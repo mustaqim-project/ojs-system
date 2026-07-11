@@ -1,61 +1,238 @@
 @extends('layouts.guest')
+
 @section('content')
 <div class="auth-card-header">
-  <h1 class="auth-title">Create your account</h1>
-  <p class="auth-sub">Join the scholarly publishing platform</p>
+  <div class="text-center mb-4">
+    <div class="brand-logo mb-3">
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+        <path d="M12 8l2 2-2 2"/>
+        <path d="M14 10H8"/>
+      </svg>
+    </div>
+    <h1 class="auth-title">Create your account</h1>
+    <p class="auth-sub">Join the scholarly publishing platform and start your research journey</p>
+  </div>
 </div>
+
 <div class="auth-card-body">
+  <!-- Info Card -->
+  <div class="alert alert-info mb-4" role="alert">
+    <i class="bi bi-info-circle me-2"></i>
+    <div>
+      <strong>Why register?</strong>
+      <ul class="mb-0 mt-2" style="padding-left: 1.2rem; font-size: 0.875rem;">
+        <li>Submit manuscripts to journals</li>
+        <li>Track your submission status</li>
+        <li>Access reviewer assignments</li>
+        <li>Manage your academic profile</li>
+      </ul>
+    </div>
+  </div>
+
   <form method="POST" action="{{ route('register.store') }}" novalidate>
     @csrf
-    <div class="mb-3">
-      <label class="lbl" for="name">Full Name <span class="req">*</span></label>
-      <input class="inp {{ $errors->has('name') ? 'is-invalid' : '' }}"
-             type="text" id="name" name="name"
-             value="{{ old('name') }}" placeholder="Dr. Full Name" autofocus required/>
-      @error('name')<div class="f-err">{{ $message }}</div>@enderror
-    </div>
-    <div class="mb-3">
-      <label class="lbl" for="email">Institutional Email <span class="req">*</span></label>
-      <input class="inp {{ $errors->has('email') ? 'is-invalid' : '' }}"
-             type="email" id="email" name="email"
-             value="{{ old('email') }}" placeholder="name@institution.ac.id" required/>
-      @error('email')<div class="f-err">{{ $message }}</div>@enderror
-    </div>
-    <div class="row g-2 mb-3">
-      <div class="col-6">
-        <label class="lbl" for="password">Password <span class="req">*</span></label>
-        <input class="inp {{ $errors->has('password') ? 'is-invalid' : '' }}"
-               type="password" id="password" name="password"
-               placeholder="Min. 8 characters" required/>
-        @error('password')<div class="f-err">{{ $message }}</div>@enderror
-      </div>
-      <div class="col-6">
-        <label class="lbl" for="password_confirmation">Confirm <span class="req">*</span></label>
-        <input class="inp" type="password" id="password_confirmation"
-               name="password_confirmation" placeholder="Repeat password" required/>
-      </div>
-    </div>
+    
+    <!-- Full Name -->
     <div class="mb-4">
-      <label class="lbl" for="affiliation">Institution / Affiliation</label>
-      <input class="inp" type="text" id="affiliation" name="affiliation"
-             value="{{ old('affiliation') }}" placeholder="University / Research Institute"/>
+      <label class="form-label" for="name">
+        Full Name
+        <span class="text-danger">*</span>
+      </label>
+      <div class="position-relative">
+        <span class="input-icon">
+          <i class="bi bi-person"></i>
+        </span>
+        <input class="form-control form-control-lg {{ $errors->has('name') ? 'is-invalid' : '' }}"
+               type="text" id="name" name="name"
+               value="{{ old('name') }}" 
+               placeholder="Dr. John Doe" 
+               autofocus 
+               required
+               aria-describedby="nameHelp"/>
+      </div>
+      @error('name')
+        <div class="invalid-feedback d-block">{{ $message }}</div>
+      @enderror
+      <small id="nameHelp" class="form-text text-muted">Include your title (e.g., Dr., Prof.)</small>
     </div>
-    <button type="submit" class="btn-auth">
-      <i class="bi bi-person-plus"></i> Create Account
+
+    <!-- Email -->
+    <div class="mb-4">
+      <label class="form-label" for="email">
+        Institutional Email
+        <span class="text-danger">*</span>
+      </label>
+      <div class="position-relative">
+        <span class="input-icon">
+          <i class="bi bi-envelope"></i>
+        </span>
+        <input class="form-control form-control-lg {{ $errors->has('email') ? 'is-invalid' : '' }}"
+               type="email" id="email" name="email"
+               value="{{ old('email') }}" 
+               placeholder="name@institution.ac.id" 
+               required
+               aria-describedby="emailHelp"/>
+      </div>
+      @error('email')
+        <div class="invalid-feedback d-block">{{ $message }}</div>
+      @enderror
+      <small id="emailHelp" class="form-text text-muted">Use your official institutional email address</small>
+    </div>
+
+    <!-- Password Fields -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-6">
+        <label class="form-label" for="password">
+          Password
+          <span class="text-danger">*</span>
+        </label>
+        <div class="position-relative">
+          <span class="input-icon">
+            <i class="bi bi-lock"></i>
+          </span>
+          <input class="form-control form-control-lg {{ $errors->has('password') ? 'is-invalid' : '' }}"
+                 type="password" id="password" name="password"
+                 placeholder="Min. 8 characters" 
+                 required
+                 aria-describedby="passwordHelp"
+                 data-toggle-password/>
+          <button type="button" class="btn-password-toggle" aria-label="Toggle password visibility">
+            <i class="bi bi-eye"></i>
+          </button>
+        </div>
+        @error('password')
+          <div class="invalid-feedback d-block">{{ $message }}</div>
+        @enderror
+        <small id="passwordHelp" class="form-text text-muted">Minimum 8 characters</small>
+      </div>
+      
+      <div class="col-md-6">
+        <label class="form-label" for="password_confirmation">
+          Confirm Password
+          <span class="text-danger">*</span>
+        </label>
+        <div class="position-relative">
+          <span class="input-icon">
+            <i class="bi bi-lock-fill"></i>
+          </span>
+          <input class="form-control form-control-lg"
+                 type="password" id="password_confirmation"
+                 name="password_confirmation" 
+                 placeholder="Repeat password" 
+                 required
+                 aria-label="Confirm password"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- Password Requirements -->
+    <div class="password-requirements mb-4 p-3 bg-light rounded-3">
+      <small class="text-muted fw-semibold d-block mb-2">Password must contain:</small>
+      <ul class="mb-0" style="font-size: 0.75rem; padding-left: 1rem;">
+        <li class="text-muted">At least 8 characters</li>
+        <li class="text-muted">Mix of uppercase and lowercase letters</li>
+        <li class="text-muted">At least one number</li>
+      </ul>
+    </div>
+
+    <!-- Affiliation -->
+    <div class="mb-4">
+      <label class="form-label" for="affiliation">
+        Institution / Affiliation
+        <span class="text-muted">(Optional)</span>
+      </label>
+      <div class="position-relative">
+        <span class="input-icon">
+          <i class="bi bi-building"></i>
+        </span>
+        <input class="form-control form-control-lg"
+               type="text" id="affiliation" name="affiliation"
+               value="{{ old('affiliation') }}" 
+               placeholder="University / Research Institute"/>
+      </div>
+      <small class="form-text text-muted">Your academic or research institution</small>
+    </div>
+
+    <!-- ORCID ID -->
+    <div class="mb-4">
+      <label class="form-label" for="orcid">
+        ORCID iD
+        <span class="text-muted">(Optional)</span>
+      </label>
+      <div class="position-relative">
+        <span class="input-icon">
+          <i class="bi bi-upc-scan"></i>
+        </span>
+        <input class="form-control form-control-lg"
+               type="text" id="orcid" name="orcid"
+               value="{{ old('orcid') }}" 
+               placeholder="0000-0000-0000-0000"
+               pattern="\d{4}-\d{4}-\d{4}-\d{3}[\dX]"/>
+      </div>
+      <small class="form-text text-muted">
+        <a href="https://orcid.org" target="_blank" class="text-decoration-none">Get your ORCID iD</a> - A persistent digital identifier for researchers
+      </small>
+    </div>
+
+    <!-- Country -->
+    <div class="mb-4">
+      <label class="form-label" for="country">
+        Country
+        <span class="text-muted">(Optional)</span>
+      </label>
+      <div class="position-relative">
+        <span class="input-icon">
+          <i class="bi bi-globe"></i>
+        </span>
+        <select class="form-select form-select-lg" id="country" name="country">
+          <option value="">Select country</option>
+          <option value="ID" {{ old('country') == 'ID' ? 'selected' : '' }}>Indonesia</option>
+          <option value="MY" {{ old('country') == 'MY' ? 'selected' : '' }}>Malaysia</option>
+          <option value="SG" {{ old('country') == 'SG' ? 'selected' : '' }}>Singapore</option>
+          <option value="TH" {{ old('country') == 'TH' ? 'selected' : '' }}>Thailand</option>
+          <option value="PH" {{ old('country') == 'PH' ? 'selected' : '' }}>Philippines</option>
+          <option value="VN" {{ old('country') == 'VN' ? 'selected' : '' }}>Vietnam</option>
+          <option value="US" {{ old('country') == 'US' ? 'selected' : '' }}>United States</option>
+          <option value="GB" {{ old('country') == 'GB' ? 'selected' : '' }}>United Kingdom</option>
+          <option value="AU" {{ old('country') == 'AU' ? 'selected' : '' }}>Australia</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Terms & Privacy -->
+    <div class="mb-4">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="terms" name="terms" required />
+        <label class="form-check-label" for="terms">
+          I agree to the 
+          <a href="#" class="text-decoration-none">Terms of Service</a> and 
+          <a href="#" class="text-decoration-none">Privacy Policy</a>
+          <span class="text-danger">*</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+      <i class="bi bi-person-plus me-2"></i> Create Account
     </button>
 
+    <!-- Divider -->
     @if(\App\Models\ApiIntegration::isEnabled('orcid') || \App\Models\ApiIntegration::isEnabled('google'))
-    <div style="display:flex;align-items:center;margin:20px 0 16px;">
-      <hr style="flex:1;border:0;border-top:1px solid var(--border);margin:0;"/>
-      <span style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;padding:0 12px;">Or register with</span>
-      <hr style="flex:1;border:0;border-top:1px solid var(--border);margin:0;"/>
+    <div class="text-center my-4">
+      <hr class="divider-text">
+      <span class="divider-label">Or register with</span>
+      <hr class="divider-text">
     </div>
-    <div style="display:flex;flex-direction:column;gap:10px;">
+    
+    <!-- SSO Buttons -->
+    <div class="d-grid gap-2 mb-4">
       @if(\App\Models\ApiIntegration::isEnabled('orcid'))
-      <a href="{{ route('auth.orcid.redirect') }}" class="btn-auth"
-         style="background:#fff;color:#1f2937;border:1px solid var(--border);box-shadow:none;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 512 512">
-          <path fill="#A6CE39" d="M512 256c0 141.4-114.6 256-256 256S0 397.4 0 256 114.6 0 256 0s256 114.6 256 256z"/>
+      <a href="{{ route('auth.orcid.redirect') }}" class="btn btn-outline-dark btn-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="me-2" style="fill: #A6CE39;">
+          <path d="M512 256c0 141.4-114.6 256-256 256S0 397.4 0 256 114.6 0 256 0s256 114.6 256 256z"/>
           <path fill="#FFF" d="M178.8 286.2h-21.3v-78.4h21.3v78.4zm-10.7-90.2c-7.3 0-13.2-5.9-13.2-13.2s5.9-13.2 13.2-13.2 13.2 5.9 13.2 13.2-5.9 13.2-13.2-13.2zm171.1 90.2h-38.6c-4.9 0-9-2.2-11.7-5.9-2.2 3.7-6.8 5.9-11.7 5.9H236v-78.4h42.1c16.1 0 26.2 9.3 26.2 21.6 0 9.2-5.5 15.6-13.8 18.2 10.3 2.1 16.7 9.3 16.7 20.3v10.7c0 4.1.8 5.7 3.3 5.7h18.7v7.7zm-90.1-70.7v24.6h17.9c10.2 0 15.6-4.5 15.6-12.3s-5.4-12.3-15.6-12.3h-17.9zm0 32.4v30.6h19.5c10.4 0 15.7-4.8 15.7-15.3 0-10.4-5.3-15.3-15.7-15.3h-19.5z"/>
         </svg>
         Register with ORCID
@@ -63,24 +240,264 @@
       @endif
 
       @if(\App\Models\ApiIntegration::isEnabled('google'))
-      <a href="{{ route('auth.google.redirect') }}" class="btn-auth"
-         style="background:#fff;color:#1f2937;border:1px solid var(--border);box-shadow:none;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48">
-          <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
-          <path fill="#FF3D00" d="m6.306 14.691 6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
-          <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
-          <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
+      <a href="{{ route('auth.google.redirect') }}" class="btn btn-outline-dark btn-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="me-2">
+          <path fill="#4285F4" d="M23.766 12.2764c0-.8908-.0764-1.7563-.2292-2.5908H12v4.905h6.473a5.541 5.541 0 0 1-2.402 3.636v3.001h3.865c2.265-2.088 3.83-5.174 3.83-8.951z"/>
+          <path fill="#34A853" d="M12 24c3.24 0 5.952-1.076 7.938-2.907l-3.865-3.001c-1.076.72-2.454 1.148-4.073 1.148-3.126 0-5.772-2.106-6.718-4.938H1.322v3.088C3.302 21.298 7.4 24 12 24z"/>
+          <path fill="#FBBC05" d="M5.28 14.302a7.166 7.166 0 0 1 0-4.604V6.61C3.302 8.538 2.4 10.712 2.4 12s.902 3.462 2.88 5.39l3.865-3.001z"/>
+          <path fill="#EA4335" d="M12 4.76c1.778 0 3.37.612 4.628 1.81l3.436-3.436C17.988 1.198 15.296 0 12 0 7.4 0 3.302 2.702 1.322 6.61l3.958 3.088C6.226 6.866 8.872 4.76 12 4.76z"/>
         </svg>
-        Register with Google <span style="font-size:11px;opacity:0.6;margin-left:4px;">(Author)</span>
+        Register with Google <span class="text-muted fw-normal">(Author)</span>
       </a>
       @endif
     </div>
     @endif
 
-    <p style="text-align:center;font-size:13px;color:var(--text-muted);margin-top:20px;margin-bottom:0;">
+    <!-- Sign In Link -->
+    <p class="text-center text-muted mb-0">
       Already have an account?
-      <a href="{{ route('login') }}" style="color:var(--primary);font-weight:600;">Sign in</a>
+      <a href="{{ route('login') }}" class="text-decoration-none fw-semibold">Sign in</a>
     </p>
   </form>
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Password visibility toggle
+  const toggleButtons = document.querySelectorAll('[data-toggle-password]');
+  toggleButtons.forEach(input => {
+    const container = input.closest('.position-relative');
+    const toggleBtn = container.querySelector('.btn-password-toggle');
+    
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', function() {
+        const icon = this.querySelector('i');
+        if (input.type === 'password') {
+          input.type = 'text';
+          icon.classList.remove('bi-eye');
+          icon.classList.add('bi-eye-slash');
+        } else {
+          input.type = 'password';
+          icon.classList.remove('bi-eye-slash');
+          icon.classList.add('bi-eye');
+        }
+      });
+    }
+  });
+  
+  // Form validation
+  const form = document.querySelector('form');
+  form.addEventListener('submit', function(e) {
+    const termsCheckbox = document.getElementById('terms');
+    if (!termsCheckbox.checked) {
+      e.preventDefault();
+      alert('Please agree to the Terms of Service and Privacy Policy');
+      termsCheckbox.focus();
+    }
+  });
+});
+</script>
+@endpush
+
+@push('styles')
+<style>
+.auth-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.auth-sub {
+  font-size: 0.95rem;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.form-label {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #374151;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.form-control, .form-select {
+  border: 1.5px solid #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem 0.75rem 2.75rem;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  outline: none;
+}
+
+.form-control.is-invalid {
+  border-color: #ef4444;
+}
+
+.form-control.is-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.invalid-feedback {
+  font-size: 0.75rem;
+  color: #ef4444;
+  margin-top: 0.25rem;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  z-index: 1;
+}
+
+.btn-password-toggle {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 0.25rem;
+  z-index: 1;
+}
+
+.btn-password-toggle:hover {
+  color: #6b7280;
+}
+
+.form-text {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin-top: 0.375rem;
+}
+
+.form-check-input {
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-top: 0.125rem;
+  border: 1.5px solid #d1d5db;
+}
+
+.form-check-input:checked {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+.form-check-label {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin-left: 0.5rem;
+}
+
+.password-requirements {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+.alert-info {
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.alert-info i {
+  color: #2563eb;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.divider-text {
+  position: relative;
+  text-align: center;
+  border-top: 1px solid #e5e7eb;
+  line-height: 1px;
+}
+
+.divider-label {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ffffff;
+  padding: 0 1rem;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.btn {
+  border-radius: 0.5rem;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  border: none;
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px -1px rgba(37, 99, 235, 0.3);
+}
+
+.btn-outline-dark {
+  border: 1.5px solid #e5e7eb;
+  background-color: #ffffff;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-outline-dark:hover {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+  transform: translateY(-1px);
+}
+
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  border-radius: 50%;
+}
+
+@media (max-width: 768px) {
+  .auth-title {
+    font-size: 1.5rem;
+  }
+  
+  .auth-sub {
+    font-size: 0.875rem;
+  }
+  
+  .form-control, .form-select {
+    padding: 0.625rem 0.875rem 0.625rem 2.5rem;
+  }
+}
+</style>
+@endpush
 @endsection
