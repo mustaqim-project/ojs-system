@@ -1,27 +1,132 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>{{ $title ?? 'Dashboard' }} — {{ config('app.name') }}</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-    <link rel="stylesheet" href="{{ asset('css/ojs.css') }}" />
+    <title>{{ $title ?? 'Dashboard' }} — {{ config('app.name', 'OJS') }}</title>
+    
+    {{-- Fonts --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+    
+    {{-- Icons --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    {{-- Tailwind CSS 4 via CDN --}}
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    
+    {{-- Design Tokens --}}
     <style>
-      /* ── Dashboard Layout Tokens ─────────────────────── */
-      :root {
-        --sb-w: 260px;
-        --tb-h: 64px;
-        --sb-bg: #111827;
-        --sb-border: #1F2937;
-        --sb-txt: #9CA3AF;
-        --sb-txt-active: #FFFFFF;
-        --sb-hover: #1F2937;
-        --sb-active-bg: #0F4C81;
-      }
+        :root {
+            /* Colors */
+            --color-primary: #2563eb;
+            --color-primary-hover: #1d4ed8;
+            --color-primary-light: #dbeafe;
+            --color-secondary: #64748b;
+            --color-success: #10b981;
+            --color-success-bg: #ecfdf5;
+            --color-warning: #f59e0b;
+            --color-warning-bg: #fffbeb;
+            --color-danger: #ef4444;
+            --color-danger-bg: #fef2f2;
+            --color-info: #06b6d4;
+            --color-info-bg: #ecfeff;
+            
+            /* Grays */
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+            
+            /* Sidebar */
+            --sidebar-width: 280px;
+            --topbar-height: 64px;
+            --sidebar-bg: #0f172a;
+            --sidebar-border: #1e293b;
+            --sidebar-text: #94a3b8;
+            --sidebar-text-active: #ffffff;
+            --sidebar-hover: #1e293b;
+            --sidebar-active: #1e40af;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--gray-50);
+            color: var(--gray-900);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .font-academic {
+            font-family: 'Merriweather', serif;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .animate-fadeInUp { animation: fadeInUp 0.4s ease-out both; }
+        .animate-delay-1 { animation-delay: 0.05s; }
+        .animate-delay-2 { animation-delay: 0.1s; }
+        .animate-delay-3 { animation-delay: 0.15s; }
+        .animate-delay-4 { animation-delay: 0.2s; }
+        
+        .gradient-brand {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        }
+        
+        .gradient-subtle {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+        
+        /* Glass effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        
+        /* Card hover effects */
+        .card-hover {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Focus states */
+        .focus-ring:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+    </style>
+    
+    @stack('styles')
+</head>
 
-      body { background: var(--bg-app); }
+<body class="antialiased">
 
       /* ── Sidebar ─────────────────────────────────────── */
       .ds-sidebar {
