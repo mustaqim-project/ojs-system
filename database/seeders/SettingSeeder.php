@@ -55,6 +55,48 @@ class SettingSeeder extends Seeder
                 'description' => '',
             ],
 
+            // ===== PUBLIC SITE SETTINGS =====
+            [
+                'key'         => 'hero_title',
+                'value'       => 'Advance Your Research with Open Access Publishing',
+                'group'       => 'general',
+                'label'       => 'Hero Title',
+                'type'        => 'text',
+                'description' => 'Teks utama pada hero banner',
+            ],
+            [
+                'key'         => 'hero_subtitle',
+                'value'       => 'Join our global community of researchers and publish your work in our peer-reviewed, high-impact journals.',
+                'group'       => 'general',
+                'label'       => 'Hero Subtitle',
+                'type'        => 'textarea',
+                'description' => 'Teks deskripsi di bawah hero title',
+            ],
+            [
+                'key'         => 'hero_button_text',
+                'value'       => 'Submit Manuscript',
+                'group'       => 'general',
+                'label'       => 'Hero Button Text',
+                'type'        => 'text',
+                'description' => 'Teks pada tombol call to action hero',
+            ],
+            [
+                'key'         => 'hero_button_link',
+                'value'       => '/register',
+                'group'       => 'general',
+                'label'       => 'Hero Button Link',
+                'type'        => 'text',
+                'description' => 'Link tujuan tombol hero',
+            ],
+            [
+                'key'         => 'footer_text',
+                'value'       => '© 2026 OJS System. All rights reserved. Empowering academic research through open access.',
+                'group'       => 'general',
+                'label'       => 'Footer Text',
+                'type'        => 'textarea',
+                'description' => 'Teks pada bagian footer',
+            ],
+
             // ===== PAYMENT SETTINGS =====
             [
                 'key'         => 'apc_amount',

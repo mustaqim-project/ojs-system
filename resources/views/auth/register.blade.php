@@ -1,6 +1,10 @@
-@extends('layouts.guest')
+@extends('layouts.app')
 
 @section('content')
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+
 <div class="auth-card-header">
   <div class="text-center mb-4">
     <div class="brand-logo mb-3">
@@ -41,7 +45,7 @@
         <span class="text-danger">*</span>
       </label>
       <div class="position-relative">
-        <span class="input-icon">
+        <span class="position-absolute top-50 translate-middle-y text-muted ms-3">
           <i class="bi bi-person"></i>
         </span>
         <input class="form-control form-control-lg {{ $errors->has('name') ? 'is-invalid' : '' }}"
@@ -50,7 +54,8 @@
                placeholder="Dr. John Doe" 
                autofocus 
                required
-               aria-describedby="nameHelp"/>
+               aria-describedby="nameHelp"
+               style="padding-left: 2.75rem;"/>
       </div>
       @error('name')
         <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -65,7 +70,7 @@
         <span class="text-danger">*</span>
       </label>
       <div class="position-relative">
-        <span class="input-icon">
+        <span class="position-absolute top-50 translate-middle-y text-muted ms-3">
           <i class="bi bi-envelope"></i>
         </span>
         <input class="form-control form-control-lg {{ $errors->has('email') ? 'is-invalid' : '' }}"
@@ -73,7 +78,8 @@
                value="{{ old('email') }}" 
                placeholder="name@institution.ac.id" 
                required
-               aria-describedby="emailHelp"/>
+               aria-describedby="emailHelp"
+               style="padding-left: 2.75rem;"/>
       </div>
       @error('email')
         <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -89,7 +95,7 @@
           <span class="text-danger">*</span>
         </label>
         <div class="position-relative">
-          <span class="input-icon">
+          <span class="position-absolute top-50 translate-middle-y text-muted ms-3">
             <i class="bi bi-lock"></i>
           </span>
           <input class="form-control form-control-lg {{ $errors->has('password') ? 'is-invalid' : '' }}"
@@ -97,8 +103,9 @@
                  placeholder="Min. 8 characters" 
                  required
                  aria-describedby="passwordHelp"
+                 style="padding-left: 2.75rem; padding-right: 2.75rem;"
                  data-toggle-password/>
-          <button type="button" class="btn-password-toggle" aria-label="Toggle password visibility">
+          <button type="button" class="btn btn-link text-muted p-0 position-absolute top-50 translate-middle-y end-0 me-3 text-decoration-none btn-password-toggle" aria-label="Toggle password visibility">
             <i class="bi bi-eye"></i>
           </button>
         </div>
@@ -114,7 +121,7 @@
           <span class="text-danger">*</span>
         </label>
         <div class="position-relative">
-          <span class="input-icon">
+          <span class="position-absolute top-50 translate-middle-y text-muted ms-3">
             <i class="bi bi-lock-fill"></i>
           </span>
           <input class="form-control form-control-lg"
@@ -122,7 +129,8 @@
                  name="password_confirmation" 
                  placeholder="Repeat password" 
                  required
-                 aria-label="Confirm password"/>
+                 aria-label="Confirm password"
+                 style="padding-left: 2.75rem;"/>
         </div>
       </div>
     </div>
@@ -144,13 +152,14 @@
         <span class="text-muted">(Optional)</span>
       </label>
       <div class="position-relative">
-        <span class="input-icon">
+        <span class="position-absolute top-50 translate-middle-y text-muted ms-3">
           <i class="bi bi-building"></i>
         </span>
         <input class="form-control form-control-lg"
                type="text" id="affiliation" name="affiliation"
                value="{{ old('affiliation') }}" 
-               placeholder="University / Research Institute"/>
+               placeholder="University / Research Institute"
+               style="padding-left: 2.75rem;"/>
       </div>
       <small class="form-text text-muted">Your academic or research institution</small>
     </div>
@@ -162,14 +171,15 @@
         <span class="text-muted">(Optional)</span>
       </label>
       <div class="position-relative">
-        <span class="input-icon">
+        <span class="position-absolute top-50 translate-middle-y text-muted ms-3">
           <i class="bi bi-upc-scan"></i>
         </span>
         <input class="form-control form-control-lg"
                type="text" id="orcid" name="orcid"
                value="{{ old('orcid') }}" 
                placeholder="0000-0000-0000-0000"
-               pattern="\d{4}-\d{4}-\d{4}-\d{3}[\dX]"/>
+               pattern="\d{4}-\d{4}-\d{4}-\d{3}[\dX]"
+               style="padding-left: 2.75rem;"/>
       </div>
       <small class="form-text text-muted">
         <a href="https://orcid.org" target="_blank" class="text-decoration-none">Get your ORCID iD</a> - A persistent digital identifier for researchers
@@ -183,10 +193,10 @@
         <span class="text-muted">(Optional)</span>
       </label>
       <div class="position-relative">
-        <span class="input-icon">
+        <span class="position-absolute top-50 translate-middle-y text-muted ms-3">
           <i class="bi bi-globe"></i>
         </span>
-        <select class="form-select form-select-lg" id="country" name="country">
+        <select class="form-select form-select-lg" id="country" name="country" style="padding-left: 2.75rem;">
           <option value="">Select country</option>
           <option value="ID" {{ old('country') == 'ID' ? 'selected' : '' }}>Indonesia</option>
           <option value="MY" {{ old('country') == 'MY' ? 'selected' : '' }}>Malaysia</option>
@@ -207,8 +217,8 @@
         <input class="form-check-input" type="checkbox" id="terms" name="terms" required />
         <label class="form-check-label" for="terms">
           I agree to the 
-          <a href="#" class="text-decoration-none">Terms of Service</a> and 
-          <a href="#" class="text-decoration-none">Privacy Policy</a>
+          <a href="{{ route('public.terms-conditions') }}" target="_blank" class="text-decoration-none">Terms of Service</a> and 
+          <a href="{{ route('public.privacy-policy') }}" target="_blank" class="text-decoration-none">Privacy Policy</a>
           <span class="text-danger">*</span>
         </label>
       </div>
@@ -220,11 +230,9 @@
     </button>
 
     <!-- Divider -->
-    @if(\App\Models\ApiIntegration::isEnabled('orcid') || \App\Models\ApiIntegration::isEnabled('google'))
     <div class="text-center my-4">
-      <hr class="divider-text">
-      <span class="divider-label">Or register with</span>
-      <hr class="divider-text">
+      <hr class="divider-text" style="margin:0;">
+      <span class="divider-label text-muted px-3" style="position:relative; top:-0.7em; background:white;">Or register with</span>
     </div>
     
     <!-- SSO Buttons -->
@@ -239,8 +247,7 @@
       </a>
       @endif
 
-      @if(\App\Models\ApiIntegration::isEnabled('google'))
-      <a href="{{ route('auth.google.redirect') }}" class="btn btn-outline-dark btn-lg">
+      <a href="{{ route('auth.google') }}" class="btn btn-outline-dark btn-lg">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="me-2">
           <path fill="#4285F4" d="M23.766 12.2764c0-.8908-.0764-1.7563-.2292-2.5908H12v4.905h6.473a5.541 5.541 0 0 1-2.402 3.636v3.001h3.865c2.265-2.088 3.83-5.174 3.83-8.951z"/>
           <path fill="#34A853" d="M12 24c3.24 0 5.952-1.076 7.938-2.907l-3.865-3.001c-1.076.72-2.454 1.148-4.073 1.148-3.126 0-5.772-2.106-6.718-4.938H1.322v3.088C3.302 21.298 7.4 24 12 24z"/>
@@ -249,9 +256,7 @@
         </svg>
         Register with Google <span class="text-muted fw-normal">(Author)</span>
       </a>
-      @endif
     </div>
-    @endif
 
     <!-- Sign In Link -->
     <p class="text-center text-muted mb-0">
@@ -259,6 +264,10 @@
       <a href="{{ route('login') }}" class="text-decoration-none fw-semibold">Sign in</a>
     </p>
   </form>
+</div>
+
+    </div>
+  </div>
 </div>
 
 @push('scripts')
@@ -300,204 +309,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 @endpush
 
-@push('styles')
-<style>
-.auth-title {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 0.5rem;
-}
 
-.auth-sub {
-  font-size: 0.95rem;
-  color: #64748b;
-  line-height: 1.5;
-}
-
-.form-label {
-  font-weight: 600;
-  font-size: 0.875rem;
-  color: #374151;
-  margin-bottom: 0.5rem;
-  display: block;
-}
-
-.form-control, .form-select {
-  border: 1.5px solid #e2e8f0;
-  border-radius: 0.5rem;
-  padding: 0.75rem 1rem 0.75rem 2.75rem;
-  font-size: 0.95rem;
-  transition: all 0.2s ease;
-}
-
-.form-control:focus, .form-select:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-  outline: none;
-}
-
-.form-control.is-invalid {
-  border-color: #ef4444;
-}
-
-.form-control.is-invalid:focus {
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
-}
-
-.invalid-feedback {
-  font-size: 0.75rem;
-  color: #ef4444;
-  margin-top: 0.25rem;
-}
-
-.input-icon {
-  position: absolute;
-  left: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #9ca3af;
-  z-index: 1;
-}
-
-.btn-password-toggle {
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  color: #9ca3af;
-  cursor: pointer;
-  padding: 0.25rem;
-  z-index: 1;
-}
-
-.btn-password-toggle:hover {
-  color: #6b7280;
-}
-
-.form-text {
-  font-size: 0.75rem;
-  color: #9ca3af;
-  margin-top: 0.375rem;
-}
-
-.form-check-input {
-  width: 1.125rem;
-  height: 1.125rem;
-  margin-top: 0.125rem;
-  border: 1.5px solid #d1d5db;
-}
-
-.form-check-input:checked {
-  background-color: #2563eb;
-  border-color: #2563eb;
-}
-
-.form-check-label {
-  font-size: 0.875rem;
-  color: #4b5563;
-  margin-left: 0.5rem;
-}
-
-.password-requirements {
-  background-color: #f9fafb;
-  border: 1px solid #e5e7eb;
-}
-
-.alert-info {
-  background-color: #eff6ff;
-  border: 1px solid #bfdbfe;
-  border-radius: 0.5rem;
-  padding: 1rem;
-  display: flex;
-  gap: 0.75rem;
-}
-
-.alert-info i {
-  color: #2563eb;
-  font-size: 1.25rem;
-  flex-shrink: 0;
-}
-
-.divider-text {
-  position: relative;
-  text-align: center;
-  border-top: 1px solid #e5e7eb;
-  line-height: 1px;
-}
-
-.divider-label {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #ffffff;
-  padding: 0 1rem;
-  font-size: 0.75rem;
-  color: #9ca3af;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.btn {
-  border-radius: 0.5rem;
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  transition: all 0.2s ease;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  border: none;
-  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
-}
-
-.btn-primary:hover {
-  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 8px -1px rgba(37, 99, 235, 0.3);
-}
-
-.btn-outline-dark {
-  border: 1.5px solid #e5e7eb;
-  background-color: #ffffff;
-  color: #374151;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-outline-dark:hover {
-  background-color: #f9fafb;
-  border-color: #d1d5db;
-  transform: translateY(-1px);
-}
-
-.brand-logo {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 80px;
-  height: 80px;
-  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-  border-radius: 50%;
-}
-
-@media (max-width: 768px) {
-  .auth-title {
-    font-size: 1.5rem;
-  }
-  
-  .auth-sub {
-    font-size: 0.875rem;
-  }
-  
-  .form-control, .form-select {
-    padding: 0.625rem 0.875rem 0.625rem 2.5rem;
-  }
-}
-</style>
-@endpush
 @endsection
+

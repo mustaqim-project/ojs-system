@@ -52,6 +52,10 @@ class PaymentController extends Controller
             $request->proof_notes
         );
 
+        // Notify Admins
+        $admins = \App\Models\User::where('role', 'admin')->active()->get();
+        \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\PaymentUploadedNotification($article, auth()->user()->name));
+
         return redirect()
             ->route('author.payments.show', $article)
             ->with('success', 'Bukti pembayaran berhasil diunggah! Admin akan segera memverifikasi.');

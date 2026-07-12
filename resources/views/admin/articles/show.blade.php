@@ -1,51 +1,56 @@
 @extends('layouts.dashboard')
 @section('content')
-<div class="pg-hdr">
+
+<div class="ds-page-hdr" data-aos="fade-up">
   <div>
-    <div class="pg-crumb"><a href="{{ route('admin.articles.index') }}">Artikel</a><span>›</span><span class="cur">Detail</span></div>
-    <h2 class="pg-title" style="font-size:17px;max-width:640px;line-height:1.3;">{{ $article->title }}</h2>
+    <x-ui.breadcrumb :items="[['label'=>'Admin'],['label'=>'Articles','href'=>route('admin.articles.index')],['label'=>Str::limit($article->title,50)]]"/>
+    <h1 class="ds-page-title" style="font-size:20px;max-width:700px;line-height:1.4;">{{ $article->title }}</h1>
   </div>
-  <div class="d-flex gap-2 align-items-center">
-    <a href="{{ route('admin.export.article', $article) }}" class="btn-o btn-out btn-sm"><i class="bi bi-file-earmark-code"></i> Export XML</a>
-    <span class="bx bx-{{ $article->status }}" style="font-size:12px;padding:5px 14px;">{{ $article->status_label }}</span>
+  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+    <a href="{{ route('admin.export.article',$article) }}" class="ds-btn ds-btn-out ds-btn-sm">
+      <i class="bi bi-file-earmark-code"></i> Export XML
+    </a>
+    <x-status-badge :status="$article->status" :label="$article->status_label"/>
   </div>
 </div>
 
 {{-- Publish CTA --}}
 @if($article->canBePublished())
-<div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid var(--green-b);border-radius:var(--r);padding:20px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;" class="fu">
+<div class="ds-alert ds-alert-success" data-aos="fade-up" style="border-radius:10px;padding:20px 24px;margin-bottom:24px;">
+  <i class="bi bi-check-circle-fill" style="font-size:18px;"></i>
   <div style="flex:1;">
-    <div style="font-size:14px;font-weight:700;color:var(--green);margin-bottom:3px;"><i class="bi bi-check-circle-fill me-2"></i>Artikel Siap Dipublish!</div>
-    <div style="font-size:13px;color:#166534;">Pembayaran sudah terverifikasi. Pilih issue dan publish artikel ini.</div>
+    <div style="font-weight:700;font-size:14px;">Ready to Publish</div>
+    <div style="font-size:13px;opacity:0.8;margin-top:2px;">Payment verified. Select an issue and publish this manuscript.</div>
   </div>
-  <button class="btn-o btn-suc btn-lg" data-bs-toggle="modal" data-bs-target="#publishModal">
-    <i class="bi bi-rocket-takeoff-fill"></i> Publish Artikel
+  <button class="ds-btn ds-btn-suc" data-bs-toggle="modal" data-bs-target="#publishModal">
+    <i class="bi bi-rocket-takeoff-fill"></i> Publish Now
   </button>
 </div>
-{{-- Publish Modal --}}
 <div class="modal fade" id="publishModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header"><h5 class="modal-title"><i class="bi bi-rocket-takeoff-fill me-2" style="color:var(--green);"></i>Publish Artikel</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-      <div class="modal-body">
-        <p style="font-size:13px;color:var(--txt2);margin-bottom:16px;">Pilih issue untuk menempatkan artikel ini:</p>
+    <div class="modal-content" style="border-radius:12px;border:1px solid var(--border);">
+      <div class="modal-header" style="border-bottom:1px solid var(--border);padding:20px 24px;">
+        <h5 class="modal-title" style="font-weight:700;font-size:15px;"><i class="bi bi-rocket-takeoff-fill me-2" style="color:var(--success);"></i>Publish Article</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="padding:24px;">
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">Select the issue to assign this article to:</p>
         <form method="POST" action="{{ route('admin.articles.publish',$article) }}" id="publishForm">
           @csrf
-          <div class="f-group mb-0">
-            <label class="lbl">Issue <span class="req">*</span></label>
-            <select name="issue_id" class="sel" required>
-              <option value="">-- Pilih Issue --</option>
+          <x-ui.form-field label="Issue" required :error="$errors->first('issue_id')">
+            <x-ui.select name="issue_id" required :error="$errors->has('issue_id')">
               @foreach($issues as $issue)
-              <option value="{{ $issue->id }}">{{ $issue->display_title }} — {{ $issue->journal->title }}</option>
+                <option value="{{ $issue->id }}">{{ $issue->display_title }} — {{ $issue->journal->title }}</option>
               @endforeach
-            </select>
-            @error('issue_id')<div class="f-err">{{ $message }}</div>@enderror
-          </div>
+            </x-ui.select>
+          </x-ui.form-field>
         </form>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn-o btn-out" data-bs-dismiss="modal">Batal</button>
-        <button type="submit" form="publishForm" class="btn-o btn-suc"><i class="bi bi-rocket-takeoff-fill"></i> Publish Sekarang</button>
+      <div class="modal-footer" style="border-top:1px solid var(--border);padding:16px 24px;">
+        <button type="button" class="ds-btn ds-btn-out" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" form="publishForm" class="ds-btn ds-btn-suc">
+          <i class="bi bi-rocket-takeoff-fill"></i> Publish
+        </button>
       </div>
     </div>
   </div>
@@ -53,49 +58,105 @@
 @endif
 
 <div class="row g-3">
+  {{-- Main Content --}}
   <div class="col-12 col-lg-8">
-    {{-- Detail --}}
-    <div class="card-ojs fu fd1">
-      <div class="card-hdr">
-        <span class="card-title">Informasi Artikel</span>
-        <div class="d-flex gap-2">
-          @if($article->manuscript_file)<a href="{{ asset('storage/'.$article->manuscript_file) }}" target="_blank" class="btn-o btn-out btn-sm"><i class="bi bi-download"></i> Manuskrip</a>@endif
-          @if($article->revision_file)<a href="{{ asset('storage/'.$article->revision_file) }}" target="_blank" class="btn-o btn-warn btn-sm"><i class="bi bi-download"></i> Revisi</a>@endif
+    <div class="ds-card" data-aos="fade-up" data-aos-delay="100">
+      <div class="ds-card-hdr">
+        <span class="ds-card-title">Manuscript Details</span>
+        <div style="display:flex;gap:8px;">
+          @if($article->manuscript_file)
+            <a href="{{ asset('storage/'.$article->manuscript_file) }}" target="_blank" class="ds-btn ds-btn-out ds-btn-sm">
+              <i class="bi bi-download"></i> Manuscript
+            </a>
+          @endif
+          @if($article->revision_file)
+            <a href="{{ asset('storage/'.$article->revision_file) }}" target="_blank" class="ds-btn ds-btn-sm" style="background:var(--warning-bg);color:var(--warning);border-color:var(--warning);">
+              <i class="bi bi-download"></i> Revision
+            </a>
+          @endif
         </div>
       </div>
       <div>
-        <div class="info-row"><span class="info-key">Jurnal</span><span class="info-val">{{ $article->journal->title }}</span></div>
-        <div class="info-row"><span class="info-key">Author</span><span class="info-val">{{ $article->author->name }} <span style="color:var(--txt3);font-size:12px;">({{ $article->author->email }})</span></span></div>
-        @if($article->assignedEditor)<div class="info-row"><span class="info-key">Editor</span><span class="info-val">{{ $article->assignedEditor->name }}</span></div>@endif
-        @if($article->issue)<div class="info-row"><span class="info-key">Issue</span><span class="info-val">{{ $article->issue->display_title }}</span></div>@endif
-        <div class="info-row"><span class="info-key">Abstrak</span><span class="info-val" style="line-height:1.75;color:var(--txt2);">{{ $article->abstract }}</span></div>
-        <div class="info-row"><span class="info-key">Kata Kunci</span><span class="info-val" style="display:flex;flex-wrap:wrap;gap:4px;">@foreach($article->keywords_array as $kw)<span style="font-size:11px;background:#f1f5f9;color:#64748b;padding:2px 8px;border-radius:5px;border:1px solid #e2e8f0;">{{ $kw }}</span>@endforeach</span></div>
-        <div class="info-row"><span class="info-key">Disubmit</span><span class="info-val">{{ $article->submitted_at?->format('d M Y H:i') }}</span></div>
-        @if($article->accepted_at)<div class="info-row"><span class="info-key">Diterima</span><span class="info-val">{{ $article->accepted_at->format('d M Y H:i') }}</span></div>@endif
-        @if($article->published_at)<div class="info-row"><span class="info-key">Dipublish</span><span class="info-val">{{ $article->published_at->format('d M Y H:i') }}</span></div>@endif
-        @if($article->doi)<div class="info-row"><span class="info-key">DOI</span><span class="info-val" style="font-family:'Courier New',monospace;color:var(--acc);">{{ $article->doi }}</span></div>@endif
+        @php
+        $rows = [
+          'Journal'    => $article->journal->title,
+          'Author'     => $article->author->name.' <span style="color:var(--text-muted);font-size:12px;">('.$article->author->email.')</span>',
+          'Language'   => strtoupper($article->language ?? 'en'),
+        ];
+        if($article->assignedEditor) $rows['Assigned Editor'] = $article->assignedEditor->name;
+        if($article->issue) $rows['Issue'] = $article->issue->display_title;
+        @endphp
+        @foreach($rows as $k => $v)
+        <div style="display:grid;grid-template-columns:140px 1fr;gap:8px;padding:13px 24px;border-bottom:1px solid #F1F5F9;font-size:14px;">
+          <span style="font-weight:500;color:var(--text-muted);">{{ $k }}</span>
+          <span style="color:var(--text-main);">{!! $v !!}</span>
+        </div>
+        @endforeach
+
+        {{-- DOI --}}
+        @if($article->doi)
+        <div style="display:grid;grid-template-columns:140px 1fr;gap:8px;padding:13px 24px;border-bottom:1px solid #F1F5F9;font-size:14px;">
+          <span style="font-weight:500;color:var(--text-muted);">DOI</span>
+          <span style="font-family:monospace;color:var(--primary);">{{ $article->doi }}</span>
+        </div>
+        @endif
+
+        {{-- Abstract --}}
+        <div style="padding:16px 24px;border-bottom:1px solid #F1F5F9;">
+          <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:8px;">Abstract</div>
+          <p style="font-size:14px;color:var(--text-main);line-height:1.75;margin:0;">{{ $article->abstract }}</p>
+        </div>
+
+        {{-- Keywords --}}
+        <div style="padding:16px 24px;">
+          <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:8px;">Keywords</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            @foreach($article->keywords_array as $kw)
+              <span style="font-size:12px;background:#F1F5F9;color:#475569;padding:3px 10px;border-radius:20px;border:1px solid #E2E8F0;">{{ $kw }}</span>
+            @endforeach
+          </div>
+        </div>
       </div>
     </div>
 
     {{-- Reviews --}}
     @if($article->reviews->count())
-    <div class="card-ojs fu fd2" style="margin-top:12px;">
-      <div class="card-hdr"><span class="card-title">Review ({{ $article->reviews->count() }})</span></div>
+    <div class="ds-card" data-aos="fade-up" data-aos-delay="200" style="margin-top:16px;">
+      <div class="ds-card-hdr">
+        <span class="ds-card-title">Peer Reviews ({{ $article->reviews->count() }})</span>
+      </div>
       @foreach($article->reviews as $review)
-      <div style="padding:16px 20px;border-bottom:1px solid #f1f5f9;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <div style="width:28px;height:28px;border-radius:7px;background:#f5f3ff;color:#7c3aed;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;">{{ strtoupper(substr($review->reviewer->name,0,1)) }}</div>
-            <div><div style="font-size:12px;font-weight:600;color:var(--txt);">{{ $review->reviewer->name }}</div><div style="font-size:11px;color:var(--txt3);">{{ $review->reviewer->affiliation }}</div></div>
+      <div style="padding:20px 24px;border-bottom:1px solid #F1F5F9;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:32px;height:32px;border-radius:8px;background:#FAF5FF;color:#6B46C1;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">{{ strtoupper(substr($review->reviewer->name,0,1)) }}</div>
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--text-main);">{{ $review->reviewer->name }}</div>
+              <div style="font-size:12px;color:var(--text-muted);">{{ $review->reviewer->affiliation }}</div>
+            </div>
           </div>
-          <div style="display:flex;gap:5px;">
-            <span class="bx bx-gray" style="font-size:10px;">{{ ucfirst($review->status) }}</span>
-            @if($review->recommendation)<span class="bx bx-{{ $review->recommendation }}" style="font-size:10px;">{{ $review->recommendation_label }}</span>@endif
+          <div style="display:flex;gap:6px;">
+            <x-status-badge :status="$review->status"/>
+            @if($review->recommendation)
+              <x-status-badge :status="$review->recommendation" :label="$review->recommendation_label"/>
+            @endif
           </div>
         </div>
-        @if($review->average_score)<div style="font-size:11px;color:var(--txt3);margin-bottom:6px;">Skor: <strong style="color:var(--txt);">{{ $review->average_score }}/5</strong></div>@endif
-        @if($review->comments_to_author)<div style="background:#f8f9fb;border-radius:7px;padding:10px;font-size:12px;color:var(--txt2);line-height:1.65;margin-bottom:5px;"><strong style="font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--txt3);">Komentar Author:</strong><br/>{{ $review->comments_to_author }}</div>@endif
-        @if($review->comments_to_editor)<div style="background:#fefce8;border-radius:7px;padding:10px;font-size:12px;color:#713f12;line-height:1.65;"><strong style="font-size:10px;text-transform:uppercase;letter-spacing:.04em;">Konfidensial:</strong><br/>{{ $review->comments_to_editor }}</div>@endif
+        @if($review->average_score)
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">Score: <strong style="color:var(--text-main);">{{ $review->average_score }}/5</strong></div>
+        @endif
+        @if($review->comments_to_author)
+          <div style="background:var(--bg-app);border-radius:8px;padding:12px;font-size:13px;color:var(--text-main);line-height:1.65;margin-bottom:6px;">
+            <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);margin-bottom:6px;">Comments to Author</div>
+            {{ $review->comments_to_author }}
+          </div>
+        @endif
+        @if($review->comments_to_editor)
+          <div style="background:#FEFCE8;border-radius:8px;padding:12px;font-size:13px;color:#713F12;line-height:1.65;">
+            <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;">Confidential to Editor</div>
+            {{ $review->comments_to_editor }}
+          </div>
+        @endif
       </div>
       @endforeach
     </div>
@@ -103,16 +164,26 @@
 
     {{-- Payment --}}
     @if($article->payment)
-    <div class="card-ojs fu fd3" style="margin-top:12px;">
-      <div class="card-hdr">
-        <span class="card-title">Pembayaran</span>
-        <a href="{{ route('admin.payments.show',$article->payment) }}" class="btn-o btn-ghost btn-sm">Kelola <i class="bi bi-arrow-right ms-1"></i></a>
+    <div class="ds-card" data-aos="fade-up" data-aos-delay="300" style="margin-top:16px;">
+      <div class="ds-card-hdr">
+        <span class="ds-card-title">Payment Information</span>
+        <a href="{{ route('admin.payments.show',$article->payment) }}" class="ds-btn ds-btn-ghost ds-btn-sm">
+          Manage <i class="bi bi-arrow-right ms-1"></i>
+        </a>
       </div>
-      <div style="padding:16px 20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
-        <div><div style="font-size:11px;color:var(--txt3);margin-bottom:2px;">Invoice</div><div style="font-family:'Courier New',monospace;font-size:13px;font-weight:700;color:var(--txt);">{{ $article->payment->invoice_code }}</div></div>
-        <div style="width:1px;height:30px;background:var(--brd);"></div>
-        <div><div style="font-size:11px;color:var(--txt3);margin-bottom:2px;">Nominal</div><div style="font-size:18px;font-weight:800;color:var(--txt);">Rp {{ number_format($article->payment->amount,0,',','.') }}</div></div>
-        <div style="margin-left:auto;"><span class="bx bx-{{ $article->payment->status }}">{{ $article->payment->status_label }}</span></div>
+      <div style="padding:20px 24px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
+        <div>
+          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);margin-bottom:4px;">Invoice</div>
+          <div style="font-family:monospace;font-size:14px;font-weight:700;color:var(--text-main);">{{ $article->payment->invoice_code }}</div>
+        </div>
+        <div style="width:1px;height:36px;background:var(--border);"></div>
+        <div>
+          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);margin-bottom:4px;">Amount</div>
+          <div style="font-size:20px;font-weight:800;color:var(--text-main);">Rp {{ number_format($article->payment->amount,0,',','.') }}</div>
+        </div>
+        <div style="margin-left:auto;">
+          <x-status-badge :status="$article->payment->status" :label="$article->payment->status_label"/>
+        </div>
       </div>
     </div>
     @endif
@@ -120,39 +191,61 @@
 
   {{-- Sidebar --}}
   <div class="col-12 col-lg-4">
-    <div style="position:sticky;top:80px;">
-      <div class="card-ojs fu fd2">
-        <div class="card-hdr"><span class="card-title">Info Singkat</span></div>
+    <div style="position:sticky;top:80px;display:flex;flex-direction:column;gap:16px;">
+      {{-- Quick Info --}}
+      <div class="ds-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="ds-card-hdr"><span class="ds-card-title">At a Glance</span></div>
         <div>
-          <div class="info-row"><span class="info-key">Status</span><span class="info-val"><span class="bx bx-{{ $article->status }}" style="font-size:11px;">{{ $article->status_label }}</span></span></div>
-          <div class="info-row"><span class="info-key">Bahasa</span><span class="info-val">{{ strtoupper($article->language) }}</span></div>
-          <div class="info-row"><span class="info-key">Total Review</span><span class="info-val">{{ $article->reviews->count() }} reviewer</span></div>
-          @if($article->pages_start)<div class="info-row"><span class="info-key">Halaman</span><span class="info-val">{{ $article->pages_start }}–{{ $article->pages_end }}</span></div>@endif
+          @php
+          $meta = [
+            'Status'       => null,
+            'Reviews'      => $article->reviews->count().' reviewer(s)',
+            'Submitted'    => $article->submitted_at?->format('d M Y H:i'),
+            'Accepted'     => $article->accepted_at?->format('d M Y'),
+            'Published'    => $article->published_at?->format('d M Y'),
+          ];
+          if($article->pages_start) $meta['Pages'] = $article->pages_start.'–'.$article->pages_end;
+          @endphp
+          <div style="padding:13px 20px;border-bottom:1px solid #F1F5F9;">
+            <span style="font-size:12px;color:var(--text-muted);">Status</span><br>
+            <div style="margin-top:6px;"><x-status-badge :status="$article->status" :label="$article->status_label"/></div>
+          </div>
+          @foreach($meta as $mk => $mv)
+            @if($mv)
+            <div style="display:grid;grid-template-columns:90px 1fr;gap:8px;padding:10px 20px;border-bottom:1px solid #F1F5F9;font-size:13px;">
+              <span style="color:var(--text-muted);">{{ $mk }}</span>
+              <span style="color:var(--text-main);font-weight:500;">{{ $mv }}</span>
+            </div>
+            @endif
+          @endforeach
         </div>
       </div>
 
-      {{-- Kelola Metadata --}}
-      <div class="card-ojs fu fd3 mt-3">
-        <div class="card-hdr"><span class="card-title"><i class="bi bi-link-45deg me-2" style="color:var(--acc);"></i>Metadata & DOI</span></div>
-        <div style="padding:16px 20px;">
-          <form method="POST" action="{{ route('admin.articles.update-metadata', $article) }}">
+      {{-- Metadata & DOI --}}
+      <div class="ds-card" data-aos="fade-up" data-aos-delay="300">
+        <div class="ds-card-hdr">
+          <span class="ds-card-title"><i class="bi bi-link-45deg me-1" style="color:var(--primary);"></i>Metadata & DOI</span>
+        </div>
+        <div style="padding:20px;">
+          <form method="POST" action="{{ route('admin.articles.update-metadata',$article) }}" novalidate>
             @csrf
-            <div class="f-group">
-              <label class="lbl">DOI</label>
-              <input type="text" name="doi" class="inp" value="{{ $article->doi }}" placeholder="e.g. 10.12345/journal.2026.1"/>
-            </div>
-            <div class="row g-2 mb-3">
+            <x-ui.form-field label="DOI" hint="e.g. 10.12345/journal.2026.001">
+              <x-ui.input type="text" name="doi" :value="$article->doi" placeholder="10.xxxxx/..."/>
+            </x-ui.form-field>
+            <div class="row g-2">
               <div class="col-6">
-                <label class="lbl">Halaman Awal</label>
-                <input type="number" name="pages_start" class="inp" value="{{ $article->pages_start }}" placeholder="Awal"/>
+                <x-ui.form-field label="Page Start">
+                  <x-ui.input type="number" name="pages_start" :value="$article->pages_start" placeholder="1"/>
+                </x-ui.form-field>
               </div>
               <div class="col-6">
-                <label class="lbl">Halaman Akhir</label>
-                <input type="number" name="pages_end" class="inp" value="{{ $article->pages_end }}" placeholder="Akhir"/>
+                <x-ui.form-field label="Page End">
+                  <x-ui.input type="number" name="pages_end" :value="$article->pages_end" placeholder="20"/>
+                </x-ui.form-field>
               </div>
             </div>
-            <button type="submit" class="btn-o btn-pri w-100 justify-content-center">
-              <i class="bi bi-floppy"></i> Simpan Metadata
+            <button type="submit" class="ds-btn ds-btn-pri w-100 justify-content-center">
+              <i class="bi bi-floppy"></i> Save Metadata
             </button>
           </form>
         </div>
@@ -160,4 +253,5 @@
     </div>
   </div>
 </div>
+
 @endsection

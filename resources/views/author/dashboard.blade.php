@@ -3,7 +3,7 @@
 @section('content')
 
 {{-- Page Header --}}
-<div class="ds-page-hdr fu">
+<div class="ds-page-hdr" data-aos="fade-up">
   <div>
     <div class="ds-breadcrumb">
       <span>Author Portal</span>
@@ -20,7 +20,7 @@
 
 {{-- ORCID Connect Banner --}}
 @if(\App\Models\ApiIntegration::isEnabled('orcid'))
-<div class="ds-card fu" style="padding:16px 24px;margin-bottom:24px;">
+<div class="ds-card" style="padding:16px 24px;margin-bottom:24px;" data-aos="fade-up" data-aos-delay="100">
   <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
     <div style="display:flex;align-items:center;gap:14px;">
       <div style="width:40px;height:40px;border-radius:10px;background:#F0FDF4;color:#A6CE39;display:flex;align-items:center;justify-content:center;font-size:20px;border:1px solid #C6F6D5;">
@@ -64,7 +64,7 @@
 
 {{-- Action Alerts (Revision Required) --}}
 @foreach($articles->whereIn('status',['revision_required']) as $a)
-<div class="ds-alert ds-alert-warn fu">
+<div class="ds-alert ds-alert-warn" data-aos="fade-up" data-aos-delay="200">
   <i class="bi bi-exclamation-triangle-fill"></i>
   <div>
     <strong>Revision Required:</strong> "{{ Str::limit($a->title, 70) }}"
@@ -78,7 +78,7 @@
 @endforeach
 
 @foreach($articles->whereIn('status',['waiting_payment','payment_uploaded']) as $a)
-<div class="ds-alert ds-alert-info fu">
+<div class="ds-alert ds-alert-info" data-aos="fade-up" data-aos-delay="200">
   <i class="bi bi-credit-card-fill"></i>
   <div>
     <strong>Payment Required:</strong> "{{ Str::limit($a->title, 70) }}"
@@ -100,22 +100,43 @@ $cards = [
   ['label'=>'Awaiting Payment',  'val'=>$stats['waiting_payment'], 'icon'=>'bi-credit-card',       'color'=>'#6B46C1',       'bg'=>'#FAF5FF'],
 ];
 @endphp
-<div class="row g-3 mb-4">
+<div class="row g-4 mb-4">
   @foreach($cards as $c)
-  <div class="col-6 col-lg-3 fu fd{{ $loop->index+1 }}">
-    <div class="ds-card ds-stat" style="margin-bottom:0;">
-      <div class="ds-stat-icon" style="background:{{ $c['bg'] }};color:{{ $c['color'] }};">
-        <i class="{{ $c['icon'] }}"></i>
+  <div class="col-12 col-md-6 col-xl-3" data-aos="fade-up" data-aos-delay="{{ 200 + ($loop->index * 50) }}">
+    <div style="position:relative; overflow:hidden; background:var(--bg-surface); border:1px solid var(--border); border-radius:20px; padding:24px; box-shadow:0 10px 15px -3px rgba(0,0,0,0.02), 0 4px 6px -4px rgba(0,0,0,0.02); transition:all 0.4s cubic-bezier(0.16, 1, 0.3, 1); display:flex; flex-direction:column; justify-content:space-between; height:100%; cursor:default;"
+         onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 20px 40px -10px rgba(0,0,0,0.08)';"
+         onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 10px 15px -3px rgba(0,0,0,0.02), 0 4px 6px -4px rgba(0,0,0,0.02)';">
+      <i class="{{ $c['icon'] }}" style="position:absolute; right:-15px; bottom:-25px; font-size:140px; opacity:0.04; transform:rotate(-15deg); z-index:0; color:{{ $c['color'] }}; pointer-events:none;"></i>
+      <div style="position:relative; z-index:1; margin-bottom:24px;">
+        <div style="width:52px; height:52px; border-radius:14px; background:{{ $c['bg'] }}; color:{{ $c['color'] }}; display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 4px 6px rgba(0,0,0,0.04);">
+          <i class="{{ $c['icon'] }}"></i>
+        </div>
       </div>
-      <div class="ds-stat-val">{{ $c['val'] }}</div>
-      <div class="ds-stat-lbl">{{ $c['label'] }}</div>
+      <div style="position:relative; z-index:1;">
+        <div style="font-size:13px; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:6px;">{{ $c['label'] }}</div>
+        <div style="font-size:32px; font-weight:800; color:var(--text-main); line-height:1; letter-spacing:-0.03em;" id="stat-{{ $loop->index }}">{{ $c['val'] }}</div>
+      </div>
     </div>
   </div>
   @endforeach
 </div>
 
+{{-- Author Activity Timeline --}}
+<div class="row mb-4">
+  <div class="col-12" data-aos="fade-up" data-aos-delay="300">
+    <div class="ds-card">
+      <div class="ds-card-hdr">
+        <span class="ds-card-title">Publication Activity</span>
+      </div>
+      <div class="card-body">
+        <div id="activityChart" class="chart-container chart-container-sm"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 {{-- Submissions Table --}}
-<div class="ds-card fu fd3">
+<div class="ds-card" data-aos="fade-up" data-aos-delay="400">
   <div class="ds-card-hdr">
     <span class="ds-card-title">My Submissions</span>
     <a href="{{ route('author.articles.create') }}" class="ds-btn ds-btn-out ds-btn-sm">
@@ -185,4 +206,63 @@ $cards = [
   </div>
 </div>
 
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const stats = @json(array_map(function($c) { return $c['val']; }, $cards));
+    stats.forEach((val, idx) => {
+        let numeric = String(val).replace(/[^0-9.-]+/g, "");
+        if (numeric) {
+            let options = { duration: 2.5, separator: '.' };
+            let countUp = new countUp.CountUp('stat-' + idx, numeric, options);
+            if (!countUp.error) {
+                countUp.start();
+            }
+        }
+    });
+
+    // ApexCharts - Author Activity Timeline
+    const activityOptions = {
+        series: [{
+            name: 'Submissions',
+            data: [1, 0, 2, 1, 3, 2, 1] // Mock data
+        }],
+        chart: {
+            type: 'area',
+            height: 250,
+            fontFamily: 'Plus Jakarta Sans, sans-serif',
+            toolbar: { show: false },
+            zoom: { enabled: false }
+        },
+        colors: ['#6B46C1'],
+        fill: {
+            type: 'gradient',
+            gradient: {
+                shadeIntensity: 1,
+                opacityFrom: 0.4,
+                opacityTo: 0.05,
+                stops: [0, 100]
+            }
+        },
+        dataLabels: { enabled: false },
+        stroke: { curve: 'smooth', width: 3 },
+        xaxis: {
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'], // Mock categories
+            axisBorder: { show: false },
+            axisTicks: { show: false },
+            labels: { style: { colors: '#64748b' } }
+        },
+        yaxis: {
+            labels: { style: { colors: '#64748b' } }
+        },
+        grid: {
+            borderColor: 'rgba(226, 232, 240, 0.5)',
+            strokeDashArray: 4,
+        },
+        tooltip: { theme: 'dark' }
+    };
+    new ApexCharts(document.querySelector("#activityChart"), activityOptions).render();
+});
+</script>
+@endpush
 @endsection

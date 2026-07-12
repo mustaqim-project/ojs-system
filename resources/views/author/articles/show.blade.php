@@ -1,86 +1,104 @@
 @extends('layouts.dashboard')
 @section('content')
-<div class="pg-hdr">
+
+<div class="ds-page-hdr" data-aos="fade-up">
   <div>
-    <div class="pg-crumb"><a href="{{ route('author.dashboard') }}">Dashboard</a><span>›</span><a href="{{ route('author.articles.index') }}">Artikel</a><span>›</span><span class="cur">Detail</span></div>
-    <h2 class="pg-title" style="font-size:17px;max-width:600px;line-height:1.3;">{{ $article->title }}</h2>
+    <x-ui.breadcrumb :items="[['label'=>'Author Portal'],['label'=>'My Submissions','href'=>route('author.articles.index')],['label'=>Str::limit($article->title,45)]]"/>
+    <h1 class="ds-page-title" style="font-size:19px;max-width:660px;line-height:1.4;">{{ $article->title }}</h1>
   </div>
-  @php $cls='bx-'.$article->status; @endphp
-  <span class="bx {{ $cls }}" style="font-size:12px;padding:5px 14px;">{{ $article->status_label }}</span>
+  <x-status-badge :status="$article->status" :label="$article->status_label"/>
 </div>
 
-{{-- Action alerts --}}
-@if($article->status==='revision_required')
-<div class="alert-o a-warn fu">
+{{-- Action Alerts --}}
+@if($article->status === 'revision_required')
+<div class="ds-alert ds-alert-warn" data-aos="fade-up" style="margin-bottom:20px;">
   <i class="bi bi-exclamation-triangle-fill"></i>
-  <div><strong>Revisi Diperlukan.</strong> {{ $article->editor_note ? 'Lihat catatan editor di bawah.' : '' }}
-    <a href="{{ route('author.articles.revision',$article) }}" style="color:inherit;font-weight:700;margin-left:8px;">Upload Revisi →</a>
+  <div><strong>Revision Required.</strong> {{ $article->editor_note ? 'Please see editor\'s note below.' : '' }}
+    <a href="{{ route('author.articles.revision',$article) }}" style="color:inherit;font-weight:700;margin-left:8px;text-decoration:underline;">Upload Revision →</a>
   </div>
 </div>
 @endif
 @if($article->needsPayment())
-<div class="alert-o a-info fu">
+<div class="ds-alert ds-alert-info" data-aos="fade-up" style="margin-bottom:20px;">
   <i class="bi bi-credit-card-fill"></i>
-  <div><strong>Artikel Diterima!</strong> Lakukan pembayaran APC untuk melanjutkan ke proses publikasi.
-    <a href="{{ route('author.payments.show',$article) }}" style="color:inherit;font-weight:700;margin-left:8px;">Ke Halaman Invoice →</a>
+  <div><strong>Article Accepted!</strong> Please complete your APC payment to proceed to publication.
+    <a href="{{ route('author.payments.show',$article) }}" style="color:inherit;font-weight:700;margin-left:8px;text-decoration:underline;">Go to Invoice →</a>
   </div>
 </div>
 @endif
 
 <div class="row g-3">
   <div class="col-12 col-lg-8">
-    {{-- Detail --}}
-    <div class="card-ojs fu fd1">
-      <div class="card-hdr"><span class="card-title">Informasi Artikel</span>
+    {{-- Article Info --}}
+    <div class="ds-card" data-aos="fade-up" data-aos-delay="100">
+      <div class="ds-card-hdr">
+        <span class="ds-card-title">Manuscript Information</span>
         @if($article->manuscript_file)
-        <a href="{{ asset('storage/'.$article->manuscript_file) }}" target="_blank" class="btn-o btn-out btn-sm"><i class="bi bi-download"></i> Manuskrip</a>
+          <a href="{{ asset('storage/'.$article->manuscript_file) }}" target="_blank" class="ds-btn ds-btn-out ds-btn-sm">
+            <i class="bi bi-download"></i> Manuscript
+          </a>
         @endif
       </div>
       <div>
-        <div class="info-row"><span class="info-key">Jurnal</span><span class="info-val">{{ $article->journal->title }}</span></div>
-        <div class="info-row"><span class="info-key">Bahasa</span><span class="info-val">{{ strtoupper($article->language) }}</span></div>
-        <div class="info-row"><span class="info-key">Abstrak</span><span class="info-val" style="line-height:1.7;color:#475569;">{{ $article->abstract }}</span></div>
-        <div class="info-row">
-          <span class="info-key">Kata Kunci</span>
-          <span class="info-val" style="display:flex;flex-wrap:wrap;gap:5px;">
-            @foreach($article->keywords_array as $kw)
-            <span style="font-size:11px;background:#f1f5f9;color:#64748b;padding:2px 8px;border-radius:5px;border:1px solid #e2e8f0;">{{ $kw }}</span>
-            @endforeach
-          </span>
+        @php
+        $rows = [
+          'Journal'   => $article->journal->title,
+          'Language'  => strtoupper($article->language ?? 'en'),
+          'Submitted' => $article->submitted_at?->format('d M Y H:i'),
+        ];
+        if($article->accepted_at)  $rows['Accepted']  = $article->accepted_at->format('d M Y H:i');
+        if($article->published_at) $rows['Published'] = $article->published_at->format('d M Y H:i');
+        if($article->doi) $rows['DOI'] = '<span style="font-family:monospace;color:var(--primary);">'.$article->doi.'</span>';
+        @endphp
+        @foreach($rows as $k => $v)
+        <div style="display:grid;grid-template-columns:130px 1fr;gap:8px;padding:12px 24px;border-bottom:1px solid #F1F5F9;font-size:14px;">
+          <span style="font-weight:500;color:var(--text-muted);">{{ $k }}</span>
+          <span style="color:var(--text-main);">{!! $v !!}</span>
         </div>
-        <div class="info-row"><span class="info-key">Disubmit</span><span class="info-val">{{ $article->submitted_at?->format('d M Y H:i') }}</span></div>
-        @if($article->accepted_at)<div class="info-row"><span class="info-key">Diterima</span><span class="info-val">{{ $article->accepted_at->format('d M Y H:i') }}</span></div>@endif
-        @if($article->published_at)<div class="info-row"><span class="info-key">Dipublish</span><span class="info-val">{{ $article->published_at->format('d M Y H:i') }}</span></div>@endif
+        @endforeach
+        {{-- Abstract --}}
+        <div style="padding:16px 24px;border-bottom:1px solid #F1F5F9;">
+          <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:8px;">Abstract</div>
+          <p style="font-size:14px;color:var(--text-main);line-height:1.75;margin:0;">{{ $article->abstract }}</p>
+        </div>
+        {{-- Keywords --}}
+        <div style="padding:16px 24px;">
+          <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:8px;">Keywords</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            @foreach($article->keywords_array as $kw)
+              <span style="font-size:12px;background:#F1F5F9;color:#475569;padding:3px 10px;border-radius:20px;border:1px solid #E2E8F0;">{{ $kw }}</span>
+            @endforeach
+          </div>
+        </div>
       </div>
     </div>
 
-    {{-- Editor note --}}
+    {{-- Editor Note --}}
     @if($article->editor_note)
-    <div class="alert-o a-warn fu fd2">
+    <div class="ds-alert ds-alert-warn" data-aos="fade-up" data-aos-delay="200" style="margin-top:16px;">
       <i class="bi bi-chat-left-text-fill"></i>
-      <div><strong>Catatan Editor:</strong><br/>{{ $article->editor_note }}</div>
+      <div><strong>Editor's Note:</strong><br/> {{ $article->editor_note }}</div>
     </div>
     @endif
 
-    {{-- Review results --}}
+    {{-- Review Results --}}
     @if($article->reviews->where('status','completed')->count())
-    <div class="card-ojs fu fd3">
-      <div class="card-hdr"><span class="card-title">Hasil Review</span></div>
+    <div class="ds-card" data-aos="fade-up" data-aos-delay="300" style="margin-top:16px;">
+      <div class="ds-card-hdr"><span class="ds-card-title">Peer Review Results</span></div>
       <div>
         @foreach($article->reviews->where('status','completed') as $review)
-        <div style="padding:16px 20px;border-bottom:1px solid #f1f5f9;">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-            <span style="font-size:12px;color:#94a3b8;font-weight:600;">Reviewer {{ $loop->iteration }}</span>
+        <div style="padding:20px 24px;border-bottom:1px solid #F1F5F9;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+            <span style="font-size:12px;color:var(--text-muted);font-weight:600;">Reviewer {{ $loop->iteration }}</span>
             @if($review->recommendation)
-            @php $rc='bx-'.$review->recommendation; @endphp
-            <span class="bx {{ $rc }}">{{ $review->recommendation_label }}</span>
+              <x-status-badge :status="$review->recommendation" :label="$review->recommendation_label"/>
             @endif
           </div>
           @if($review->comments_to_author)
-          <p style="font-size:13px;color:#475569;line-height:1.7;margin:0;">{{ $review->comments_to_author }}</p>
+            <p style="font-size:14px;color:var(--text-main);line-height:1.7;margin:0;">{{ $review->comments_to_author }}</p>
           @endif
           @if($review->average_score)
-          <div style="font-size:11px;color:#94a3b8;margin-top:8px;">Skor rata-rata: <strong style="color:#0f172a;">{{ $review->average_score }}/5</strong></div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:10px;">Average Score: <strong style="color:var(--text-main);">{{ $review->average_score }}/5</strong></div>
           @endif
         </div>
         @endforeach
@@ -88,88 +106,90 @@
     </div>
     @endif
 
-    {{-- Payment summary --}}
+    {{-- Payment Summary --}}
     @if($article->payment)
-    <div class="card-ojs fu fd4">
-      <div class="card-hdr">
-        <span class="card-title">Pembayaran</span>
-        <a href="{{ route('author.payments.show',$article) }}" class="btn-o btn-ghost btn-sm">Lihat Detail <i class="bi bi-arrow-right ms-1"></i></a>
+    <div class="ds-card" data-aos="fade-up" data-aos-delay="400" style="margin-top:16px;">
+      <div class="ds-card-hdr">
+        <span class="ds-card-title">APC Payment</span>
+        <a href="{{ route('author.payments.show',$article) }}" class="ds-btn ds-btn-ghost ds-btn-sm">View Invoice <i class="bi bi-arrow-right ms-1"></i></a>
       </div>
-      <div style="padding:20px;display:flex;align-items:center;gap:16px;">
+      <div style="padding:20px 24px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
         <div>
-          <div style="font-size:11px;color:#94a3b8;margin-bottom:2px;">Invoice</div>
-          <div style="font-size:13px;font-weight:700;font-family:'Courier New',monospace;color:#0f172a;">{{ $article->payment->invoice_code }}</div>
+          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);margin-bottom:4px;">Invoice</div>
+          <div style="font-family:monospace;font-size:14px;font-weight:700;">{{ $article->payment->invoice_code }}</div>
         </div>
-        <div style="width:1px;height:32px;background:#e2e8f0;"></div>
+        <div style="width:1px;height:36px;background:var(--border);"></div>
         <div>
-          <div style="font-size:11px;color:#94a3b8;margin-bottom:2px;">Nominal</div>
-          <div style="font-size:16px;font-weight:800;color:#0f172a;">{{ $article->payment->formatted_amount }}</div>
+          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);margin-bottom:4px;">Amount</div>
+          <div style="font-size:20px;font-weight:800;">{{ $article->payment->formatted_amount }}</div>
         </div>
         <div style="margin-left:auto;">
-          @php $pc='bx-'.$article->payment->status; @endphp
-          <span class="bx {{ $pc }}">{{ $article->payment->status_label }}</span>
+          <x-status-badge :status="$article->payment->status" :label="$article->payment->status_label"/>
         </div>
       </div>
     </div>
     @endif
   </div>
 
-  {{-- Sidebar: Timeline --}}
+  {{-- Sidebar: Progress Timeline --}}
   <div class="col-12 col-lg-4">
-    <div class="card-ojs fu fd2" style="position:sticky;top:80px;">
-      <div class="card-hdr"><span class="card-title">Progress Artikel</span></div>
+    <div class="ds-card" data-aos="fade-up" data-aos-delay="200" style="position:sticky;top:80px;">
+      <div class="ds-card-hdr"><span class="ds-card-title">Manuscript Progress</span></div>
       <div style="padding:20px;">
         @php
-        $stages=[
-          ['key'=>'submitted','label'=>'Disubmit','sub'=>'Manuskrip diterima sistem'],
-          ['key'=>'under_review','label'=>'Under Review','sub'=>'Reviewer sedang menilai'],
-          ['key'=>'accepted','label'=>'Diterima','sub'=>'Editor menerima artikel'],
-          ['key'=>'waiting_payment','label'=>'Pembayaran','sub'=>'APC menunggu dibayar'],
-          ['key'=>'paid','label'=>'Lunas','sub'=>'Pembayaran terverifikasi'],
-          ['key'=>'published','label'=>'Dipublish','sub'=>'Artikel tampil publik'],
+        $stages = [
+          ['key'=>'submitted',       'label'=>'Submitted',       'sub'=>'Manuscript received'],
+          ['key'=>'under_review',    'label'=>'Under Review',    'sub'=>'Peer review in progress'],
+          ['key'=>'accepted',        'label'=>'Accepted',        'sub'=>'Editor approved'],
+          ['key'=>'waiting_payment', 'label'=>'Payment',         'sub'=>'APC awaiting payment'],
+          ['key'=>'paid',            'label'=>'Paid',            'sub'=>'Payment confirmed'],
+          ['key'=>'published',       'label'=>'Published',       'sub'=>'Article is now live'],
         ];
-        $order=['submitted','under_review','revision_required','accepted','rejected','waiting_payment','payment_uploaded','payment_verification','paid','published'];
-        $ci=array_search($article->status,$order);
+        $order = ['submitted','under_review','revision_required','accepted','rejected','waiting_payment','payment_uploaded','paid','published'];
+        $ci = array_search($article->status, $order);
         @endphp
-        <div class="ojs-tl">
-          @foreach($stages as $i=>$s)
-          @php
-            $si=array_search($s['key'],$order);
-            $done=$ci>$si;$active=$ci===$si;
-          @endphp
-          <div class="tl-item">
-            <div class="tl-dot {{ $done?'tl-done':($active?'tl-active':'tl-todo') }}">
-              @if($done)<i class="bi bi-check" style="font-size:11px;"></i>
-              @elseif($active)<div style="width:8px;height:8px;border-radius:50%;background:#fff;"></div>
-              @else<span style="font-size:9px;">{{ $i+1 }}</span>@endif
-            </div>
-            <div>
-              <div class="tl-label" style="{{ $active?'color:var(--acc);':($done?'':'color:var(--txt3);') }}">{{ $s['label'] }}</div>
-              <div class="tl-sub">{{ $s['sub'] }}</div>
-            </div>
-          </div>
-          @endforeach
-
-          @if($article->status==='rejected')
-          <div class="tl-item">
-            <div class="tl-dot" style="background:#fef2f2;border:2px solid var(--red);color:var(--red);"><i class="bi bi-x" style="font-size:12px;"></i></div>
-            <div><div class="tl-label" style="color:var(--red);">Ditolak</div><div class="tl-sub">Artikel tidak diterima</div></div>
-          </div>
+        @foreach($stages as $i => $s)
+        @php $si = array_search($s['key'],$order); $done = $ci > $si; $active = $ci === $si; @endphp
+        <div style="display:flex;align-items:flex-start;gap:14px;padding-bottom:{{ $i < count($stages)-1 ? '18px' : '0' }};position:relative;">
+          @if($i < count($stages)-1)
+            <div style="position:absolute;left:15px;top:30px;bottom:0;width:1px;background:{{ $done ? 'var(--success)' : 'var(--border)' }};"></div>
           @endif
+          <div style="width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;position:relative;z-index:1;
+            {{ $done ? 'background:var(--success);color:#fff;' : ($active ? 'background:var(--primary);color:#fff;' : 'background:var(--bg-app);color:var(--text-muted);border:2px solid var(--border);') }}">
+            @if($done)<i class="bi bi-check" style="font-size:14px;"></i>@elseif($active)<i class="bi bi-circle-fill" style="font-size:8px;"></i>@else{{ $i+1 }}@endif
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:{{ $active ? 'var(--primary)' : ($done ? 'var(--text-main)' : 'var(--text-muted)') }};">{{ $s['label'] }}</div>
+            <div style="font-size:12px;color:var(--text-muted);">{{ $s['sub'] }}</div>
+          </div>
         </div>
+        @endforeach
 
-        @if($article->status==='revision_required')
-        <a href="{{ route('author.articles.revision',$article) }}" class="btn-o btn-warn w-100 justify-content-center mt-4">
-          <i class="bi bi-pencil-square"></i> Upload Revisi
-        </a>
+        @if($article->status === 'rejected')
+        <div style="display:flex;align-items:flex-start;gap:14px;padding-top:18px;">
+          <div style="width:30px;height:30px;border-radius:50%;background:var(--danger-bg);border:2px solid var(--danger);color:var(--danger);display:flex;align-items:center;justify-content:center;">
+            <i class="bi bi-x" style="font-size:14px;"></i>
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--danger);">Rejected</div>
+            <div style="font-size:12px;color:var(--text-muted);">Article was not accepted</div>
+          </div>
+        </div>
+        @endif
+
+        @if($article->status === 'revision_required')
+          <a href="{{ route('author.articles.revision',$article) }}" class="ds-btn ds-btn-pri w-100 justify-content-center" style="margin-top:20px;background:var(--warning);border-color:var(--warning);">
+            <i class="bi bi-pencil-square"></i> Upload Revision
+          </a>
         @endif
         @if($article->needsPayment())
-        <a href="{{ route('author.payments.show',$article) }}" class="btn-o btn-pri w-100 justify-content-center mt-4" style="background:#7c3aed;border-color:#7c3aed;">
-          <i class="bi bi-credit-card"></i> Bayar Sekarang
-        </a>
+          <a href="{{ route('author.payments.show',$article) }}" class="ds-btn ds-btn-pri w-100 justify-content-center" style="margin-top:20px;background:#6B46C1;border-color:#6B46C1;">
+            <i class="bi bi-credit-card"></i> Pay Now
+          </a>
         @endif
       </div>
     </div>
   </div>
 </div>
+
 @endsection

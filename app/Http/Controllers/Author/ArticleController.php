@@ -35,6 +35,10 @@ class ArticleController extends Controller
     {
         $article = $this->articleService->submit($request->validated(), auth()->id());
 
+        // Notify Editors & Admins
+        $adminsAndEditors = \App\Models\User::whereIn('role', ['admin', 'editor'])->active()->get();
+        \Illuminate\Support\Facades\Notification::send($adminsAndEditors, new \App\Notifications\ArticleSubmittedNotification($article));
+
         return redirect()
             ->route('author.articles.show', $article)
             ->with('success', 'Artikel berhasil disubmit! Tim editor akan segera meninjau artikel Anda.');

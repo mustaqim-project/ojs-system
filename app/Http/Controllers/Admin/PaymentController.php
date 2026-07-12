@@ -46,6 +46,9 @@ class PaymentController extends Controller
 
         $this->paymentService->verify($payment, auth()->id(), $request->admin_notes);
 
+        // Notify Author
+        $payment->author->notify(new \App\Notifications\PaymentVerifiedNotification($payment->article));
+
         return redirect()->route('admin.payments.index')
             ->with('success', "Invoice {$payment->invoice_code} berhasil diverifikasi!");
     }

@@ -66,6 +66,10 @@ class ReviewController extends Controller
 
         $this->reviewService->submitReview($review, $request->validated());
 
+        // Notify Editors
+        $editors = \App\Models\User::where('role', 'editor')->active()->get();
+        \Illuminate\Support\Facades\Notification::send($editors, new \App\Notifications\ReviewSubmittedNotification($review->article, auth()->user()->name));
+
         return redirect()
             ->route('reviewer.reviews.show', $review)
             ->with('success', 'Review berhasil disubmit! Terima kasih.');

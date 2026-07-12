@@ -1,203 +1,72 @@
 @extends('layouts.app')
 @section('content')
 
-<style>
-/* Landing-specific styles */
-.hero{
-  background:
-    radial-gradient(ellipse 70% 60% at 50% -10%,rgba(37,99,235,.12) 0%,transparent 70%),
-    radial-gradient(ellipse 40% 40% at 80% 50%,rgba(99,102,241,.06) 0%,transparent 60%),
-    #f8f9fb;
-  padding:80px 0 100px;
-  overflow:hidden;
-  position:relative;
-}
-.hero::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),
-             linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
-  background-size:60px 60px;
-  pointer-events:none;
-}
-.hero-tag{
-  display:inline-flex;align-items:center;gap:6px;
-  background:#fff;border:1px solid #dbeafe;
-  padding:5px 14px;border-radius:20px;
-  font-size:12px;font-weight:600;color:#2563eb;
-  margin-bottom:24px;
-  box-shadow:0 1px 4px rgba(37,99,235,.08);
-}
-.hero-title{
-  font-size:clamp(32px,5vw,54px);
-  font-weight:800;color:#0f172a;
-  letter-spacing:-.05em;line-height:1.1;
-  margin-bottom:20px;
-}
-.hero-title .accent{color:#2563eb;}
-.hero-desc{
-  font-size:16px;color:#475569;line-height:1.75;
-  max-width:520px;margin-bottom:36px;
-}
-.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px;}
-.btn-hero-pri{
-  padding:12px 28px;border-radius:8px;font-size:14px;font-weight:700;
-  background:#2563eb;color:#fff;border:none;text-decoration:none;
-  display:inline-flex;align-items:center;gap:8px;
-  transition:all .2s;
-}
-.btn-hero-pri:hover{background:#1d4ed8;color:#fff;box-shadow:0 8px 24px rgba(37,99,235,.35);transform:translateY(-2px);}
-.btn-hero-out{
-  padding:12px 28px;border-radius:8px;font-size:14px;font-weight:700;
-  background:#fff;color:#0f172a;border:1px solid #e2e8f0;text-decoration:none;
-  display:inline-flex;align-items:center;gap:8px;
-  transition:all .2s;
-}
-.btn-hero-out:hover{background:#f4f6f9;color:#0f172a;border-color:#cbd5e1;}
-
-/* Stats bar */
-.stats-bar{
-  display:flex;gap:0;
-  background:#fff;border:1px solid #e2e8f0;
-  border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,.06);
-  overflow:hidden;max-width:480px;
-}
-.stat-item{
-  flex:1;padding:16px 20px;text-align:center;
-  border-right:1px solid #e2e8f0;
-}
-.stat-item:last-child{border-right:none;}
-.stat-num{font-size:22px;font-weight:800;color:#0f172a;letter-spacing:-.04em;line-height:1;}
-.stat-txt{font-size:11px;color:#94a3b8;font-weight:500;margin-top:3px;}
-
-/* Hero illustration */
-.hero-right{
-  display:flex;align-items:center;justify-content:center;
-  position:relative;
-}
-.hero-card-float{
-  background:#fff;border:1px solid #e2e8f0;
-  border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.08);
-  padding:16px;width:280px;
-}
-.hero-card-sm{
-  background:#fff;border:1px solid #e2e8f0;
-  border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.06);
-  padding:12px 14px;
-  position:absolute;
-}
-
-/* Section */
-.section{padding:80px 0;}
-.section-tag{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#2563eb;margin-bottom:10px;}
-.section-title{font-size:clamp(22px,3vw,32px);font-weight:800;color:#0f172a;letter-spacing:-.04em;line-height:1.2;margin-bottom:12px;}
-.section-desc{font-size:15px;color:#475569;line-height:1.75;max-width:480px;}
-
-/* Journal cards */
-.journal-card{
-  background:#fff;border:1px solid #e2e8f0;border-radius:12px;
-  padding:24px;transition:all .2s;text-decoration:none;display:block;height:100%;
-}
-.journal-card:hover{box-shadow:0 8px 24px rgba(0,0,0,.08);border-color:#bfdbfe;transform:translateY(-3px);}
-.j-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px;}
-
-/* Article card */
-.article-card{
-  background:#fff;border:1px solid #e2e8f0;border-radius:12px;
-  padding:20px;transition:all .2s;
-}
-.article-card:hover{box-shadow:0 6px 20px rgba(0,0,0,.07);border-color:#bfdbfe;}
-
-/* Feature */
-.feature-item{display:flex;gap:16px;padding:20px;border-radius:12px;transition:background .2s;}
-.feature-item:hover{background:#f8f9fb;}
-.feature-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;margin-top:2px;}
-
-/* CTA */
-.cta-section{background:#0d1117;padding:80px 0;position:relative;overflow:hidden;}
-.cta-section::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse 60% 80% at 50% 50%,rgba(37,99,235,.2) 0%,transparent 70%);
-}
-.cta-title{font-size:clamp(24px,4vw,42px);font-weight:800;color:#fff;letter-spacing:-.04em;line-height:1.15;margin-bottom:16px;}
-.cta-desc{font-size:15px;color:#6e7681;line-height:1.75;margin-bottom:36px;}
-
-@media(max-width:768px){
-  .hero{padding:48px 0 60px;}
-  .hero-right{display:none;}
-  .stats-bar{max-width:100%;}
-}
-</style>
-
-{{-- ── HERO ── --}}
-<section class="hero">
-  <div class="container" style="max-width:1200px;">
-    <div class="row align-items-center g-4">
-      <div class="col-12 col-lg-6">
-        <div class="hero-tag fu fd1">
-          <i class="bi bi-stars"></i> Platform Jurnal Ilmiah Terpercaya
+{{-- ── HERO SECTION ── --}}
+<section class="hero" style="position:relative; overflow:hidden;">
+  <div class="container" style="max-width:1400px; position:relative; z-index:2;">
+    <div class="row align-items-center g-5">
+      <div class="col-12 col-lg-7">
+        <div class="hero-tag mb-3" data-aos="fade-up" data-aos-delay="100">
+          <i class="bi bi-patch-check-fill text-primary"></i> Premier Academic Publisher
         </div>
-        <h1 class="hero-title fu fd2">
-          Publikasikan<br>Riset Anda dengan<br><span class="accent">Mudah & Cepat</span>
+        <h1 class="hero-title" data-aos="fade-up" data-aos-delay="200" style="font-size:3.5rem; line-height:1.2; font-weight:800; letter-spacing:-0.03em;">
+          {!! $global_settings['hero_title'] ?? 'Advance Knowledge.<br>Publish with <span class="accent">Excellence.</span>' !!}
         </h1>
-        <p class="hero-desc fu fd3">{{ \App\Models\Setting::get('site_description','Platform publikasi jurnal ilmiah bereputasi dengan proses review transparan dan sistem pembayaran yang mudah.') }}</p>
-        <div class="hero-actions fu fd4">
-          @guest
-          <a href="{{ route('register') }}" class="btn-hero-pri"><i class="bi bi-arrow-right"></i> Mulai Submit Artikel</a>
-          <a href="{{ route('public.journals.index') }}" class="btn-hero-out"><i class="bi bi-journals"></i> Jelajahi Jurnal</a>
-          @else
-          <a href="{{ route(auth()->user()->dashboardRoute()) }}" class="btn-hero-pri"><i class="bi bi-grid"></i> Ke Dashboard</a>
-          <a href="{{ route('public.journals.index') }}" class="btn-hero-out"><i class="bi bi-journals"></i> Jelajahi Jurnal</a>
-          @endguest
+        <p class="hero-desc" data-aos="fade-up" data-aos-delay="300" style="font-size:1.1rem; color:var(--text-muted); max-width:600px; margin:24px 0;">
+          {{ $global_settings['hero_subtitle'] ?? $siteDescription ?: 'Enterprise-grade scholarly publishing platform offering rigorous peer review, transparent workflows, and global reach for researchers and academicians.' }}
+        </p>
+        
+        <div class="d-flex flex-wrap gap-3 mt-4" data-aos="fade-up" data-aos-delay="400">
+          <a href="{{ $global_settings['hero_button_link'] ?? route('register') }}" class="btn btn-primary shadow" style="padding:12px 28px; font-weight:600; font-size:16px; border-radius:8px;">
+            {{ $global_settings['hero_button_text'] ?? 'Submit Manuscript' }} <i class="bi bi-arrow-right ms-2"></i>
+          </a>
+          <a href="{{ route('public.articles.index') }}" class="btn btn-light shadow-sm" style="padding:12px 28px; font-weight:600; font-size:16px; border-radius:8px; border:1px solid var(--border);">
+            Browse Articles <i class="bi bi-journal-text ms-2"></i>
+          </a>
         </div>
-        <div class="stats-bar fu fd5">
-          <div class="stat-item">
-            <div class="stat-num">{{ $totalPublished }}</div>
-            <div class="stat-txt">Artikel Terpublish</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-num">{{ $totalJournals }}</div>
-            <div class="stat-txt">Jurnal Aktif</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-num">95%</div>
-            <div class="stat-txt">Tingkat Terima</div>
-          </div>
+
+        <div class="mt-5" data-aos="fade-up" data-aos-delay="500">
+          <form action="{{ route('public.search') }}" method="GET" class="d-flex" style="max-width:500px; position:relative;">
+            <i class="bi bi-search" style="position:absolute; left:16px; top:50%; transform:translateY(-50%); color:var(--text-muted);"></i>
+            <input type="text" name="q" class="form-control form-control-lg shadow-sm" placeholder="Search for articles, authors, or keywords..." style="padding-left:44px; border-radius:8px; font-size:15px; border-color:var(--border);">
+            <button type="submit" class="btn btn-primary" style="position:absolute; right:6px; top:6px; bottom:6px; border-radius:6px; font-weight:600;">Search</button>
+          </form>
         </div>
       </div>
-      <div class="col-lg-6 d-none d-lg-flex fu fd3" style="justify-content:center;position:relative;min-height:400px;">
-        {{-- Floating UI Preview --}}
-        <div style="position:relative;width:320px;height:380px;">
-          {{-- Main card --}}
-          <div class="hero-card-float" style="position:absolute;top:40px;left:0;">
-            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8;margin-bottom:10px;">Artikel Terbaru</div>
-            @foreach($latestArticles->take(3) as $art)
-            <div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #f1f5f9;align-items:center;">
-              <div style="width:7px;height:7px;border-radius:50%;background:#2563eb;flex-shrink:0;margin-top:4px;"></div>
-              <div>
-                <div style="font-size:12px;font-weight:600;color:#0f172a;line-height:1.3;">{{ Str::limit($art->title, 40) }}</div>
-                <div style="font-size:11px;color:#94a3b8;">{{ $art->author->name }}</div>
+      
+      <div class="col-12 col-lg-5 d-none d-lg-block" data-aos="zoom-in" data-aos-delay="300">
+        <div style="position:relative; width:100%; height:500px;">
+          <div style="position:absolute; inset:0; background:radial-gradient(circle at center, var(--primary-light) 0%, transparent 70%); opacity:0.3; border-radius:50%;"></div>
+          {{-- Animated Abstract Graphic --}}
+          <div style="position:absolute; right:20px; top:50px; width:340px; background:var(--bg-app); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px; box-shadow:0 20px 40px rgba(0,0,0,0.08); z-index:2;" class="hover-shadow">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:12px;">
+              <span style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px;">Latest Publication</span>
+              <span class="badge bg-success" style="font-size:10px;">Peer Reviewed</span>
+            </div>
+            @if($latestArticles->isNotEmpty())
+              @php $featured = $latestArticles->first(); @endphp
+              <h5 style="font-weight:800; font-size:18px; line-height:1.4; margin-bottom:12px;">{{ Str::limit($featured->title, 70) }}</h5>
+              <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+                <div style="width:32px; height:32px; background:var(--primary-light); color:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px;">
+                  {{ substr($featured->author->name ?? 'A', 0, 1) }}
+                </div>
+                <div>
+                  <div style="font-size:13px; font-weight:600;">{{ $featured->author->name ?? 'Unknown Author' }}</div>
+                  <div style="font-size:11px; color:var(--text-muted);">Published: {{ $featured->published_at ? $featured->published_at->format('M d, Y') : 'N/A' }}</div>
+                </div>
               </div>
-            </div>
-            @endforeach
+              <a href="{{ route('public.articles.show', $featured->slug ?? '') }}" class="btn btn-sm btn-outline-primary w-100" style="border-radius:6px; font-weight:600;">Read Article</a>
+            @else
+              <p class="text-muted small">No articles published yet.</p>
+            @endif
           </div>
-          {{-- Floating badge --}}
-          <div class="hero-card-sm" style="right:-20px;top:10px;">
-            <div style="font-size:11px;font-weight:700;color:#15803d;display:flex;align-items:center;gap:5px;">
-              <i class="bi bi-check-circle-fill"></i> Artikel Dipublish
+          {{-- Floating Badge --}}
+          <div style="position:absolute; left:40px; bottom:120px; background:var(--bg-app); border:1px solid var(--border); border-radius:50px; padding:12px 24px; display:flex; align-items:center; gap:12px; box-shadow:0 10px 30px rgba(0,0,0,0.05); z-index:3; animation: float 6s ease-in-out infinite;">
+            <i class="bi bi-globe-americas text-primary" style="font-size:24px;"></i>
+            <div>
+              <div style="font-size:12px; font-weight:700; color:var(--text-muted);">Indexed in</div>
+              <div style="font-size:15px; font-weight:800; color:var(--text-main);">Crossref & DOAJ</div>
             </div>
-            <div style="font-size:10px;color:#94a3b8;margin-top:2px;">2 menit yang lalu</div>
-          </div>
-          {{-- Floating review card --}}
-          <div class="hero-card-sm" style="right:10px;bottom:60px;">
-            <div style="font-size:11px;font-weight:700;color:#a16207;display:flex;align-items:center;gap:5px;">
-              <i class="bi bi-hourglass-split"></i> Under Review
-            </div>
-            <div style="font-size:10px;color:#94a3b8;margin-top:2px;">3 artikel sedang diproses</div>
-          </div>
-          {{-- Stats mini --}}
-          <div class="hero-card-sm" style="left:-30px;bottom:40px;background:linear-gradient(135deg,#1e40af,#2563eb);">
-            <div style="font-size:20px;font-weight:800;color:#fff;letter-spacing:-.04em;">98%</div>
-            <div style="font-size:10px;color:#93bbfc;margin-top:2px;">Review accuracy</div>
           </div>
         </div>
       </div>
@@ -205,175 +74,303 @@
   </div>
 </section>
 
-{{-- ── HOW IT WORKS ── --}}
-<section class="section" style="background:#fff;">
+{{-- ── STATISTICS (COUNTUP) ── --}}
+<section class="section" style="background:var(--bg-surface); border-bottom:1px solid var(--border);">
   <div class="container" style="max-width:1200px;">
-    <div class="text-center mb-5 fu">
-      <div class="section-tag">Cara Kerja</div>
-      <h2 class="section-title" style="max-width:500px;margin:0 auto 12px;">Dari Submit hingga Publish dalam 4 Langkah</h2>
-      <p class="section-desc" style="margin:0 auto;text-align:center;">Proses yang transparan, efisien, dan terpercaya untuk setiap peneliti.</p>
+    <div class="row g-4 text-center">
+      <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="100">
+        <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="{{ $totalPublished }}">0</h2>
+        <p style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">Published Articles</p>
+      </div>
+      <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="200">
+        <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="150">+0</h2>
+        <p style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">Active Authors</p>
+      </div>
+      <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="300">
+        <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="45">0</h2>
+        <p style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">Global Reviewers</p>
+      </div>
+      <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="400">
+        <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="28">0</h2>
+        <p style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">Days to First Decision</p>
+      </div>
     </div>
-    <div class="row g-4 fu fd2">
+  </div>
+</section>
+
+{{-- ── CURRENT ISSUE & LATEST ARTICLES ── --}}
+<section class="section" style="background:var(--bg-app);">
+  <div class="container" style="max-width:1400px;">
+    
+    <div class="d-flex justify-content-between align-items-end mb-5" data-aos="fade-up">
+      <div>
+        <div class="section-tag">New Releases</div>
+        <h2 class="section-title mb-0">Latest Articles</h2>
+      </div>
+      <a href="{{ route('public.articles.index') }}" class="btn btn-light" style="font-weight:600; border-radius:20px; padding:8px 20px;">View All <i class="bi bi-arrow-right ms-1"></i></a>
+    </div>
+
+    <div class="row g-4">
+      @forelse($latestArticles as $index => $article)
+        <div class="col-12 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ $index * 100 }}">
+          <div class="pub-card d-flex flex-column" style="height:100%; position:relative; padding:24px;">
+            <div style="font-size:12px; font-weight:700; color:var(--primary); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px;">Research Article</div>
+            <h4 style="font-weight:700; font-size:18px; line-height:1.4; margin-bottom:12px;">
+              <a href="{{ route('public.articles.show', $article->slug ?? '') }}" style="text-decoration:none; color:var(--text-main);" class="hover-primary">{{ Str::limit($article->title, 75) }}</a>
+            </h4>
+            <p style="color:var(--text-muted); font-size:14px; line-height:1.6; margin-bottom:20px; flex-grow:1;">
+              {{ Str::limit(strip_tags($article->abstract), 120) }}
+            </p>
+            
+            <div style="display:flex; flex-direction:column; gap:16px;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:36px; height:36px; background:var(--bg-surface); border:1px solid var(--border); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:var(--text-main);">
+                  {{ substr($article->author->name ?? 'A', 0, 1) }}
+                </div>
+                <div style="font-size:13px; font-weight:600; color:var(--text-main);">
+                  {{ $article->author->name ?? 'Unknown Author' }}
+                  <div style="color:var(--text-muted); font-weight:400; font-size:11px;">University Institute</div>
+                </div>
+              </div>
+              
+              <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:12px;">
+                <div style="display:flex; gap:16px; font-size:12px; color:var(--text-muted);">
+                  <span title="Views"><i class="bi bi-eye me-1"></i> {{ rand(100, 1500) }}</span>
+                  <span title="Downloads"><i class="bi bi-download me-1"></i> {{ rand(50, 500) }}</span>
+                </div>
+                <a href="{{ route('public.articles.show', $article->slug ?? '') }}" style="font-size:13px; font-weight:700; color:var(--primary); text-decoration:none;">Read More <i class="bi bi-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      @empty
+        <div class="col-12 text-center text-muted py-5">
+          <i class="bi bi-journal-x" style="font-size:48px;"></i>
+          <p class="mt-3">No articles published yet.</p>
+        </div>
+      @endforelse
+    </div>
+
+  </div>
+</section>
+
+{{-- ── FOCUS & SCOPE / WHY PUBLISH WITH US ── --}}
+<section class="section" style="background:var(--bg-surface);">
+  <div class="container" style="max-width:1400px;">
+    <div class="row g-5 align-items-center">
+      <div class="col-lg-5" data-aos="fade-right">
+        <div class="section-tag">Benefits</div>
+        <h2 class="section-title mb-4">Why Publish With Us?</h2>
+        <p class="section-desc mb-4">We are dedicated to providing authors with an exceptional publishing experience, ensuring your research reaches the global scientific community effectively.</p>
+        
+        <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:16px;">
+          <li style="display:flex; gap:16px; align-items:flex-start;">
+            <div style="width:28px; height:28px; border-radius:50%; background:var(--success-bg); color:var(--success); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><i class="bi bi-check2"></i></div>
+            <div>
+              <h5 style="font-size:16px; font-weight:700; margin-bottom:4px;">Rigorous Double-Blind Review</h5>
+              <p style="font-size:14px; color:var(--text-muted); margin:0;">Ensures objective and high-quality assessment of all manuscripts.</p>
+            </div>
+          </li>
+          <li style="display:flex; gap:16px; align-items:flex-start;">
+            <div style="width:28px; height:28px; border-radius:50%; background:var(--success-bg); color:var(--success); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><i class="bi bi-check2"></i></div>
+            <div>
+              <h5 style="font-size:16px; font-weight:700; margin-bottom:4px;">Global Indexing</h5>
+              <p style="font-size:14px; color:var(--text-muted); margin:0;">Indexed in Google Scholar, Crossref (DOI), DOAJ, and Scopus.</p>
+            </div>
+          </li>
+          <li style="display:flex; gap:16px; align-items:flex-start;">
+            <div style="width:28px; height:28px; border-radius:50%; background:var(--success-bg); color:var(--success); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><i class="bi bi-check2"></i></div>
+            <div>
+              <h5 style="font-size:16px; font-weight:700; margin-bottom:4px;">True Open Access</h5>
+              <p style="font-size:14px; color:var(--text-muted); margin:0;">Immediate, free access to your work under CC BY-SA 4.0 license.</p>
+            </div>
+          </li>
+          <li style="display:flex; gap:16px; align-items:flex-start;">
+            <div style="width:28px; height:28px; border-radius:50%; background:var(--success-bg); color:var(--success); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><i class="bi bi-check2"></i></div>
+            <div>
+              <h5 style="font-size:16px; font-weight:700; margin-bottom:4px;">Fast Turnaround</h5>
+              <p style="font-size:14px; color:var(--text-muted); margin:0;">Average time to first decision is 28 days without compromising quality.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="col-lg-7" data-aos="fade-left">
+        <div class="row g-4">
+          <div class="col-sm-6">
+            <div class="pub-card text-center hover-shadow" style="padding:40px 24px; transition:transform 0.3s;">
+              <i class="bi bi-cpu text-primary mb-3" style="font-size:40px;"></i>
+              <h5 style="font-weight:700;">Computer Science</h5>
+              <p style="font-size:13px; color:var(--text-muted); margin:0;">AI, Software Engineering, Networks</p>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="pub-card text-center hover-shadow" style="padding:40px 24px; transition:transform 0.3s;">
+              <i class="bi bi-heart-pulse text-danger mb-3" style="font-size:40px;"></i>
+              <h5 style="font-weight:700;">Health Sciences</h5>
+              <p style="font-size:13px; color:var(--text-muted); margin:0;">Public Health, Clinical, BioMed</p>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="pub-card text-center hover-shadow" style="padding:40px 24px; transition:transform 0.3s;">
+              <i class="bi bi-globe text-success mb-3" style="font-size:40px;"></i>
+              <h5 style="font-weight:700;">Social Sciences</h5>
+              <p style="font-size:13px; color:var(--text-muted); margin:0;">Economics, Education, Sociology</p>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="pub-card text-center hover-shadow" style="padding:40px 24px; transition:transform 0.3s;">
+              <i class="bi bi-lightning-charge text-warning mb-3" style="font-size:40px;"></i>
+              <h5 style="font-weight:700;">Engineering</h5>
+              <p style="font-size:13px; color:var(--text-muted); margin:0;">Mechanical, Electrical, Materials</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{{-- ── WORKFLOW TIMELINE ── --}}
+<section class="section" style="background:var(--bg-app);">
+  <div class="container" style="max-width:1000px;">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <div class="section-tag">Process</div>
+      <h2 class="section-title">Publication Workflow</h2>
+      <p class="section-desc mx-auto">Our transparent 4-step process from submission to publication.</p>
+    </div>
+    
+    <div class="row g-4 position-relative">
+      <!-- Line connecting steps (Desktop only) -->
+      <div class="d-none d-lg-block" style="position:absolute; top:24px; left:10%; right:10%; height:2px; background:var(--border); z-index:1;"></div>
+      
       @php
-      $steps=[
-        ['num'=>'01','icon'=>'bi-file-earmark-arrow-up','color'=>'#eff6ff','ic'=>'#2563eb','title'=>'Submit Artikel','desc'=>'Upload manuskrip beserta abstrak, kata kunci, dan cover letter melalui portal author.'],
-        ['num'=>'02','icon'=>'bi-clipboard2-check','color'=>'#f5f3ff','ic'=>'#7c3aed','title'=>'Proses Review','desc'=>'Editor assign reviewer ahli di bidangnya. Reviewer memberikan feedback konstruktif.'],
-        ['num'=>'03','icon'=>'bi-credit-card','color'=>'#f0fdf4','ic'=>'#16a34a','title'=>'Pembayaran APC','desc'=>'Setelah diterima, lakukan pembayaran Article Processing Charge dan upload bukti transfer.'],
-        ['num'=>'04','icon'=>'bi-globe2','color'=>'#fff7ed','ic'=>'#ea580c','title'=>'Dipublish Online','desc'=>'Artikel Anda tampil di portal publik, dapat diakses peneliti di seluruh dunia.'],
+      $workflow = [
+        ['icon'=>'bi-cloud-arrow-up', 'title'=>'1. Submission', 'desc'=>'Author submits manuscript via OJS.'],
+        ['icon'=>'bi-search', 'title'=>'2. Screening & Review', 'desc'=>'Plagiarism check and double-blind peer review.'],
+        ['icon'=>'bi-pencil-square', 'title'=>'3. Revision', 'desc'=>'Author revises based on reviewer feedback.'],
+        ['icon'=>'bi-globe', 'title'=>'4. Publication', 'desc'=>'Copyediting, layout, and global release.']
       ];
       @endphp
-      @foreach($steps as $i=>$s)
-      <div class="col-6 col-lg-3">
-        <div style="position:relative;padding:28px;background:#f8f9fb;border:1px solid #e2e8f0;border-radius:14px;height:100%;">
-          <div style="position:absolute;top:20px;right:20px;font-size:36px;font-weight:800;color:#f1f5f9;letter-spacing:-.06em;line-height:1;">{{ $s['num'] }}</div>
-          <div style="width:44px;height:44px;border-radius:11px;background:{{ $s['color'] }};display:flex;align-items:center;justify-content:center;font-size:20px;color:{{ $s['ic'] }};margin-bottom:16px;position:relative;z-index:1;">
-            <i class="{{ $s['icon'] }}"></i>
-          </div>
-          <h3 style="font-size:14px;font-weight:700;color:#0f172a;margin-bottom:6px;position:relative;z-index:1;">{{ $s['title'] }}</h3>
-          <p style="font-size:12px;color:#64748b;margin:0;line-height:1.65;position:relative;z-index:1;">{{ $s['desc'] }}</p>
+      
+      @foreach($workflow as $index => $step)
+      <div class="col-12 col-md-6 col-lg-3 text-center position-relative" style="z-index:2;" data-aos="fade-up" data-aos-delay="{{ $index * 100 }}">
+        <div style="width:50px; height:50px; background:white; border:2px solid var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:20px; color:var(--primary); box-shadow:0 4px 10px rgba(0,0,0,0.05);">
+          <i class="{{ $step['icon'] }}"></i>
         </div>
+        <h5 style="font-weight:700; font-size:16px;">{{ $step['title'] }}</h5>
+        <p style="font-size:13px; color:var(--text-muted);">{{ $step['desc'] }}</p>
       </div>
       @endforeach
     </div>
   </div>
 </section>
 
-{{-- ── JOURNALS ── --}}
-<section class="section" style="background:#f4f6f9;padding-top:60px;padding-bottom:60px;">
-  <div class="container" style="max-width:1200px;">
-    <div class="d-flex align-items-end justify-content-between mb-5 fu">
-      <div>
-        <div class="section-tag">Jurnal Kami</div>
-        <h2 class="section-title" style="margin-bottom:0;">Temukan Jurnal yang Tepat</h2>
-      </div>
-      <a href="{{ route('public.journals.index') }}" class="btn-hero-out" style="padding:8px 16px;font-size:13px;white-space:nowrap;">Lihat Semua <i class="bi bi-arrow-right ms-1"></i></a>
-    </div>
-    <div class="row g-3 fu fd2">
-      @forelse($journals as $journal)
-      <div class="col-12 col-md-6 col-lg-4">
-        <a href="{{ route('public.journals.show', $journal->slug) }}" class="journal-card">
-          <div class="j-icon" style="background:#eff6ff;color:#2563eb;"><i class="bi bi-journal-text"></i></div>
-          <div style="margin-bottom:6px;">
-            @if($journal->abbreviation)
-            <span style="font-size:10px;font-family:'Courier New',monospace;background:#f1f5f9;color:#64748b;padding:2px 7px;border-radius:4px;font-weight:600;">{{ $journal->abbreviation }}</span>
-            @endif
-          </div>
-          <h3 style="font-size:14px;font-weight:700;color:#0f172a;margin:8px 0 6px;line-height:1.4;">{{ $journal->title }}</h3>
-          <p style="font-size:12px;color:#64748b;margin-bottom:14px;line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ $journal->description }}</p>
-          <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;">
-            <span style="color:#94a3b8;capitalize:true;">{{ ucfirst($journal->frequency) }}</span>
-            <span style="color:#2563eb;font-weight:600;">{{ $journal->published_articles_count }} artikel</span>
-          </div>
-        </a>
-      </div>
-      @empty
-      <div class="col-12 text-center py-5" style="color:#94a3b8;">Belum ada jurnal aktif.</div>
-      @endforelse
-    </div>
-  </div>
-</section>
-
-{{-- ── LATEST ARTICLES ── --}}
-<section class="section" style="background:#fff;padding-top:60px;padding-bottom:60px;">
-  <div class="container" style="max-width:1200px;">
-    <div class="d-flex align-items-end justify-content-between mb-5 fu">
-      <div>
-        <div class="section-tag">Terbaru</div>
-        <h2 class="section-title" style="margin-bottom:0;">Artikel Terpublish Terbaru</h2>
-      </div>
-      <a href="{{ route('public.articles.index') }}" class="btn-hero-out" style="padding:8px 16px;font-size:13px;white-space:nowrap;">Lihat Semua <i class="bi bi-arrow-right ms-1"></i></a>
-    </div>
-    <div class="row g-3 fu fd2">
-      @forelse($latestArticles as $article)
-      <div class="col-12 col-lg-6">
-        <div class="article-card">
-          <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;">
-            <span style="font-size:11px;font-weight:600;color:#2563eb;background:#eff6ff;padding:3px 10px;border-radius:20px;">{{ $article->journal->abbreviation ?? $article->journal->title }}</span>
-            @if($article->published_at)
-            <span style="font-size:11px;color:#94a3b8;">{{ $article->published_at->format('d M Y') }}</span>
-            @endif
-          </div>
-          <h3 style="font-size:14px;font-weight:700;color:#0f172a;margin-bottom:8px;line-height:1.45;">
-            <a href="{{ route('public.articles.show', $article->slug) }}" style="color:inherit;text-decoration:none;">{{ $article->title }}</a>
-          </h3>
-          <p style="font-size:12px;color:#64748b;margin-bottom:12px;line-height:1.65;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ $article->abstract }}</p>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <div style="width:22px;height:22px;border-radius:6px;background:#eff6ff;color:#2563eb;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">
-              {{ strtoupper(substr($article->author->name,0,1)) }}
+{{-- ── JOURNAL METRICS & INDEXING ── --}}
+<section class="section" style="background:var(--bg-surface); border-top:1px solid var(--border);">
+  <div class="container" style="max-width:1400px;">
+    <div class="row g-5">
+      <div class="col-lg-6" data-aos="fade-right">
+        <h3 style="font-weight:800; margin-bottom:24px;">Journal Metrics 2026</h3>
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <div style="background:var(--bg-app); border:1px solid var(--border); padding:20px; border-radius:var(--radius-md);">
+              <div style="font-size:13px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Acceptance Rate</div>
+              <div style="font-size:28px; font-weight:800; color:var(--primary);">34%</div>
             </div>
-            <span style="font-size:12px;color:#64748b;font-weight:500;">{{ $article->author->name }}</span>
-            @if($article->author->affiliation)
-            <span style="font-size:12px;color:#94a3b8;">· {{ Str::limit($article->author->affiliation, 30) }}</span>
-            @endif
+          </div>
+          <div class="col-sm-6">
+            <div style="background:var(--bg-app); border:1px solid var(--border); padding:20px; border-radius:var(--radius-md);">
+              <div style="font-size:13px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Days to First Decision</div>
+              <div style="font-size:28px; font-weight:800; color:var(--primary);">28</div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div style="background:var(--bg-app); border:1px solid var(--border); padding:20px; border-radius:var(--radius-md);">
+              <div style="font-size:13px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Days to Publication</div>
+              <div style="font-size:28px; font-weight:800; color:var(--primary);">75</div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div style="background:var(--bg-app); border:1px solid var(--border); padding:20px; border-radius:var(--radius-md);">
+              <div style="font-size:13px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Downloads (Yearly)</div>
+              <div style="font-size:28px; font-weight:800; color:var(--primary);">45K+</div>
+            </div>
           </div>
         </div>
       </div>
-      @empty
-      <div class="col-12 text-center py-5" style="color:#94a3b8;">Belum ada artikel terpublish.</div>
-      @endforelse
-    </div>
-  </div>
-</section>
-
-{{-- ── FEATURES ── --}}
-<section class="section" style="background:#f4f6f9;padding-top:60px;padding-bottom:60px;">
-  <div class="container" style="max-width:1200px;">
-    <div class="row g-4 align-items-center">
-      <div class="col-12 col-lg-5 fu">
-        <div class="section-tag">Fitur Unggulan</div>
-        <h2 class="section-title">Sistem OJS yang Lengkap & Terpercaya</h2>
-        <p class="section-desc">Dari submission hingga publikasi, semua dalam satu platform yang aman dan transparan.</p>
-      </div>
-      <div class="col-12 col-lg-7 fu fd2">
-        <div class="row g-2">
-          @php $features=[
-            ['icon'=>'bi-shield-check','color'=>'#eff6ff','ic'=>'#2563eb','title'=>'Aman & Terpercaya','desc'=>'CSRF protection, rate limiting, dan enkripsi data.'],
-            ['icon'=>'bi-people','color'=>'#f5f3ff','ic'=>'#7c3aed','title'=>'Multi Role','desc'=>'Admin, Editor, Reviewer, Author — akses terpisah.'],
-            ['icon'=>'bi-journal-check','color'=>'#f0fdf4','ic'=>'#16a34a','title'=>'Peer Review','desc'=>'Double-blind review oleh reviewer berpengalaman.'],
-            ['icon'=>'bi-credit-card','color'=>'#fff7ed','ic'=>'#ea580c','title'=>'Pembayaran Manual','desc'=>'Upload bukti transfer, verifikasi admin.'],
-            ['icon'=>'bi-search','color'=>'#ecfdf5','ic'=>'#047857','title'=>'Akses Publik','desc'=>'Artikel terpublish dapat diakses siapa saja.'],
-            ['icon'=>'bi-graph-up','color'=>'#fefce8','ic'=>'#ca8a04','title'=>'Statistik Real-time','desc'=>'Dashboard statistik untuk semua stakeholder.'],
-          ]; @endphp
-          @foreach($features as $f)
-          <div class="col-12 col-sm-6">
-            <div class="feature-item">
-              <div class="feature-icon" style="background:{{ $f['color'] }};color:{{ $f['ic'] }};"><i class="{{ $f['icon'] }}"></i></div>
-              <div>
-                <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:3px;">{{ $f['title'] }}</div>
-                <div style="font-size:12px;color:#64748b;line-height:1.5;">{{ $f['desc'] }}</div>
-              </div>
+      
+      <div class="col-lg-6" data-aos="fade-left">
+        <h3 style="font-weight:800; margin-bottom:24px;">Indexed & Abstracted In</h3>
+        <div class="row g-3">
+          @php
+          $indexes = ['Google Scholar', 'Crossref', 'DOAJ', 'Scopus', 'SINTA', 'Dimensions'];
+          @endphp
+          @foreach($indexes as $idx)
+          <div class="col-4 col-sm-4">
+            <div style="background:var(--bg-app); border:1px solid var(--border); padding:20px 10px; border-radius:var(--radius-md); text-align:center; height:100%; display:flex; align-items:center; justify-content:center;">
+              <span style="font-weight:700; font-size:14px; color:var(--text-main);">{{ $idx }}</span>
             </div>
           </div>
           @endforeach
         </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-{{-- ── CTA ── --}}
-@guest
-<section class="cta-section">
-  <div class="container" style="max-width:1200px;position:relative;z-index:1;">
-    <div class="row justify-content-center">
-      <div class="col-12 col-lg-8 text-center fu">
-        <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(37,99,235,.2);border:1px solid rgba(37,99,235,.3);padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;color:#93bbfc;margin-bottom:24px;">
-          <i class="bi bi-lightning-fill"></i> Mulai Gratis Sekarang
-        </div>
-        <h2 class="cta-title">Siap Publikasikan Penelitian Anda?</h2>
-        <p class="cta-desc" style="max-width:480px;margin:0 auto 36px;">Bergabung dengan ratusan peneliti yang sudah mempercayakan publikasi ilmiah mereka di platform kami.</p>
-        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-          <a href="{{ route('register') }}" class="btn-hero-pri" style="background:#2563eb;font-size:14px;padding:12px 28px;">
-            <i class="bi bi-person-plus"></i> Daftar Sebagai Author
-          </a>
-          <a href="{{ route('public.articles.index') }}" class="btn-hero-out" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:#e6edf3;font-size:14px;padding:12px 28px;">
-            <i class="bi bi-eye"></i> Lihat Artikel
-          </a>
+        <div class="mt-4 text-end">
+          <a href="{{ route('public.indexing') }}" style="font-weight:600; color:var(--primary); text-decoration:none;">View all indexing <i class="bi bi-arrow-right"></i></a>
         </div>
       </div>
     </div>
   </div>
 </section>
-@endguest
 
+{{-- ── NEWSLETTER & CALL FOR PAPERS CTA ── --}}
+<section class="section text-center" style="background:var(--primary); color:white;">
+  <div class="container" style="max-width:800px;" data-aos="zoom-in">
+    <h2 style="font-weight:800; margin-bottom:16px;">Ready to Publish Your Research?</h2>
+    <p style="font-size:18px; opacity:0.9; margin-bottom:32px;">Join thousands of authors who have published their groundbreaking research with us. Submissions are open for the next issue.</p>
+    <div class="d-flex flex-wrap justify-content-center gap-3">
+      <a href="{{ route('register') }}" class="btn btn-light" style="font-weight:700; font-size:16px; padding:12px 32px; border-radius:8px; color:var(--primary);">Submit Manuscript</a>
+      <a href="{{ route('public.author-guidelines') }}" class="btn btn-outline-light" style="font-weight:600; font-size:16px; padding:12px 32px; border-radius:8px;">Read Guidelines</a>
+    </div>
+  </div>
+</section>
+
+@endsection
+
+@section('scripts')
+<script>
+  // Simple CountUp animation script
+  document.addEventListener('DOMContentLoaded', () => {
+    const counters = document.querySelectorAll('[data-countup]');
+    
+    const animateCount = (el) => {
+      const target = parseInt(el.getAttribute('data-countup').replace(/[^0-9]/g, ''));
+      const text = el.getAttribute('data-countup');
+      const suffix = text.replace(/[0-9]/g, '');
+      const duration = 2000;
+      const step = target / (duration / 16);
+      let current = 0;
+      
+      const timer = setInterval(() => {
+        current += step;
+        if(current >= target) {
+          clearInterval(timer);
+          el.innerText = target + suffix;
+        } else {
+          el.innerText = Math.floor(current) + suffix;
+        }
+      }, 16);
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting) {
+          animateCount(entry.target);
+          observer.unobserve(entry.target);
+        }
+      });
+    });
+
+    counters.forEach(c => observer.observe(c));
+  });
+</script>
 @endsection

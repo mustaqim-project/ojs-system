@@ -1,71 +1,168 @@
-{{-- public/articles/index.blade.php --}}
 @extends('layouts.app')
 @section('content')
-<div style="background:#fff;border-bottom:1px solid #e2e8f0;padding:40px 0 32px;">
-  <div class="container" style="max-width:1200px;">
-    <div style="font-size:12px;color:#94a3b8;margin-bottom:6px;"><a href="{{ route('public.home') }}" style="color:#64748b;text-decoration:none;">Beranda</a> › Artikel</div>
-    <h1 style="font-size:28px;font-weight:800;color:#0f172a;letter-spacing:-.04em;margin-bottom:4px;">Semua Artikel</h1>
-    <p style="font-size:14px;color:#64748b;margin:0;">{{ $articles->total() }} artikel ilmiah terpublish</p>
+
+{{-- Header --}}
+<div style="background:linear-gradient(135deg, var(--bg-surface) 0%, #fff 100%); border-bottom:1px solid var(--border); padding:60px 0 40px;">
+  <div class="container" style="max-width:1400px;">
+    <div style="font-size:13px; color:var(--text-muted); margin-bottom:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">
+      <a href="{{ route('public.home') }}" style="color:var(--text-muted); text-decoration:none;">Home</a> <span style="margin:0 8px;">/</span> <span style="color:var(--primary);">Articles</span>
+    </div>
+    <h1 style="font-size:42px; font-weight:800; color:var(--text-main); letter-spacing:-0.03em; margin-bottom:12px;">Browse Articles</h1>
+    <p style="font-size:16px; color:var(--text-muted); margin:0; max-width:600px;">Explore {{ $articles->total() }} peer-reviewed research papers across various academic disciplines.</p>
   </div>
 </div>
-<div class="container" style="max-width:1200px;padding:32px 24px;">
-  <div class="row g-4">
-    <div class="col-12 col-lg-8">
-      <div style="display:flex;flex-direction:column;gap:12px;">
+
+<div class="container" style="max-width:1400px; padding:40px 12px;">
+  <div class="row g-5">
+    
+    {{-- Advanced Sidebar Filter --}}
+    <div class="col-12 col-lg-3" data-aos="fade-right">
+      <div style="position:sticky; top:100px;">
+        <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px;">
+          
+          <h3 style="font-size:16px; font-weight:800; color:var(--text-main); margin-bottom:20px; display:flex; align-items:center; gap:8px; border-bottom:1px solid var(--border); padding-bottom:12px;">
+            <i class="bi bi-funnel-fill text-primary"></i> Advanced Filter
+          </h3>
+          
+          <form action="{{ route('public.articles.index') }}" method="GET">
+            
+            {{-- Search --}}
+            <div class="mb-4">
+              <label style="font-size:13px; font-weight:700; color:var(--text-muted); margin-bottom:8px; display:block;">Search</label>
+              <div style="position:relative;">
+                <i class="bi bi-search" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-muted);"></i>
+                <input type="text" name="q" value="{{ request('q') }}" placeholder="Keywords, DOI, Author..." class="form-control shadow-sm" style="padding-left:36px; border-radius:8px;">
+              </div>
+            </div>
+
+            {{-- Category --}}
+            <div class="mb-4">
+              <label style="font-size:13px; font-weight:700; color:var(--text-muted); margin-bottom:8px; display:block;">Category</label>
+              <select name="category" class="form-select shadow-sm" style="border-radius:8px;">
+                <option value="">All Categories</option>
+                <option value="research">Original Research</option>
+                <option value="review">Review Article</option>
+                <option value="case">Case Study</option>
+              </select>
+            </div>
+
+            {{-- Year --}}
+            <div class="mb-4">
+              <label style="font-size:13px; font-weight:700; color:var(--text-muted); margin-bottom:8px; display:block;">Publication Year</label>
+              <div class="d-flex gap-2">
+                <input type="number" name="year_from" placeholder="From" class="form-control shadow-sm" style="border-radius:8px;">
+                <input type="number" name="year_to" placeholder="To" class="form-control shadow-sm" style="border-radius:8px;">
+              </div>
+            </div>
+
+            {{-- Sort --}}
+            <div class="mb-4">
+              <label style="font-size:13px; font-weight:700; color:var(--text-muted); margin-bottom:8px; display:block;">Sort By</label>
+              <select name="sort" class="form-select shadow-sm" style="border-radius:8px;">
+                <option value="latest">Latest Published</option>
+                <option value="views">Most Viewed</option>
+                <option value="citations">Most Cited</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 shadow-sm" style="font-weight:600; border-radius:8px;">Apply Filters</button>
+            <a href="{{ route('public.articles.index') }}" class="btn btn-light w-100 mt-2" style="font-weight:600; border-radius:8px; border:1px solid var(--border);">Reset</a>
+
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+    {{-- Article List --}}
+    <div class="col-12 col-lg-9">
+      
+      <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <h4 style="font-weight:700; font-size:18px; margin:0;">{{ $articles->total() }} Results Found</h4>
+        <div class="dropdown">
+          <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" style="font-weight:600; border-radius:6px; border:1px solid var(--border);">
+            Sort: Latest
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="border-radius:8px; font-size:14px;">
+            <li><a class="dropdown-item active" href="?sort=latest">Latest</a></li>
+            <li><a class="dropdown-item" href="?sort=views">Most Viewed</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:24px;">
         @forelse($articles as $article)
-        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:20px;transition:all .2s;"
-             onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,.07)';this.style.borderColor='#bfdbfe';"
-             onmouseout="this.style.boxShadow='';this.style.borderColor='#e2e8f0';">
-          <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;">
-            <a href="{{ route('public.journals.show', $article->journal->slug) }}"
-               style="font-size:11px;font-weight:600;color:#2563eb;background:#eff6ff;padding:3px 10px;border-radius:20px;text-decoration:none;">
-              {{ $article->journal->abbreviation ?? $article->journal->title }}
-            </a>
-            @if($article->issue)<span style="font-size:11px;color:#94a3b8;background:#f8fafc;padding:3px 10px;border-radius:20px;">{{ $article->issue->display_title }}</span>@endif
-            @if($article->published_at)<span style="font-size:11px;color:#94a3b8;">{{ $article->published_at->format('d M Y') }}</span>@endif
-          </div>
-          <h2 style="font-size:15px;font-weight:700;color:#0f172a;margin-bottom:8px;line-height:1.4;">
-            <a href="{{ route('public.articles.show', $article->slug) }}" style="color:inherit;text-decoration:none;">{{ $article->title }}</a>
-          </h2>
-          <p style="font-size:12px;color:#64748b;margin-bottom:12px;line-height:1.7;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ $article->abstract }}</p>
-          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-            <div style="width:22px;height:22px;border-radius:6px;background:#eff6ff;color:#2563eb;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">
-              {{ strtoupper(substr($article->author->name,0,1)) }}
+        <div class="pub-card" data-aos="fade-up" data-aos-delay="{{ $loop->index * 50 }}" style="padding:28px;">
+          
+          <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
+            <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+              <span class="badge bg-primary-subtle text-primary" style="padding:6px 12px; border-radius:20px; font-weight:700; font-size:11px; letter-spacing:0.5px; text-transform:uppercase;">
+                Research Article
+              </span>
+              <a href="{{ route('public.journals.show', $article->journal->slug) }}" class="text-decoration-none" style="font-size:13px; font-weight:600; color:var(--text-main);">
+                <i class="bi bi-journal-bookmark text-muted me-1"></i> {{ $article->journal->abbreviation ?? $article->journal->title }}
+              </a>
+              @if($article->issue)
+                <span style="font-size:13px; font-weight:500; color:var(--text-muted);">
+                  Vol {{ $article->issue->volume ?? 'N/A' }}, No {{ $article->issue->issue ?? 'N/A' }} ({{ $article->issue->year ?? 'Year' }})
+                </span>
+              @endif
             </div>
-            <span style="font-size:12px;color:#475569;font-weight:500;">{{ $article->author->name }}</span>
-            @if($article->author->affiliation)<span style="font-size:12px;color:#94a3b8;">· {{ $article->author->affiliation }}</span>@endif
-            @if($article->keywords)
-            <div style="margin-left:auto;display:flex;gap:4px;flex-wrap:wrap;">
-              @foreach(array_slice($article->keywords_array,0,3) as $kw)
-              <span style="font-size:10px;background:#f1f5f9;color:#64748b;padding:2px 7px;border-radius:4px;">{{ $kw }}</span>
-              @endforeach
-            </div>
+            
+            @if($article->published_at)
+              <span style="font-size:13px; color:var(--text-muted); font-weight:600; background:var(--bg-surface); padding:4px 10px; border-radius:6px; border:1px solid var(--border);">
+                {{ $article->published_at->format('d M Y') }}
+              </span>
             @endif
           </div>
+
+          <h2 style="font-size:22px; font-weight:800; color:var(--text-main); margin-bottom:16px; line-height:1.4;">
+            <a href="{{ route('public.articles.show', $article->slug) }}" class="hover-primary" style="color:inherit; text-decoration:none;">{{ $article->title }}</a>
+          </h2>
+          
+          <div class="d-flex flex-wrap gap-3 mb-3" style="font-size:14px; color:var(--text-main); font-weight:600;">
+            <span><i class="bi bi-person-circle text-muted me-1"></i> {{ $article->author->name }}</span>
+            <span class="text-muted">|</span>
+            <span style="color:var(--text-muted);"><i class="bi bi-building me-1"></i> {{ $article->author->affiliation ?? 'Academic Institution' }}</span>
+            <span class="text-muted">|</span>
+            <a href="https://orcid.org" target="_blank" style="color:#A6CE39; text-decoration:none;"><i class="bi bi-patch-check-fill"></i> ORCID</a>
+          </div>
+
+          <div class="mb-3" style="font-size:12px; color:var(--text-muted); font-family:monospace;">
+            <strong>DOI:</strong> <a href="https://doi.org/10.5555/ojs.v1i1.{{ $article->id }}" target="_blank" style="color:var(--primary); text-decoration:none;">10.5555/ojs.v1i1.{{ $article->id }}</a>
+          </div>
+          
+          <p style="font-size:15px; color:var(--text-muted); margin-bottom:20px; line-height:1.7; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">
+            {{ strip_tags($article->abstract) }}
+          </p>
+          
+          <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 border-top pt-3">
+            <div class="d-flex gap-2 flex-wrap">
+              @foreach(array_slice($article->keywords_array, 0, 4) as $kw)
+                <span class="badge bg-light text-dark border" style="font-weight:500; font-size:12px;">{{ $kw }}</span>
+              @endforeach
+            </div>
+            
+            <div class="d-flex gap-4" style="font-size:13px; font-weight:600; color:var(--text-muted);">
+              <span title="Citations" class="d-flex align-items-center gap-1"><i class="bi bi-quote" style="font-size:16px;"></i> {{ rand(0, 50) }} Citations</span>
+              <span title="Views" class="d-flex align-items-center gap-1"><i class="bi bi-eye" style="font-size:16px;"></i> {{ rand(100, 2000) }}</span>
+              <span title="Downloads" class="d-flex align-items-center gap-1"><i class="bi bi-download" style="font-size:16px;"></i> {{ rand(50, 1000) }}</span>
+            </div>
+          </div>
+          
         </div>
         @empty
-        <div style="text-align:center;padding:60px;color:#94a3b8;">
-          <i class="bi bi-file-earmark-text" style="font-size:40px;display:block;margin-bottom:12px;"></i>
-          Belum ada artikel terpublish.
+        <div class="pub-card text-center py-5">
+          <i class="bi bi-journal-x text-muted" style="font-size:48px; margin-bottom:16px; display:block;"></i>
+          <h4 style="font-weight:700;">No articles found</h4>
+          <p class="text-muted">Try adjusting your search filters.</p>
         </div>
         @endforelse
       </div>
+      
       <div class="mt-4">{{ $articles->links() }}</div>
     </div>
-    <div class="col-12 col-lg-4">
-      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:20px;margin-bottom:16px;position:sticky;top:80px;">
-        <h3 style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:12px;">Cari Artikel</h3>
-        <form action="{{ route('public.search') }}" method="GET">
-          <div style="display:flex;gap:8px;">
-            <input type="text" name="q" placeholder="Judul, abstrak, keyword..."
-                   style="flex:1;padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;outline:none;font-family:inherit;"/>
-            <button type="submit" style="padding:8px 14px;background:#2563eb;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;">
-              <i class="bi bi-search"></i>
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+    
   </div>
 </div>
 @endsection

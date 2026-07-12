@@ -1,79 +1,82 @@
-{{-- ════════════════════════════════════════
-   author/articles/index.blade.php
-════════════════════════════════════════ --}}
+{{-- author/articles/index.blade.php --}}
 @extends('layouts.dashboard')
 @section('content')
-<div class="pg-hdr">
+
+<div class="ds-page-hdr" data-aos="fade-up">
   <div>
-    <div class="pg-crumb"><a href="{{ route('author.dashboard') }}">Dashboard</a><span>›</span><span class="cur">Artikel Saya</span></div>
-    <h2 class="pg-title">Artikel Saya</h2>
-    <p class="pg-desc">{{ $articles->total() }} artikel yang telah Anda submit</p>
+    <x-ui.breadcrumb :items="[['label'=>'Author Portal'],['label'=>'Dashboard','href'=>route('author.dashboard')],['label'=>'My Submissions']]"/>
+    <h1 class="ds-page-title">My Submissions</h1>
+    <p class="ds-page-subtitle">{{ $articles->total() }} manuscripts submitted</p>
   </div>
-  <a href="{{ route('author.articles.create') }}" class="btn-o btn-pri"><i class="bi bi-plus-lg"></i> Submit Baru</a>
+  <a href="{{ route('author.articles.create') }}" class="ds-btn ds-btn-pri">
+    <i class="bi bi-plus-lg"></i> Submit Manuscript
+  </a>
 </div>
 
-{{-- Action alerts --}}
+{{-- Action Alerts --}}
 @foreach($articles->whereIn('status',['revision_required']) as $a)
-<div class="alert-o a-warn mb-2 fu">
+<div class="ds-alert ds-alert-warn" data-aos="fade-up" style="margin-bottom:10px;">
   <i class="bi bi-pencil-square"></i>
   <div style="flex:1;min-width:0;">
-    <strong>Revisi diperlukan:</strong> {{ Str::limit($a->title,55) }}
-    <a href="{{ route('author.articles.revision',$a) }}" style="color:inherit;font-weight:700;margin-left:8px;">Upload Revisi →</a>
+    <strong>Revision Required:</strong> {{ Str::limit($a->title, 60) }}
+    <a href="{{ route('author.articles.revision',$a) }}" style="color:inherit;font-weight:700;margin-left:8px;text-decoration:underline;">Upload revision →</a>
   </div>
+  <button class="ds-alert-close" onclick="this.parentElement.remove()">✕</button>
 </div>
 @endforeach
 @foreach($articles->whereIn('status',['waiting_payment','payment_uploaded']) as $a)
-<div class="alert-o a-info mb-2 fu">
+<div class="ds-alert ds-alert-info" data-aos="fade-up" style="margin-bottom:10px;">
   <i class="bi bi-credit-card-fill"></i>
   <div style="flex:1;min-width:0;">
-    <strong>Menunggu pembayaran:</strong> {{ Str::limit($a->title,50) }}
-    <a href="{{ route('author.payments.show',$a) }}" style="color:inherit;font-weight:700;margin-left:8px;">Bayar Sekarang →</a>
+    <strong>Payment Required:</strong> {{ Str::limit($a->title, 55) }}
+    <a href="{{ route('author.payments.show',$a) }}" style="color:inherit;font-weight:700;margin-left:8px;text-decoration:underline;">Pay now →</a>
   </div>
+  <button class="ds-alert-close" onclick="this.parentElement.remove()">✕</button>
 </div>
 @endforeach
 
-<div class="card-ojs fu fd2">
-  <div style="overflow-x:auto;">
-    <table class="tbl">
+<div class="ds-card" data-aos="fade-up" data-aos-delay="200">
+  <div class="table-responsive">
+    <table class="ds-table">
       <thead>
         <tr>
-          <th>Judul Artikel</th>
-          <th>Jurnal</th>
+          <th>Title</th>
+          <th>Journal</th>
           <th>Status</th>
-          <th>Pembayaran</th>
-          <th>Disubmit</th>
-          <th>Aksi</th>
+          <th>Payment</th>
+          <th>Submitted</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         @forelse($articles as $article)
         <tr>
           <td>
-            <div class="cell-pri" style="max-width:260px;">{{ Str::limit($article->title, 55) }}</div>
+            <a href="{{ route('author.articles.show',$article) }}"
+               style="font-weight:600;color:var(--text-main);text-decoration:none;max-width:280px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"
+               title="{{ $article->title }}">{{ Str::limit($article->title, 55) }}</a>
           </td>
-          <td><span class="cell-mute">{{ $article->journal->abbreviation ?? '-' }}</span></td>
-          <td>
-            <span class="bx bx-{{ $article->status }}" style="font-size:10.5px;padding:3px 9px;">{{ $article->status_label }}</span>
-          </td>
+          <td style="font-size:13px;color:var(--text-muted);">{{ $article->journal->abbreviation ?? '—' }}</td>
+          <td><x-status-badge :status="$article->status" :label="$article->status_label"/></td>
           <td>
             @if($article->payment)
-              <span class="bx bx-{{ $article->payment->status }}" style="font-size:10.5px;padding:3px 9px;">{{ $article->payment->status_label }}</span>
+              <x-status-badge :status="$article->payment->status" :label="$article->payment->status_label"/>
             @else
-              <span style="font-size:12px;color:var(--txt4);">—</span>
+              <span style="font-size:12px;color:var(--text-muted);">—</span>
             @endif
           </td>
-          <td><span class="cell-mute">{{ $article->submitted_at?->format('d M Y') }}</span></td>
+          <td style="font-size:13px;color:var(--text-muted);">{{ $article->submitted_at?->format('d M Y') }}</td>
           <td>
-            <div style="display:flex;gap:5px;flex-wrap:wrap;">
-              <a href="{{ route('author.articles.show', $article) }}" class="btn-o btn-out btn-sm">Detail</a>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+              <a href="{{ route('author.articles.show',$article) }}" class="ds-btn ds-btn-out ds-btn-xs">Detail</a>
               @if($article->status === 'revision_required')
-                <a href="{{ route('author.articles.revision', $article) }}" class="btn-o btn-warn btn-sm">
-                  <i class="bi bi-pencil"></i> Revisi
+                <a href="{{ route('author.articles.revision',$article) }}" class="ds-btn ds-btn-xs" style="background:var(--warning-bg);color:var(--warning);border-color:var(--warning);">
+                  <i class="bi bi-pencil"></i> Revise
                 </a>
               @endif
               @if($article->needsPayment())
-                <a href="{{ route('author.payments.show', $article) }}" class="btn-o btn-sm" style="background:#7c3aed;color:#fff;border-color:#7c3aed;">
-                  <i class="bi bi-credit-card"></i> Bayar
+                <a href="{{ route('author.payments.show',$article) }}" class="ds-btn ds-btn-xs" style="background:#FAF5FF;color:#6B46C1;border-color:#6B46C1;">
+                  <i class="bi bi-credit-card"></i> Pay
                 </a>
               @endif
             </div>
@@ -82,20 +85,22 @@
         @empty
         <tr>
           <td colspan="6">
-            <div class="empty-st">
-              <div class="empty-icon"><i class="bi bi-file-earmark-text"></i></div>
-              <div class="empty-title">Belum ada artikel</div>
-              <div class="empty-desc">Mulai perjalanan publikasi Anda sekarang.</div>
-              <a href="{{ route('author.articles.create') }}" class="btn-o btn-pri btn-sm" style="margin-top:16px;display:inline-flex;">
-                <i class="bi bi-plus-lg"></i> Submit Artikel Pertama
+            <x-ui.empty-state icon="bi-file-earmark-text" title="No submissions yet" description="Begin your publishing journey by submitting your first manuscript.">
+              <a href="{{ route('author.articles.create') }}" class="ds-btn ds-btn-pri" style="display:inline-flex;">
+                <i class="bi bi-plus-lg"></i> Submit First Manuscript
               </a>
-            </div>
+            </x-ui.empty-state>
           </td>
         </tr>
         @endforelse
       </tbody>
     </table>
   </div>
-  <div class="card-ftr">{{ $articles->links() }}</div>
+  @if($articles->hasPages())
+  <div style="padding:16px 24px;border-top:1px solid var(--border);background:var(--bg-app);">
+    {{ $articles->links() }}
+  </div>
+  @endif
 </div>
+
 @endsection

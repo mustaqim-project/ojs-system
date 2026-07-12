@@ -1,59 +1,56 @@
-@props(['variant' => 'primary', 'size' => 'md', 'type' => 'button', 'href' => null, 'icon' => null, 'iconRight' => null, 'disabled' => false, 'loading' => false, 'fullWidth' => false])
+@props([
+    'variant'  => 'primary',   // primary | secondary | ghost | danger | success | warning | outline
+    'size'     => 'md',        // xs | sm | md | lg
+    'type'     => 'button',
+    'href'     => null,
+    'icon'     => null,        // bi class e.g. "bi-plus-lg"
+    'iconRight'=> null,
+    'loading'  => false,
+    'disabled' => false,
+    'full'     => false,
+])
 
 @php
-$baseClasses = 'inline-flex items-center justify-center font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg';
-
-$variants = [
-    'primary' => 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 focus:ring-blue-500 shadow-md hover:shadow-lg hover:-translate-y-0.5',
-    'secondary' => 'bg-slate-600 text-white hover:bg-slate-700 focus:ring-slate-500',
-    'outline' => 'bg-transparent text-slate-700 border border-slate-300 hover:bg-slate-50 focus:ring-slate-400',
-    'ghost' => 'bg-transparent text-slate-600 hover:bg-slate-100 focus:ring-slate-300',
-    'danger' => 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
-    'success' => 'bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-500',
-];
+$base = 'ds-btn';
 
 $sizes = [
-    'sm' => 'px-3 py-1.5 text-xs gap-1.5',
-    'md' => 'px-4 py-2 text-sm gap-2',
-    'lg' => 'px-6 py-3 text-base gap-2.5',
+    'xs' => 'ds-btn-xs',
+    'sm' => 'ds-btn-sm',
+    'md' => '',
+    'lg' => 'btn-lg', // Fallback to bootstrap if needed, or custom
 ];
 
-$widthClass = $fullWidth ? 'w-full' : '';
-$iconSize = $size === 'sm' ? 'h-3.5 w-3.5' : ($size === 'lg' ? 'h-5 w-5' : 'h-4 w-4');
+$variants = [
+    'primary'   => 'ds-btn-pri',
+    'secondary' => 'ds-btn-out',
+    'ghost'     => 'ds-btn-ghost',
+    'outline'   => 'ds-btn-out',
+    'danger'    => 'ds-btn-danger',
+    'success'   => 'ds-btn-suc',
+    'warning'   => 'btn-warning', // fallback to bootstrap
+];
 
-$classes = "$baseClasses {$variants[$variant]} {$sizes[$size]} $widthClass";
+$classes = implode(' ', array_filter([
+    $base,
+    $sizes[$size] ?? $sizes['md'],
+    $variants[$variant] ?? $variants['primary'],
+    $full ? 'w-100 justify-content-center' : '',
+    ($disabled || $loading) ? 'disabled' : '',
+]));
 @endphp
 
 @if($href && !$disabled)
-    <a href="{{ $href }}" class="{{ $classes }}">
-        @if($icon && !$loading)
-            <i class="bi bi-{{ $icon }} {{ $iconSize }}"></i>
-        @endif
-        @if($loading)
-            <svg class="animate-spin {{ $iconSize }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-        @endif
-        <span>{{ $slot }}</span>
-        @if($iconRight && !$loading)
-            <i class="bi bi-{{ $iconRight }} {{ $iconSize }}"></i>
-        @endif
+    <a href="{{ $href }}" {{ $attributes->merge(['class' => $classes]) }}>
+        @if($icon)<i class="bi {{ $icon }}"></i>@endif
+        @if($loading)<i class="bi bi-arrow-repeat animate__animated animate__spin"></i>@endif
+        {{ $slot }}
+        @if($iconRight)<i class="bi {{ $iconRight }}"></i>@endif
     </a>
 @else
-    <button type="{{ $type }}" {{ $disabled ? 'disabled' : '' }} class="{{ $classes }}">
-        @if($icon && !$loading)
-            <i class="bi bi-{{ $icon }} {{ $iconSize }}"></i>
-        @endif
-        @if($loading)
-            <svg class="animate-spin {{ $iconSize }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-        @endif
-        <span>{{ $slot }}</span>
-        @if($iconRight && !$loading)
-            <i class="bi bi-{{ $iconRight }} {{ $iconSize }}"></i>
-        @endif
+    <button type="{{ $type }}" {{ $disabled || $loading ? 'disabled' : '' }} {{ $attributes->merge(['class' => $classes]) }}>
+        @if($icon)<i class="bi {{ $icon }}"></i>@endif
+        @if($loading)<i class="bi bi-arrow-repeat animate__animated animate__spin"></i>@endif
+        {{ $slot }}
+        @if($iconRight)<i class="bi {{ $iconRight }}"></i>@endif
     </button>
 @endif

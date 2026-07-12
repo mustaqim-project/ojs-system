@@ -2,7 +2,7 @@
 @extends('layouts.dashboard')
 @section('content')
 
-<div class="ds-page-hdr fu">
+<div class="ds-page-hdr" data-aos="fade-up">
   <div>
     <div class="ds-breadcrumb">
       <span>Reviewer Portal</span>
@@ -19,7 +19,7 @@
 
 {{-- Pending Alert --}}
 @if($pendingReviews->count())
-<div class="ds-alert ds-alert-info fu">
+<div class="ds-alert ds-alert-info" data-aos="fade-up" data-aos-delay="100">
   <i class="bi bi-bell-fill"></i>
   <div><strong>{{ $pendingReviews->count() }} review assignment(s)</strong> awaiting your confirmation or action.</div>
   <button class="ds-alert-close" onclick="this.parentElement.remove()">✕</button>
@@ -35,22 +35,29 @@ $cards = [
   ['label'=>'Completed',      'val'=>$stats['completed'],   'icon'=>'bi-check-circle',    'color'=>'var(--success)', 'bg'=>'var(--success-bg)'],
 ];
 @endphp
-<div class="row g-3 mb-4">
+<div class="row g-4 mb-4">
   @foreach($cards as $c)
-  <div class="col-6 col-lg-3 fu fd{{ $loop->index+1 }}">
-    <div class="ds-card ds-stat" style="margin-bottom:0;">
-      <div class="ds-stat-icon" style="background:{{ $c['bg'] }};color:{{ $c['color'] }};">
-        <i class="{{ $c['icon'] }}"></i>
+  <div class="col-12 col-md-6 col-xl-3" data-aos="fade-up" data-aos-delay="{{ 100 + ($loop->index * 50) }}">
+    <div style="position:relative; overflow:hidden; background:var(--bg-surface); border:1px solid var(--border); border-radius:20px; padding:24px; box-shadow:0 10px 15px -3px rgba(0,0,0,0.02), 0 4px 6px -4px rgba(0,0,0,0.02); transition:all 0.4s cubic-bezier(0.16, 1, 0.3, 1); display:flex; flex-direction:column; justify-content:space-between; height:100%; cursor:default;"
+         onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 20px 40px -10px rgba(0,0,0,0.08)';"
+         onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 10px 15px -3px rgba(0,0,0,0.02), 0 4px 6px -4px rgba(0,0,0,0.02)';">
+      <i class="{{ $c['icon'] }}" style="position:absolute; right:-15px; bottom:-25px; font-size:140px; opacity:0.04; transform:rotate(-15deg); z-index:0; color:{{ $c['color'] }}; pointer-events:none;"></i>
+      <div style="position:relative; z-index:1; margin-bottom:24px;">
+        <div style="width:52px; height:52px; border-radius:14px; background:{{ $c['bg'] }}; color:{{ $c['color'] }}; display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 4px 6px rgba(0,0,0,0.04);">
+          <i class="{{ $c['icon'] }}"></i>
+        </div>
       </div>
-      <div class="ds-stat-val">{{ $c['val'] }}</div>
-      <div class="ds-stat-lbl">{{ $c['label'] }}</div>
+      <div style="position:relative; z-index:1;">
+        <div style="font-size:13px; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:6px;">{{ $c['label'] }}</div>
+        <div style="font-size:32px; font-weight:800; color:var(--text-main); line-height:1; letter-spacing:-0.03em;" id="stat-{{ $loop->index }}">{{ $c['val'] }}</div>
+      </div>
     </div>
   </div>
   @endforeach
 </div>
 
 {{-- Active Review Assignments --}}
-<div class="ds-card fu fd3">
+<div class="ds-card" data-aos="fade-up" data-aos-delay="300">
   <div class="ds-card-hdr">
     <span class="ds-card-title">Active Assignments</span>
     <a href="{{ route('reviewer.reviews.index') }}" class="ds-btn ds-btn-ghost ds-btn-sm">
@@ -128,27 +135,100 @@ $cards = [
 
 {{-- Review Performance Summary --}}
 @if($stats['completed'] > 0)
-<div class="ds-card fu fd5" style="margin-top:24px;">
-  <div class="ds-card-hdr">
-    <span class="ds-card-title">Review Performance</span>
-  </div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0;">
-    @php
-    $perf = [
-      ['val'=>$stats['completed'],  'label'=>'Reviews Completed', 'color'=>'var(--success)'],
-      ['val'=>($stats['total'] > 0 ? round(($stats['completed']/$stats['total'])*100) : 0).'%', 'label'=>'Completion Rate', 'color'=>'var(--primary)'],
-      ['val'=>$stats['pending'],    'label'=>'Awaiting Action',   'color'=>'var(--warning)'],
-      ['val'=>$stats['in_progress'],'label'=>'In Progress',       'color'=>'var(--info)'],
-    ];
-    @endphp
-    @foreach($perf as $i => $p)
-    <div style="text-align:center;padding:24px 16px;{{ $i < count($perf)-1 ? 'border-right:1px solid var(--border);' : '' }}">
-      <div style="font-size:28px;font-weight:700;color:{{ $p['color'] }};">{{ $p['val'] }}</div>
-      <div style="font-size:13px;color:var(--text-muted);margin-top:4px;">{{ $p['label'] }}</div>
+<div class="row g-4 mt-1 mb-4">
+  <div class="col-12 col-xl-6" data-aos="fade-up" data-aos-delay="400">
+    <div class="ds-card h-100">
+      <div class="ds-card-hdr">
+        <span class="ds-card-title">Task Completion</span>
+      </div>
+      <div class="card-body d-flex align-items-center justify-content-center">
+        <div id="completionChart" class="chart-container chart-container-sm w-100"></div>
+      </div>
     </div>
-    @endforeach
+  </div>
+  <div class="col-12 col-xl-6" data-aos="fade-up" data-aos-delay="500">
+    <div class="ds-card h-100">
+      <div class="ds-card-hdr">
+        <span class="ds-card-title">Performance Metrics</span>
+      </div>
+      <div class="card-body d-flex align-items-center justify-content-center">
+        <div style="display:grid;grid-template-columns:repeat(2, 1fr);gap:24px;width:100%;text-align:center;">
+          @php
+          $perf = [
+            ['val'=>$stats['completed'],  'label'=>'Reviews Completed', 'color'=>'var(--success)'],
+            ['val'=>($stats['total'] > 0 ? round(($stats['completed']/$stats['total'])*100) : 0).'%', 'label'=>'Completion Rate', 'color'=>'var(--primary)'],
+            ['val'=>$stats['pending'],    'label'=>'Awaiting Action',   'color'=>'var(--warning)'],
+            ['val'=>$stats['in_progress'],'label'=>'In Progress',       'color'=>'var(--info)'],
+          ];
+          @endphp
+          @foreach($perf as $i => $p)
+          <div style="padding:16px;background:var(--bg-app);border-radius:var(--radius-md);border:1px solid var(--border);">
+            <div style="font-size:28px;font-weight:700;color:{{ $p['color'] }};">{{ $p['val'] }}</div>
+            <div style="font-size:13px;color:var(--text-muted);margin-top:4px;">{{ $p['label'] }}</div>
+          </div>
+          @endforeach
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 @endif
 
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const stats = @json(array_map(function($c) { return $c['val']; }, $cards));
+    stats.forEach((val, idx) => {
+        let numeric = String(val).replace(/[^0-9.-]+/g, "");
+        if (numeric) {
+            let options = { duration: 2.5, separator: '.' };
+            let countUp = new countUp.CountUp('stat-' + idx, numeric, options);
+            if (!countUp.error) {
+                countUp.start();
+            }
+        }
+    });
+
+    @if($stats['completed'] > 0)
+    // ApexCharts - Task Completion Radial
+    const completionOptions = {
+        series: [{{ $stats['total'] > 0 ? round(($stats['completed']/$stats['total'])*100) : 0 }}],
+        chart: {
+            height: 280,
+            type: 'radialBar',
+            fontFamily: 'Plus Jakarta Sans, sans-serif',
+        },
+        plotOptions: {
+            radialBar: {
+                hollow: {
+                    size: '65%',
+                },
+                dataLabels: {
+                    name: {
+                        fontSize: '14px',
+                        color: '#64748b',
+                        offsetY: -10
+                    },
+                    value: {
+                        fontSize: '32px',
+                        fontWeight: 700,
+                        color: '#1e293b',
+                        formatter: function (val) {
+                            return val + "%"
+                        }
+                    }
+                }
+            }
+        },
+        colors: ['#2F855A'],
+        labels: ['Completion Rate'],
+        stroke: {
+            lineCap: 'round'
+        },
+    };
+    new ApexCharts(document.querySelector("#completionChart"), completionOptions).render();
+    @endif
+});
+</script>
+@endpush
 @endsection

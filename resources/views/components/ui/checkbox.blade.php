@@ -1,24 +1,14 @@
-@props([
-    'label' => null,
-    'name' => null,
-    'checked' => false,
-    'disabled' => false,
-    'helpText' => null,
-])
-
-<label class="flex items-start gap-3 cursor-pointer {{ $disabled ? 'opacity-50 cursor-not-allowed' : '' }}">
-    <input 
-        type="checkbox" 
-        name="{{ $name }}"
-        {{ $checked ? 'checked' : '' }}
-        {{ $disabled ? 'disabled' : '' }}
-        class="mt-0.5 h-4 w-4 rounded border-gray-300 text-[#0F4C81] focus:ring-[#0F4C81]"
-    />
+@props(['label' => null, 'hint' => null])
+<label class="inline-flex items-start gap-2.5 cursor-pointer group">
+    <input type="checkbox" {{ $attributes->merge(['class' => 'mt-0.5 w-4 h-4 rounded border-[#E2E8F0] text-[#0F4C81] cursor-pointer accent-[#0F4C81] shrink-0']) }}>
     @if($label)
-        <span class="text-sm text-gray-700">{{ $label }}</span>
-    @endif
-    
-    @if($helpText)
-        <span class="text-xs text-gray-500 mt-0.5">{{ $helpText }}</span>
+    <span style="font-size:14px;color:var(--text-main);line-height:1.5;">
+        {{ $label }}
+        @if($hint)
+        <span style="display:block;font-size:12px;color:var(--text-muted);margin-top:1px;">{{ $hint }}</span>
+        @endif
+    </span>
+    @elseif($slot->isNotEmpty())
+    <span style="font-size:14px;color:var(--text-main);line-height:1.5;">{{ $slot }}</span>
     @endif
 </label>

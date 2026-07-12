@@ -1,44 +1,81 @@
 {{-- admin/issues/index.blade.php --}}
 @extends('layouts.dashboard')
 @section('content')
-<div class="pg-hdr"><div><h2 class="pg-title">Kelola Issue</h2></div>
-  <a href="{{ route('admin.issues.create') }}" class="btn-o btn-pri"><i class="bi bi-plus-lg"></i> Tambah Issue</a>
+
+<div class="ds-page-hdr" data-aos="fade-up">
+  <div>
+    <x-ui.breadcrumb :items="[['label'=>'Admin'],['label'=>'Issues']]"/>
+    <h1 class="ds-page-title">Issue Management</h1>
+    <p class="ds-page-subtitle">Manage journal volumes and issues</p>
+  </div>
+  <a href="{{ route('admin.issues.create') }}" class="ds-btn ds-btn-pri">
+    <i class="bi bi-plus-lg"></i> Add Issue
+  </a>
 </div>
-<div class="card-ojs fu fd2">
-  <div style="overflow-x:auto;">
-    <table class="tbl">
-      <thead><tr><th>Jurnal</th><th>Volume / Nomor</th><th>Tahun</th><th>Status</th><th>Tgl Publish</th><th>Aksi</th></tr></thead>
+
+<div class="ds-card" data-aos="fade-up" data-aos-delay="200">
+  <div class="table-responsive">
+    <table class="ds-table">
+      <thead>
+        <tr>
+          <th>Journal</th>
+          <th>Volume / Number</th>
+          <th>Year</th>
+          <th>Status</th>
+          <th>Published Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
       <tbody>
         @forelse($issues as $issue)
         <tr>
-          <td><div class="cell-pri">{{ $issue->journal->abbreviation ?? $issue->journal->title }}</div></td>
-          <td><span class="cell-mute">Vol. {{ $issue->volume }} No. {{ $issue->number }}</span></td>
-          <td><span class="cell-mute">{{ $issue->year }}</span></td>
           <td>
-            @if($issue->status==='published')
-              <span class="bx bx-published-issue">Published</span>
+            <div style="font-weight:600;color:var(--text-main);">{{ $issue->journal->abbreviation ?? $issue->journal->title }}</div>
+            <div style="font-size:12px;color:var(--text-muted);">{{ $issue->journal->title }}</div>
+          </td>
+          <td style="font-weight:600;color:var(--text-main);">Vol. {{ $issue->volume }} No. {{ $issue->number }}</td>
+          <td style="font-size:14px;color:var(--text-muted);">{{ $issue->year }}</td>
+          <td>
+            @if($issue->status === 'published')
+              <x-status-badge status="published" label="Published"/>
             @else
-              <span class="bx bx-draft">Draft</span>
+              <x-status-badge status="draft" label="Draft"/>
             @endif
           </td>
-          <td><span class="cell-mute">{{ $issue->published_date?->format('d M Y') ?? '—' }}</span></td>
+          <td style="font-size:13px;color:var(--text-muted);">{{ $issue->published_date?->format('d M Y') ?? '—' }}</td>
           <td>
-            @if($issue->status==='draft')
-            <form method="POST" action="{{ route('admin.issues.publish',$issue) }}" style="display:inline;">
-              @csrf @method('PATCH')
-              <button type="submit" onclick="return confirm('Publish issue ini?')" class="btn-o btn-suc btn-sm"><i class="bi bi-send-check"></i> Publish</button>
-            </form>
+            @if($issue->status === 'draft')
+              <form method="POST" action="{{ route('admin.issues.publish',$issue) }}" style="display:inline;">
+                @csrf @method('PATCH')
+                <button type="submit" class="ds-btn ds-btn-suc ds-btn-sm"
+                        onclick="return confirm('Publish this issue? This will make it publicly visible.')">
+                  <i class="bi bi-send-check"></i> Publish
+                </button>
+              </form>
             @else
-              <span style="font-size:12px;color:var(--txt4);">Sudah publish</span>
+              <span style="font-size:12px;color:var(--success);font-weight:600;"><i class="bi bi-check-circle me-1"></i>Published</span>
             @endif
           </td>
         </tr>
         @empty
-        <tr><td colspan="6"><div class="empty-st"><div class="empty-icon"><i class="bi bi-collection"></i></div><div class="empty-title">Belum ada issue</div></div></td></tr>
+        <tr>
+          <td colspan="6">
+            <x-ui.empty-state icon="bi-collection" title="No issues yet" description="Create the first issue to start accepting articles.">
+              <a href="{{ route('admin.issues.create') }}" class="ds-btn ds-btn-pri" style="display:inline-flex;">
+                <i class="bi bi-plus-lg"></i> Add Issue
+              </a>
+            </x-ui.empty-state>
+          </td>
+        </tr>
         @endforelse
       </tbody>
     </table>
   </div>
-  <div class="card-ftr">{{ $issues->links() }}</div>
+  @if($issues->hasPages())
+  <div style="padding:16px 24px;border-top:1px solid var(--border);background:var(--bg-app);">
+    {{ $issues->links() }}
+  </div>
+  @endif
 </div>
+
 @endsection

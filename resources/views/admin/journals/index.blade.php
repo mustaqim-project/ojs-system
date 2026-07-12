@@ -1,30 +1,83 @@
 {{-- admin/journals/index.blade.php --}}
 @extends('layouts.dashboard')
 @section('content')
-<div class="pg-hdr"><div><h2 class="pg-title">Kelola Jurnal</h2></div>
-  <a href="{{ route('admin.journals.create') }}" class="btn-o btn-pri"><i class="bi bi-plus-lg"></i> Tambah Jurnal</a>
+
+<div class="ds-page-hdr" data-aos="fade-up">
+  <div>
+    <x-ui.breadcrumb :items="[['label'=>'Admin'],['label'=>'Journals']]"/>
+    <h1 class="ds-page-title">Journal Management</h1>
+    <p class="ds-page-subtitle">{{ $journals->total() }} journals managed on this platform</p>
+  </div>
+  <a href="{{ route('admin.journals.create') }}" class="ds-btn ds-btn-pri">
+    <i class="bi bi-plus-lg"></i> Add Journal
+  </a>
 </div>
-<div class="card-ojs fu fd2">
-  <div style="overflow-x:auto;">
-    <table class="tbl">
-      <thead><tr><th>Jurnal</th><th>ISSN</th><th>Editor</th><th>Artikel</th><th>Frekuensi</th><th>Status</th><th>Aksi</th></tr></thead>
+
+<div class="ds-card" data-aos="fade-up" data-aos-delay="200">
+  <div class="table-responsive">
+    <table class="ds-table">
+      <thead>
+        <tr>
+          <th>Journal</th>
+          <th>ISSN</th>
+          <th>Chief Editor</th>
+          <th>Articles</th>
+          <th>Frequency</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
       <tbody>
         @forelse($journals as $j)
-        <tr class="{{ $j->trashed()?'opacity-50':'' }}">
-          <td><div class="cell-pri">{{ $j->title }}</div>@if($j->abbreviation)<span style="font-size:10px;font-family:'Courier New',monospace;background:#f1f5f9;color:#64748b;padding:2px 7px;border-radius:4px;">{{ $j->abbreviation }}</span>@endif</td>
-          <td><span class="cell-mute" style="font-family:'Courier New',monospace;">{{ $j->issn_print??$j->issn_online??'—' }}</span></td>
-          <td><span class="cell-mute">{{ $j->editor?->name??'—' }}</span></td>
-          <td><span class="cell-mute">{{ $j->articles_count }}</span></td>
-          <td><span class="cell-mute" style="text-transform:capitalize;">{{ $j->frequency }}</span></td>
-          <td>@if($j->trashed())<span style="font-size:11px;color:var(--red);">Dihapus</span>@elseif($j->is_active)<span style="font-size:11px;color:var(--green);font-weight:600;">Aktif</span>@else<span style="font-size:11px;color:var(--txt3);">Nonaktif</span>@endif</td>
-          <td>@if(!$j->trashed())<a href="{{ route('admin.journals.edit',$j) }}" class="btn-o btn-out btn-sm"><i class="bi bi-pencil"></i></a>@endif</td>
+        <tr style="{{ $j->trashed() ? 'opacity:0.5;' : '' }}">
+          <td>
+            <div style="font-weight:700;font-size:14px;color:var(--text-main);">{{ $j->title }}</div>
+            @if($j->abbreviation)
+              <span style="font-size:11px;font-family:monospace;background:#F1F5F9;color:#475569;padding:2px 7px;border-radius:4px;display:inline-block;margin-top:3px;">{{ $j->abbreviation }}</span>
+            @endif
+          </td>
+          <td style="font-family:monospace;font-size:13px;color:var(--text-muted);">{{ $j->issn_print ?? $j->issn_online ?? '—' }}</td>
+          <td style="font-size:13px;color:var(--text-muted);">{{ $j->editor?->name ?? '—' }}</td>
+          <td>
+            <span style="font-weight:600;font-size:14px;color:var(--primary);">{{ $j->articles_count }}</span>
+          </td>
+          <td style="font-size:13px;color:var(--text-muted);text-transform:capitalize;">{{ $j->frequency ?? '—' }}</td>
+          <td>
+            @if($j->trashed())
+              <x-status-badge status="rejected" label="Deleted"/>
+            @elseif($j->is_active)
+              <x-status-badge status="active" label="Active"/>
+            @else
+              <x-status-badge status="inactive" label="Inactive"/>
+            @endif
+          </td>
+          <td>
+            @if(!$j->trashed())
+              <a href="{{ route('admin.journals.edit',$j) }}" class="ds-btn ds-btn-out ds-btn-xs" title="Edit Journal">
+                <i class="bi bi-pencil"></i>
+              </a>
+            @endif
+          </td>
         </tr>
         @empty
-        <tr><td colspan="7"><div class="empty-st"><div class="empty-icon"><i class="bi bi-journals"></i></div><div class="empty-title">Belum ada jurnal</div></div></td></tr>
+        <tr>
+          <td colspan="7">
+            <x-ui.empty-state icon="bi-journals" title="No journals yet" description="Create the first journal to get started.">
+              <a href="{{ route('admin.journals.create') }}" class="ds-btn ds-btn-pri" style="display:inline-flex;">
+                <i class="bi bi-plus-lg"></i> Add Journal
+              </a>
+            </x-ui.empty-state>
+          </td>
+        </tr>
         @endforelse
       </tbody>
     </table>
   </div>
-  <div class="card-ftr">{{ $journals->links() }}</div>
+  @if($journals->hasPages())
+  <div style="padding:16px 24px;border-top:1px solid var(--border);background:var(--bg-app);">
+    {{ $journals->links() }}
+  </div>
+  @endif
 </div>
+
 @endsection

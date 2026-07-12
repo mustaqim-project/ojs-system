@@ -1,101 +1,100 @@
 @extends('layouts.dashboard')
 @section('content')
-<div class="pg-hdr">
+
+<div class="ds-page-hdr" data-aos="fade-up">
   <div>
-    <div class="pg-crumb"><a href="{{ route('author.dashboard') }}">Dashboard</a><span>›</span><a href="{{ route('author.articles.index') }}">Artikel</a><span>›</span><span class="cur">Submit Baru</span></div>
-    <h2 class="pg-title">Submit Artikel Baru</h2>
-    <p class="pg-desc">Isi semua informasi artikel dengan lengkap dan benar.</p>
+    <x-ui.breadcrumb :items="[['label'=>'Author Portal'],['label'=>'My Submissions','href'=>route('author.articles.index')],['label'=>'New Submission']]"/>
+    <h1 class="ds-page-title">Submit New Manuscript</h1>
+    <p class="ds-page-subtitle">Fill in all required information before submitting your manuscript.</p>
   </div>
 </div>
 
-<div style="max-width:760px;">
-  <form method="POST" action="{{ route('author.articles.store') }}" enctype="multipart/form-data">
+<div style="max-width:780px;">
+  <form method="POST" action="{{ route('author.articles.store') }}" enctype="multipart/form-data" novalidate>
     @csrf
 
-    {{-- Jurnal --}}
-    <div class="f-section fu fd1">
-      <div class="f-section-hdr"><h3 class="f-section-title">Pilih Jurnal</h3></div>
-      <div class="f-section-body">
-        <div class="f-group">
-          <label class="lbl">Jurnal Tujuan <span class="req">*</span></label>
-          <select name="journal_id" class="sel {{ $errors->has('journal_id') ? 'is-invalid':'' }}" required>
-            <option value="">-- Pilih jurnal yang sesuai --</option>
+    {{-- Step 1: Journal --}}
+    <div class="ds-section" data-aos="fade-up" data-aos-delay="100">
+      <div class="ds-section-hdr">
+        <h3 class="ds-section-title"><i class="bi bi-journal-bookmark me-2" style="color:var(--primary);"></i>Step 1: Select Journal</h3>
+      </div>
+      <div class="ds-section-body">
+        <x-ui.form-field label="Target Journal" required :error="$errors->first('journal_id')">
+          <x-ui.select name="journal_id" required :error="$errors->has('journal_id')" placeholder="Select the journal that best fits your manuscript">
             @foreach($journals as $j)
-            <option value="{{ $j->id }}" {{ old('journal_id')==$j->id?'selected':'' }}>{{ $j->title }} ({{ $j->abbreviation }})</option>
+              <option value="{{ $j->id }}" {{ old('journal_id') == $j->id ? 'selected' : '' }}>
+                {{ $j->title }}{{ $j->abbreviation ? ' ('.$j->abbreviation.')' : '' }}
+              </option>
             @endforeach
-          </select>
-          @error('journal_id')<div class="f-err"><i class="bi bi-exclamation-circle me-1"></i>{{ $message }}</div>@enderror
-        </div>
+          </x-ui.select>
+        </x-ui.form-field>
       </div>
     </div>
 
-    {{-- Info Artikel --}}
-    <div class="f-section fu fd2">
-      <div class="f-section-hdr"><h3 class="f-section-title">Informasi Artikel</h3></div>
-      <div class="f-section-body">
-        <div class="f-group">
-          <label class="lbl">Judul Artikel <span class="req">*</span></label>
-          <input class="inp {{ $errors->has('title')?'is-invalid':'' }}" type="text" name="title"
-                 value="{{ old('title') }}" placeholder="Masukkan judul artikel yang deskriptif" required/>
-          @error('title')<div class="f-err">{{ $message }}</div>@enderror
-        </div>
-        <div class="f-group">
-          <label class="lbl">Abstrak <span class="req">*</span> <span class="hint">Minimal 100 karakter</span></label>
-          <textarea name="abstract" class="txta {{ $errors->has('abstract')?'is-invalid':'' }}"
-                    rows="6" placeholder="Tuliskan abstrak penelitian Anda secara ringkas dan jelas..." required>{{ old('abstract') }}</textarea>
-          @error('abstract')<div class="f-err">{{ $message }}</div>@enderror
-        </div>
+    {{-- Step 2: Article Info --}}
+    <div class="ds-section" data-aos="fade-up" data-aos-delay="200">
+      <div class="ds-section-hdr">
+        <h3 class="ds-section-title"><i class="bi bi-file-earmark-text me-2" style="color:var(--primary);"></i>Step 2: Manuscript Information</h3>
+      </div>
+      <div class="ds-section-body">
+        <x-ui.form-field label="Article Title" required :error="$errors->first('title')" hint="Be specific and descriptive. Avoid abbreviations.">
+          <x-ui.input type="text" name="title" :value="old('title')" placeholder="A Comprehensive Study of..." required :error="$errors->has('title')"/>
+        </x-ui.form-field>
+        <x-ui.form-field label="Abstract" required :error="$errors->first('abstract')" hint="Minimum 100 characters. Summarize the problem, method, results, and conclusion.">
+          <x-ui.textarea name="abstract" rows="6" placeholder="This study investigates..." required :error="$errors->has('abstract')">{{ old('abstract') }}</x-ui.textarea>
+        </x-ui.form-field>
         <div class="row g-3">
           <div class="col-md-8">
-            <label class="lbl">Kata Kunci <span class="req">*</span> <span class="hint">Pisahkan dengan koma</span></label>
-            <input class="inp {{ $errors->has('keywords')?'is-invalid':'' }}" type="text" name="keywords"
-                   value="{{ old('keywords') }}" placeholder="machine learning, deep learning, NLP"/>
-            @error('keywords')<div class="f-err">{{ $message }}</div>@enderror
+            <x-ui.form-field label="Keywords" required :error="$errors->first('keywords')" hint="Separate with commas. Maximum 6 keywords.">
+              <x-ui.input type="text" name="keywords" :value="old('keywords')" placeholder="machine learning, NLP, deep learning" :error="$errors->has('keywords')"/>
+            </x-ui.form-field>
           </div>
           <div class="col-md-4">
-            <label class="lbl">Bahasa <span class="req">*</span></label>
-            <select name="language" class="sel">
-              <option value="id" {{ old('language','id')==='id'?'selected':'' }}>Bahasa Indonesia</option>
-              <option value="en" {{ old('language')==='en'?'selected':'' }}>English</option>
-            </select>
+            <x-ui.form-field label="Language" required>
+              <x-ui.select name="language" required>
+                <option value="id" {{ old('language','id') === 'id' ? 'selected' : '' }}>Bahasa Indonesia</option>
+                <option value="en" {{ old('language') === 'en' ? 'selected' : '' }}>English</option>
+              </x-ui.select>
+            </x-ui.form-field>
           </div>
         </div>
       </div>
     </div>
 
-    {{-- File --}}
-    <div class="f-section fu fd3">
-      <div class="f-section-hdr"><h3 class="f-section-title">Upload File</h3></div>
-      <div class="f-section-body">
-        <div class="f-group">
-          <label class="lbl">File Manuskrip <span class="req">*</span></label>
-          <input class="file-inp {{ $errors->has('manuscript_file')?'is-invalid':'' }}" type="file"
-                 name="manuscript_file" accept=".pdf,.doc,.docx" required/>
-          <div class="f-hint-txt"><i class="bi bi-info-circle me-1"></i>Format: PDF, DOC, DOCX. Maks 10MB.</div>
-          @error('manuscript_file')<div class="f-err">{{ $message }}</div>@enderror
-        </div>
-        <div class="f-group">
-          <label class="lbl">Cover Letter <span class="hint">(opsional)</span></label>
-          <input class="file-inp" type="file" name="cover_letter" accept=".pdf,.doc,.docx"/>
-          <div class="f-hint-txt"><i class="bi bi-info-circle me-1"></i>Surat pengantar kepada editor.</div>
-        </div>
-        <div class="f-group mb-0">
-          <label class="lbl">Catatan untuk Editor <span class="hint">(opsional)</span></label>
-          <textarea name="author_note" class="txta" rows="3" placeholder="Informasi tambahan untuk editor...">{{ old('author_note') }}</textarea>
-        </div>
+    {{-- Step 3: File Upload --}}
+    <div class="ds-section" data-aos="fade-up" data-aos-delay="300">
+      <div class="ds-section-hdr">
+        <h3 class="ds-section-title"><i class="bi bi-upload me-2" style="color:var(--primary);"></i>Step 3: Upload Files</h3>
+      </div>
+      <div class="ds-section-body">
+        <x-ui.form-field label="Manuscript File" required :error="$errors->first('manuscript_file')" hint="Accepted: PDF, DOC, DOCX. Maximum 10MB.">
+          <input type="file" name="manuscript_file" accept=".pdf,.doc,.docx" required
+                 class="{{ $errors->has('manuscript_file') ? 'is-invalid' : '' }}"
+                 style="display:block;width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-app);font-size:13px;color:var(--text-main);cursor:pointer;"/>
+        </x-ui.form-field>
+        <x-ui.form-field label="Cover Letter" hint="Optional. Letter of introduction to the editor.">
+          <input type="file" name="cover_letter" accept=".pdf,.doc,.docx"
+                 style="display:block;width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-app);font-size:13px;color:var(--text-main);cursor:pointer;"/>
+        </x-ui.form-field>
+        <x-ui.form-field label="Note to Editor" hint="Optional. Additional information for the editorial team.">
+          <x-ui.textarea name="author_note" rows="3" placeholder="Additional context for the editorial team...">{{ old('author_note') }}</x-ui.textarea>
+        </x-ui.form-field>
       </div>
     </div>
 
-    {{-- Warning --}}
-    <div class="alert-o a-info fu fd4" style="margin-bottom:20px;">
+    {{-- Submission Warning --}}
+    <div class="ds-alert ds-alert-info" data-aos="fade-up" style="margin-bottom:24px;">
       <i class="bi bi-info-circle-fill"></i>
-      <div style="font-size:13px;">Pastikan manuskrip Anda sudah sesuai panduan penulisan jurnal sebelum disubmit. Artikel yang disubmit tidak dapat ditarik kembali.</div>
+      <div style="font-size:13px;line-height:1.6;">Please ensure your manuscript follows the journal's author guidelines before submitting. Once submitted, the manuscript cannot be withdrawn without contacting the editorial office.</div>
     </div>
 
-    <div class="d-flex gap-3 fu fd5">
-      <button type="submit" class="btn-o btn-pri btn-lg"><i class="bi bi-send-fill"></i> Submit Artikel</button>
-      <a href="{{ route('author.articles.index') }}" class="btn-o btn-out btn-lg">Batal</a>
+    <div style="display:flex;gap:12px;">
+      <button type="submit" class="ds-btn ds-btn-pri" style="height:44px;padding:0 28px;font-size:15px;">
+        <i class="bi bi-send-fill"></i> Submit Manuscript
+      </button>
+      <a href="{{ route('author.articles.index') }}" class="ds-btn ds-btn-out" style="height:44px;padding:0 20px;">Cancel</a>
     </div>
   </form>
 </div>
+
 @endsection

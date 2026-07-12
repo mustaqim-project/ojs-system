@@ -1,29 +1,27 @@
+{{--
+  Usage:
+  <x-ui.empty-state
+    icon="bi-file-earmark-text"
+    title="No articles yet"
+    description="Submit your first manuscript to get started."
+  >
+    <x-ui.button icon="bi-plus-lg" href="{{ route('...') }}">New Submission</x-ui.button>
+  </x-ui.empty-state>
+--}}
 @props([
-    'title' => null,
+    'icon'        => 'bi-inbox',
+    'title'       => 'Nothing here yet',
     'description' => null,
-    'icon' => 'inbox',
-    'actionText' => null,
-    'actionUrl' => null,
 ])
-
-<div class="text-center py-12 px-6">
-    <div class="mx-auto w-16 h-16 rounded-2xl bg-gray-50 border border-gray-200 flex items-center justify-center mb-4">
-        <x-dynamic-component component="heroicon::{{ $icon }}" class="h-7 w-7 text-gray-400" />
+<div style="text-align:center;padding:64px 24px;" {{ $attributes }}>
+    <div style="width:56px;height:56px;border-radius:14px;background:var(--bg-app);border:1px solid var(--border);display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px;">
+        <i class="bi {{ $icon }}" style="font-size:24px;color:var(--text-muted);"></i>
     </div>
-    
-    @if($title)
-        <h3 class="text-base font-semibold text-gray-900 mb-1">{{ $title }}</h3>
-    @endif
-    
+    <h3 style="font-size:15px;font-weight:700;color:var(--text-main);margin:0 0 6px;">{{ $title }}</h3>
     @if($description)
-        <p class="text-sm text-gray-500 max-w-md mx-auto mb-6">{{ $description }}</p>
+    <p style="font-size:14px;color:var(--text-muted);margin:0 auto 24px;max-width:360px;line-height:1.6;">{{ $description }}</p>
     @endif
-    
-    @if($actionText && $actionUrl)
-        <a href="{{ $actionUrl }}" 
-           class="inline-flex items-center gap-2 px-4 py-2 bg-[#0F4C81] text-white text-sm font-medium rounded-lg hover:bg-[#0d4372] transition-colors">
-            <x-dynamic-component component="heroicon::plus" class="h-4 w-4" />
-            {{ $actionText }}
-        </a>
+    @if($slot->isNotEmpty())
+    <div>{{ $slot }}</div>
     @endif
 </div>

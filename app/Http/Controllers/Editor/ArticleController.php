@@ -64,6 +64,10 @@ class ArticleController extends Controller
 
         try {
             $this->articleService->assignReviewer($article, $request->reviewer_id);
+            
+            // Notify Reviewer
+            $reviewer->notify(new \App\Notifications\ReviewAssignedNotification($article));
+
             return back()->with('success', 'Reviewer berhasil diassign!');
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
@@ -94,6 +98,10 @@ class ArticleController extends Controller
                 'reject'   => 'Artikel ditolak.',
                 'revision' => 'Permintaan revisi telah dikirim ke author.',
             };
+
+            // Notify Author
+            $article->refresh();
+            $article->author->notify(new \App\Notifications\ArticleStatusUpdatedNotification($article, ucfirst($article->status)));
 
             return back()->with('success', $message);
         } catch (\Exception $e) {

@@ -1,81 +1,102 @@
 @extends('layouts.dashboard')
 @section('content')
-<div class="pg-hdr">
+
+<div class="ds-page-hdr" data-aos="fade-up">
   <div>
-    <div class="pg-crumb"><a href="{{ route('reviewer.dashboard') }}">Dashboard</a><span>›</span><a href="{{ route('reviewer.reviews.index') }}">Tugas Review</a><span>›</span><span class="cur">Detail</span></div>
-    <h2 class="pg-title">Form Review</h2>
+    <x-ui.breadcrumb :items="[['label'=>'Reviewer Portal'],['label'=>'Review Assignments','href'=>route('reviewer.reviews.index')],['label'=>'Review Form']]"/>
+    <h1 class="ds-page-title">Review Assignment</h1>
   </div>
-  @php $sc=['pending'=>'bx-yellow','in_progress'=>'bx-blue','completed'=>'bx-green','declined'=>'bx-red'];
-  $cl=$sc[$review->status]??'bx-gray'; @endphp
-  <span class="bx {{ $cl }}" style="font-size:12px;padding:5px 14px;">{{ ucfirst(str_replace('_',' ',$review->status)) }}</span>
+  @php
+  $sc = [
+    'pending'    => ['bg'=>'var(--warning-bg)','color'=>'var(--warning)'],
+    'in_progress'=> ['bg'=>'var(--info-bg)','color'=>'var(--info)'],
+    'completed'  => ['bg'=>'var(--success-bg)','color'=>'var(--success)'],
+    'accepted'   => ['bg'=>'var(--success-bg)','color'=>'var(--success)'],
+    'declined'   => ['bg'=>'var(--danger-bg)','color'=>'var(--danger)'],
+  ];
+  $style = $sc[$review->status] ?? ['bg'=>'var(--bg-app)','color'=>'var(--text-muted)'];
+  @endphp
+  <span style="display:inline-flex;align-items:center;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:700;background:{{ $style['bg'] }};color:{{ $style['color'] }};">
+    {{ ucfirst(str_replace('_',' ',$review->status)) }}
+  </span>
 </div>
 
 <div class="row g-3">
-  {{-- Main: Article + Form --}}
+  {{-- Main Content: Article + Form --}}
   <div class="col-12 col-lg-8">
 
-    {{-- Article summary --}}
-    <div class="card-ojs fu fd1">
-      <div class="card-hdr">
-        <span class="card-title">Artikel yang Direview</span>
-        <div class="d-flex gap-2">
-          <a href="{{ asset('storage/'.$review->article->manuscript_file) }}" target="_blank" class="btn-o btn-pri btn-sm">
-            <i class="bi bi-download"></i> Download Manuskrip
+    {{-- Article Summary --}}
+    <div class="ds-card" data-aos="fade-up" data-aos-delay="100" style="margin-bottom:20px;">
+      <div class="ds-card-hdr">
+        <span class="ds-card-title">Manuscript for Review</span>
+        <div style="display:flex;gap:8px;">
+          <a href="{{ asset('storage/'.$review->article->manuscript_file) }}" target="_blank" class="ds-btn ds-btn-out ds-btn-sm">
+            <i class="bi bi-download"></i> Manuscript
           </a>
           @if($review->article->revision_file)
-          <a href="{{ asset('storage/'.$review->article->revision_file) }}" target="_blank" class="btn-o btn-warn btn-sm">
-            <i class="bi bi-download"></i> Revisi
+          <a href="{{ asset('storage/'.$review->article->revision_file) }}" target="_blank" class="ds-btn ds-btn-sm" style="background:var(--warning-bg);color:var(--warning);border-color:var(--warning);">
+            <i class="bi bi-download"></i> Revision
           </a>
           @endif
         </div>
       </div>
-      <div class="card-body-p">
-        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
-          <span style="font-size:11px;font-weight:600;color:#2563eb;background:#eff6ff;padding:3px 10px;border-radius:20px;">{{ $review->article->journal->title }}</span>
-          <span style="font-size:11px;font-weight:600;color:#047857;background:#ecfdf5;padding:3px 10px;border-radius:20px;">{{ strtoupper($review->article->language) }}</span>
+      <div style="padding:24px;">
+        <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+          <span style="font-size:11px;font-weight:700;color:var(--primary);background:var(--primary-light);padding:3px 10px;border-radius:20px;">{{ $review->article->journal->title }}</span>
+          <span style="font-size:11px;font-weight:700;color:var(--success);background:var(--success-bg);padding:3px 10px;border-radius:20px;">{{ strtoupper($review->article->language) }}</span>
         </div>
-        <h3 style="font-size:16px;font-weight:700;color:#0f172a;letter-spacing:-.02em;margin-bottom:12px;line-height:1.4;">{{ $review->article->title }}</h3>
-        <p style="font-size:13px;color:#475569;line-height:1.75;margin-bottom:14px;">{{ $review->article->abstract }}</p>
+        <h3 style="font-size:18px;font-weight:700;color:var(--text-main);letter-spacing:-0.02em;margin-bottom:12px;line-height:1.4;">{{ $review->article->title }}</h3>
+        <p style="font-size:14px;color:var(--text-main);line-height:1.75;margin-bottom:16px;">{{ $review->article->abstract }}</p>
+        
         @if($review->article->keywords)
-        <div style="display:flex;flex-wrap:wrap;gap:5px;">
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
           @foreach($review->article->keywords_array as $kw)
-          <span style="font-size:11px;background:#f1f5f9;color:#64748b;padding:3px 9px;border-radius:5px;border:1px solid #e2e8f0;">{{ $kw }}</span>
+            <span style="font-size:12px;background:#F1F5F9;color:#475569;padding:3px 10px;border-radius:20px;border:1px solid #E2E8F0;">{{ $kw }}</span>
           @endforeach
         </div>
         @endif
       </div>
+
       @if($review->due_date)
-      <div class="card-ftr d-flex align-items-center gap-2">
-        @php $ov=$review->due_date->isPast()&&$review->status!=='completed'; @endphp
-        <i class="bi bi-clock" style="color:{{ $ov?'var(--red)':'var(--txt3)' }};"></i>
-        <span style="font-size:12px;color:{{ $ov?'var(--red)':'var(--txt2)' }};font-weight:{{ $ov?'700':'400' }};">
-          Batas review: {{ $review->due_date->format('d M Y') }}
-          {{ $ov ? ' (Terlambat!)' : '' }}
+      <div style="padding:14px 24px;border-top:1px solid var(--border);background:var(--bg-app);display:flex;align-items:center;gap:8px;">
+        @php $ov = $review->due_date->isPast() && $review->status !== 'completed'; @endphp
+        <i class="bi bi-clock" style="color:{{ $ov ? 'var(--danger)' : 'var(--text-muted)' }};"></i>
+        <span style="font-size:13px;color:{{ $ov ? 'var(--danger)' : 'var(--text-main)' }};font-weight:{{ $ov ? '700' : '500' }};">
+          Review Due: {{ $review->due_date->format('d M Y') }}
+          @if($ov) <span style="margin-left:4px;">(Overdue!)</span> @endif
         </span>
       </div>
       @endif
     </div>
 
-    {{-- Accept/Decline (pending) --}}
+    {{-- Accept/Decline Action (pending) --}}
     @if($review->status === 'pending')
-    <div class="row g-3 mt-0 fu fd2">
+    <div class="row g-3" data-aos="fade-up" data-aos-delay="200" style="margin-bottom:20px;">
       <div class="col-md-6">
-        <div style="background:var(--green-bg);border:1px solid var(--green-b);border-radius:var(--r);padding:20px;">
-          <h4 style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:8px;"><i class="bi bi-check-circle me-2"></i>Terima Tugas</h4>
-          <p style="font-size:12px;color:#166534;margin-bottom:14px;line-height:1.6;">Saya bersedia melakukan review artikel ini sesuai batas waktu.</p>
-          <form method="POST" action="{{ route('reviewer.reviews.accept',$review) }}">
+        <div style="background:var(--success-bg);border:1px solid #C6F6D5;border-radius:10px;padding:24px;height:100%;display:flex;flex-direction:column;">
+          <h4 style="font-size:14px;font-weight:700;color:var(--success);margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+            <i class="bi bi-check-circle-fill" style="font-size:18px;"></i> Accept Assignment
+          </h4>
+          <p style="font-size:13px;color:#276749;margin-bottom:20px;line-height:1.6;flex:1;">I agree to peer review this manuscript and can complete it by the requested deadline.</p>
+          <form method="POST" action="{{ route('reviewer.reviews.accept', $review) }}">
             @csrf
-            <button type="submit" class="btn-o btn-suc w-100 justify-content-center"><i class="bi bi-check-lg"></i> Terima Tugas Review</button>
+            <button type="submit" class="ds-btn ds-btn-suc w-100 justify-content-center" style="height:42px;">
+              <i class="bi bi-check-lg"></i> Accept Request
+            </button>
           </form>
         </div>
       </div>
       <div class="col-md-6">
-        <div style="background:var(--red-bg);border:1px solid var(--red-b);border-radius:var(--r);padding:20px;">
-          <h4 style="font-size:13px;font-weight:700;color:var(--red);margin-bottom:8px;"><i class="bi bi-x-circle me-2"></i>Tolak Tugas</h4>
-          <p style="font-size:12px;color:#991b1b;margin-bottom:14px;line-height:1.6;">Tidak dapat mengerjakan review ini (konflik jadwal, dll).</p>
-          <form method="POST" action="{{ route('reviewer.reviews.decline',$review) }}">
+        <div style="background:var(--danger-bg);border:1px solid #FED7D7;border-radius:10px;padding:24px;height:100%;display:flex;flex-direction:column;">
+          <h4 style="font-size:14px;font-weight:700;color:var(--danger);margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+            <i class="bi bi-x-circle-fill" style="font-size:18px;"></i> Decline Assignment
+          </h4>
+          <p style="font-size:13px;color:#9B2C2C;margin-bottom:20px;line-height:1.6;flex:1;">I am unable to review this manuscript (e.g., conflict of interest, lack of time/expertise).</p>
+          <form method="POST" action="{{ route('reviewer.reviews.decline', $review) }}">
             @csrf
-            <button type="submit" onclick="return confirm('Tolak tugas review ini?')" class="btn-o btn-danger w-100 justify-content-center"><i class="bi bi-x-lg"></i> Tolak Tugas Review</button>
+            <button type="submit" onclick="return confirm('Are you sure you want to decline this review assignment?')" class="ds-btn ds-btn-danger w-100 justify-content-center" style="height:42px;">
+              <i class="bi bi-x-lg"></i> Decline Request
+            </button>
           </form>
         </div>
       </div>
@@ -83,55 +104,65 @@
     @endif
 
     {{-- Review Form (in_progress / accepted) --}}
-    @if(in_array($review->status,['in_progress','accepted']))
-    <div class="card-ojs fu fd3 mt-0">
-      <div class="card-hdr">
-        <span class="card-title"><i class="bi bi-pencil-square me-2" style="color:var(--acc);"></i>Submit Review</span>
+    @if(in_array($review->status, ['in_progress', 'accepted']))
+    <div class="ds-section" data-aos="fade-up" data-aos-delay="300">
+      <div class="ds-section-hdr">
+        <span class="ds-section-title"><i class="bi bi-pencil-square me-2" style="color:var(--primary);"></i>Submit Peer Review</span>
       </div>
-      <div class="card-body-p">
-        <form method="POST" action="{{ route('reviewer.reviews.submit',$review) }}" enctype="multipart/form-data">
+      <div class="ds-section-body">
+        <form method="POST" action="{{ route('reviewer.reviews.submit', $review) }}" enctype="multipart/form-data" novalidate>
           @csrf
 
           {{-- Recommendation --}}
-          <div class="f-group">
-            <label class="lbl">Rekomendasi <span class="req">*</span></label>
-            <div class="row g-2">
-              @php $recs=[
-                'accept' =>['label'=>'Accept','sub'=>'Artikel layak publish tanpa revisi','bg'=>'var(--green-bg)','border'=>'var(--green-b)','ic'=>'var(--green)','icon'=>'bi-check-circle-fill'],
-                'minor'  =>['label'=>'Minor Revision','sub'=>'Perlu sedikit perbaikan kecil','bg'=>'var(--yllw-bg)','border'=>'var(--yllw-b)','ic'=>'var(--yllw)','icon'=>'bi-arrow-clockwise'],
-                'major'  =>['label'=>'Major Revision','sub'=>'Perlu revisi substansial','bg'=>'var(--orng-bg)','border'=>'var(--orng-b)','ic'=>'var(--orng)','icon'=>'bi-exclamation-circle-fill'],
-                'reject' =>['label'=>'Reject','sub'=>'Artikel tidak layak publish','bg'=>'var(--red-bg)','border'=>'var(--red-b)','ic'=>'var(--red)','icon'=>'bi-x-circle-fill'],
-              ]; @endphp
-              @foreach($recs as $val=>$r)
-              <div class="col-6">
-                <label style="display:flex;align-items:start;gap:10px;padding:12px;border:2px solid {{ old('recommendation')===$val?$r['border']:'var(--brd)' }};border-radius:8px;cursor:pointer;background:{{ old('recommendation')===$val?$r['bg']:'var(--surf)' }};transition:all .15s;"
-                       onmouseover="this.style.borderColor='{{ $r['border'] }}'" onmouseout="if(!this.querySelector('input').checked){this.style.borderColor='var(--brd)';this.style.background='var(--surf)'}">
-                  <input type="radio" name="recommendation" value="{{ $val }}" {{ old('recommendation')===$val?'checked':'' }} required style="margin-top:2px;accent-color:{{ $r['ic'] }};"
-                         onchange="document.querySelectorAll('.rec-label').forEach(l=>{l.style.borderColor='var(--brd)';l.style.background='var(--surf)'});this.closest('label').style.borderColor='{{ $r['border'] }}';this.closest('label').style.background='{{ $r['bg'] }}'"/>
+          <div style="margin-bottom:24px;">
+            <label style="font-size:13px;font-weight:600;color:var(--text-main);display:block;margin-bottom:12px;">Recommendation <span style="color:var(--danger);">*</span></label>
+            <div class="row g-3">
+              @php
+              $recs = [
+                'accept' =>['label'=>'Accept','sub'=>'Publish without revisions','bg'=>'var(--success-bg)','border'=>'#C6F6D5','ic'=>'var(--success)','icon'=>'bi-check-circle-fill'],
+                'minor'  =>['label'=>'Minor Revision','sub'=>'Requires small corrections','bg'=>'var(--warning-bg)','border'=>'#FEEBC8','ic'=>'var(--warning)','icon'=>'bi-arrow-clockwise'],
+                'major'  =>['label'=>'Major Revision','sub'=>'Requires substantial changes','bg'=>'var(--warning-bg)','border'=>'#FBD38D','ic'=>'#D97706','icon'=>'bi-exclamation-triangle-fill'],
+                'reject' =>['label'=>'Reject','sub'=>'Not suitable for publication','bg'=>'var(--danger-bg)','border'=>'#FED7D7','ic'=>'var(--danger)','icon'=>'bi-x-circle-fill'],
+              ];
+              @endphp
+              @foreach($recs as $val => $r)
+              <div class="col-sm-6">
+                <label style="display:flex;align-items:flex-start;gap:12px;padding:16px;border:2px solid {{ old('recommendation')===$val?$r['border']:'var(--border)' }};border-radius:8px;cursor:pointer;background:{{ old('recommendation')===$val?$r['bg']:'var(--bg-surface)' }};transition:all 0.2s;"
+                       onmouseover="this.style.borderColor='{{ $r['border'] }}'" onmouseout="if(!this.querySelector('input').checked){this.style.borderColor='var(--border)';this.style.background='var(--bg-surface)'}">
+                  <input type="radio" name="recommendation" value="{{ $val }}" {{ old('recommendation')===$val?'checked':'' }} required style="margin-top:2px;accent-color:{{ $r['ic'] }};width:16px;height:16px;"
+                         onchange="document.querySelectorAll('.rec-label').forEach(l=>{l.style.borderColor='var(--border)';l.style.background='var(--bg-surface)'});this.closest('label').style.borderColor='{{ $r['border'] }}';this.closest('label').style.background='{{ $r['bg'] }}'"/>
                   <div>
-                    <div style="font-size:13px;font-weight:700;color:{{ $r['ic'] }};display:flex;align-items:center;gap:6px;"><i class="{{ $r['icon'] }}"></i>{{ $r['label'] }}</div>
-                    <div style="font-size:11px;color:var(--txt2);margin-top:2px;">{{ $r['sub'] }}</div>
+                    <div style="font-size:14px;font-weight:700;color:{{ $r['ic'] }};display:flex;align-items:center;gap:6px;margin-bottom:2px;"><i class="{{ $r['icon'] }}"></i>{{ $r['label'] }}</div>
+                    <div style="font-size:12px;color:var(--text-muted);line-height:1.4;">{{ $r['sub'] }}</div>
                   </div>
                 </label>
               </div>
               @endforeach
             </div>
-            @error('recommendation')<div class="f-err">{{ $message }}</div>@enderror
+            @error('recommendation')<div style="font-size:12px;color:var(--danger);margin-top:6px;">{{ $message }}</div>@enderror
           </div>
 
-          {{-- Scores --}}
-          <div class="f-group">
-            <label class="lbl">Penilaian <span class="hint">(1–5, opsional)</span></label>
-            <div style="background:var(--canvas);border:1px solid var(--brd);border-radius:8px;padding:16px;">
-              <div class="row g-3">
-                @foreach(['originality_score'=>'Orisinalitas','methodology_score'=>'Metodologi','relevance_score'=>'Relevansi & Kontribusi','writing_score'=>'Kualitas Penulisan'] as $field=>$lbl)
-                <div class="col-6">
-                  <label class="lbl" style="font-size:11px;margin-bottom:4px;">{{ $lbl }}</label>
-                  <div style="display:flex;gap:4px;">
+          {{-- Evaluation Scores --}}
+          <div style="margin-bottom:24px;">
+            <label style="font-size:13px;font-weight:600;color:var(--text-main);display:flex;align-items:center;gap:6px;margin-bottom:10px;">
+              Evaluation Scores <span style="font-size:11px;font-weight:normal;color:var(--text-muted);">(1–5, optional)</span>
+            </label>
+            <div style="background:var(--bg-app);border:1px solid var(--border);border-radius:8px;padding:20px;">
+              <div class="row g-4">
+                @foreach([
+                  'originality_score' => 'Originality & Innovation',
+                  'methodology_score' => 'Methodology & Technical Rigor',
+                  'relevance_score'   => 'Relevance & Contribution',
+                  'writing_score'     => 'Quality of Writing & Presentation'
+                ] as $field => $lbl)
+                <div class="col-sm-6">
+                  <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:8px;">{{ $lbl }}</div>
+                  <div class="rating-stars" style="display:flex;gap:8px;">
                     @for($s=1;$s<=5;$s++)
-                    <label style="cursor:pointer;">
+                    <label style="cursor:pointer;display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--bg-surface);border:1px solid var(--border);transition:all 0.15s;"
+                           onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='none'">
                       <input type="radio" name="{{ $field }}" value="{{ $s }}" {{ old($field)==$s?'checked':'' }} style="display:none;"/>
-                      <i class="bi bi-star-fill" style="font-size:18px;color:{{ old($field)>=$s?'#f59e0b':'#e2e8f0' }};transition:color .1s;" id="star_{{ $field }}_{{ $s }}"></i>
+                      <i class="bi bi-star-fill" style="font-size:16px;color:{{ old($field)>=$s?'#F59E0B':'#E2E8F0' }};transition:color 0.15s;"></i>
                     </label>
                     @endfor
                   </div>
@@ -141,109 +172,115 @@
             </div>
           </div>
 
-          {{-- Comments to author --}}
-          <div class="f-group">
-            <label class="lbl">Komentar untuk Penulis <span class="req">*</span> <span class="hint">Minimal 50 karakter</span></label>
-            <textarea name="comments_to_author" class="txta {{ $errors->has('comments_to_author')?'is-invalid':'' }}"
-                      rows="7" required
-                      placeholder="Berikan komentar konstruktif tentang isi artikel, metodologi, relevansi, dan kualitas penulisan. Komentar ini akan dibagikan kepada penulis...">{{ old('comments_to_author') }}</textarea>
-            @error('comments_to_author')<div class="f-err">{{ $message }}</div>@enderror
-          </div>
+          {{-- Comments to Author --}}
+          <x-ui.form-field label="Comments to Author" required :error="$errors->first('comments_to_author')" hint="Provide constructive feedback on the methodology, results, and writing. This will be visible to the author. (Min 50 characters)">
+            <x-ui.textarea name="comments_to_author" rows="8" required :error="$errors->has('comments_to_author')" placeholder="Detailed review outlining strengths, weaknesses, and specific areas for improvement...">{{ old('comments_to_author') }}</x-ui.textarea>
+          </x-ui.form-field>
 
-          {{-- Confidential comments --}}
-          <div class="f-group">
-            <label class="lbl">Komentar Konfidensial untuk Editor <span class="hint">(tidak terlihat penulis)</span></label>
-            <textarea name="comments_to_editor" class="txta" rows="3"
-                      placeholder="Catatan rahasia khusus untuk editor (kekhawatiran, konflik kepentingan, dll)...">{{ old('comments_to_editor') }}</textarea>
-          </div>
+          {{-- Comments to Editor --}}
+          <x-ui.form-field label="Confidential Comments to Editor" hint="Optional. Concerns regarding academic misconduct, conflict of interest, or candid remarks. This will NOT be shared with the author.">
+            <x-ui.textarea name="comments_to_editor" rows="4" placeholder="Confidential remarks for the editorial team...">{{ old('comments_to_editor') }}</x-ui.textarea>
+          </x-ui.form-field>
 
-          {{-- Review file --}}
-          <div class="f-group">
-            <label class="lbl">File Review Anotasi <span class="hint">(opsional)</span></label>
-            <input class="file-inp" type="file" name="review_file" accept=".pdf,.doc,.docx"/>
-            <div class="f-hint-txt"><i class="bi bi-info-circle me-1"></i>Upload manuskrip dengan anotasi jika ada. PDF/DOC/DOCX, maks 10MB.</div>
-          </div>
+          {{-- Annotated File --}}
+          <x-ui.form-field label="Annotated Manuscript File" hint="Optional. Upload a PDF/DOCX containing your specific comments or highlighted text. Max 10MB.">
+            <input type="file" name="review_file" accept=".pdf,.doc,.docx"
+                   style="display:block;width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-app);font-size:13px;color:var(--text-main);cursor:pointer;"/>
+          </x-ui.form-field>
 
-          {{-- Warning --}}
-          <div class="alert-o a-warn" style="margin-bottom:20px;">
+          {{-- Submission Warning --}}
+          <div class="ds-alert ds-alert-warn" style="margin-bottom:24px;">
             <i class="bi bi-exclamation-triangle-fill"></i>
-            <span style="font-size:13px;">Review yang sudah disubmit <strong>tidak dapat diubah</strong>. Pastikan semua informasi sudah benar.</span>
+            <span style="font-size:13px;">Once submitted, your review <strong>cannot be modified</strong>. Please ensure all feedback and recommendations are final.</span>
           </div>
 
-          <button type="submit"
-                  onclick="return confirm('Submit review? Tindakan ini tidak dapat dibatalkan.')"
-                  class="btn-o btn-pri btn-lg w-100 justify-content-center">
-            <i class="bi bi-send-fill"></i> Submit Review Sekarang
+          <button type="submit" onclick="return confirm('Are you sure you want to submit this review? This action cannot be undone.')" class="ds-btn ds-btn-pri w-100 justify-content-center" style="height:48px;font-size:15px;">
+            <i class="bi bi-send-fill"></i> Submit Final Review
           </button>
         </form>
       </div>
     </div>
     @endif
 
-    {{-- Completed view --}}
+    {{-- Completed View --}}
     @if($review->status === 'completed')
-    <div class="card-ojs fu fd2 mt-0">
-      <div class="card-hdr">
-        <span class="card-title"><i class="bi bi-check-circle-fill me-2" style="color:var(--green);"></i>Review Selesai</span>
+    <div class="ds-card" data-aos="fade-up" data-aos-delay="200">
+      <div class="ds-card-hdr">
+        <span class="ds-card-title"><i class="bi bi-check-circle-fill me-2" style="color:var(--success);"></i>Review Completed</span>
         @if($review->recommendation)
-          @php $rc=['accept'=>'bx-green','minor'=>'bx-yellow','major'=>'bx-orange','reject'=>'bx-red'][$review->recommendation]??'bx-gray'; @endphp
-          <span class="bx {{ $rc }}">{{ $review->recommendation_label }}</span>
+          <x-status-badge :status="$review->recommendation" :label="$review->recommendation_label"/>
         @endif
       </div>
-      <div class="card-body-p">
+      <div style="padding:24px;">
         @if($review->average_score)
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--brd);">
-          <span style="font-size:12px;color:var(--txt2);">Skor Rata-rata:</span>
-          <div class="score-stars">
-            @for($s=1;$s<=5;$s++)<i class="bi bi-star-fill {{ $s<=$review->average_score?'star-on':'star-off' }}"></i>@endfor
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);">
+          <span style="font-size:13px;font-weight:600;color:var(--text-muted);">Overall Score:</span>
+          <div style="display:flex;gap:4px;">
+            @for($s=1;$s<=5;$s++)
+              <i class="bi bi-star-fill" style="font-size:16px;color:{{ $s <= $review->average_score ? '#F59E0B' : '#E2E8F0' }};"></i>
+            @endfor
           </div>
-          <span style="font-size:13px;font-weight:700;color:var(--txt);">{{ $review->average_score }}/5</span>
+          <span style="font-size:16px;font-weight:800;color:var(--text-main);margin-left:4px;">{{ $review->average_score }}/5</span>
         </div>
         @endif
+        
         @if($review->comments_to_author)
-        <div style="margin-bottom:12px;">
-          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--txt2);margin-bottom:8px;">Komentar untuk Penulis:</div>
-          <div style="background:var(--canvas);border-radius:8px;padding:14px;font-size:13px;color:var(--txt2);line-height:1.75;">{{ $review->comments_to_author }}</div>
+        <div style="margin-bottom:20px;">
+          <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:10px;">Comments to Author:</div>
+          <div style="background:var(--bg-app);border-radius:10px;padding:20px;font-size:14px;color:var(--text-main);line-height:1.7;">{{ $review->comments_to_author }}</div>
         </div>
         @endif
-        <div style="font-size:12px;color:var(--txt3);">Diselesaikan: {{ $review->completed_at?->format('d M Y H:i') }}</div>
+
+        <div style="font-size:13px;color:var(--text-muted);display:flex;align-items:center;gap:6px;">
+          <i class="bi bi-clock-history"></i> Completed on: {{ $review->completed_at?->format('d M Y H:i') }}
+        </div>
       </div>
     </div>
     @endif
 
   </div>
 
-  {{-- Sidebar --}}
+  {{-- Right Sidebar --}}
   <div class="col-12 col-lg-4">
-    <div style="position:sticky;top:80px;display:flex;flex-direction:column;gap:12px;">
+    <div style="position:sticky;top:80px;display:flex;flex-direction:column;gap:20px;">
 
-      {{-- Article info --}}
-      <div class="card-ojs fu fd1">
-        <div class="card-hdr"><span class="card-title">Informasi Tugas</span></div>
+      {{-- Assignment Info --}}
+      <div class="ds-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="ds-card-hdr"><span class="ds-card-title">Assignment Details</span></div>
         <div>
-          <div class="info-row"><span class="info-key">Jurnal</span><span class="info-val" style="font-size:12px;">{{ $review->article->journal->title }}</span></div>
-          <div class="info-row"><span class="info-key">Author</span><span class="info-val" style="font-size:12px;">{{ $review->article->author->name }}</span></div>
-          @if($review->due_date)
-          <div class="info-row">
-            <span class="info-key">Batas Waktu</span>
-            <span class="info-val" style="font-size:12px;color:{{ $review->due_date->isPast()&&$review->status!=='completed'?'var(--red)':'var(--txt)' }};font-weight:600;">
-              {{ $review->due_date->format('d M Y') }}
-            </span>
+          @php
+          $rows = [
+            'Journal' => $review->article->journal->title,
+            'Author'  => $review->article->author->name,
+            'Assigned'=> $review->created_at->format('d M Y'),
+          ];
+          if($review->due_date) {
+            $ov = $review->due_date->isPast() && $review->status !== 'completed';
+            $rows['Deadline'] = '<span style="color:'.($ov?'var(--danger)':'var(--text-main)').';font-weight:600;">'.$review->due_date->format('d M Y').'</span>';
+          }
+          if($review->completed_at) $rows['Completed'] = $review->completed_at->format('d M Y');
+          @endphp
+          @foreach($rows as $k => $v)
+          <div style="display:grid;grid-template-columns:90px 1fr;gap:8px;padding:12px 20px;border-bottom:1px solid var(--border);font-size:13px;">
+            <span style="font-weight:500;color:var(--text-muted);">{{ $k }}</span>
+            <span style="color:var(--text-main);">{!! $v !!}</span>
           </div>
-          @endif
-          <div class="info-row"><span class="info-key">Diterima</span><span class="info-val" style="font-size:12px;">{{ $review->created_at->format('d M Y') }}</span></div>
-          @if($review->completed_at)<div class="info-row"><span class="info-key">Selesai</span><span class="info-val" style="font-size:12px;">{{ $review->completed_at->format('d M Y') }}</span></div>@endif
+          @endforeach
         </div>
       </div>
 
-      {{-- Scoring guide --}}
-      @if(in_array($review->status,['in_progress','accepted']))
-      <div class="card-ojs fu fd3">
-        <div class="card-hdr"><span class="card-title">Panduan Penilaian</span></div>
-        <div class="card-body-p">
-          @foreach(['5 — Sangat Baik / Excellent','4 — Baik / Good','3 — Cukup / Fair','2 — Kurang / Poor','1 — Sangat Kurang / Very Poor'] as $g)
-          <div style="font-size:12px;color:var(--txt2);padding:3px 0;border-bottom:1px solid var(--canvas);">{{ $g }}</div>
-          @endforeach
+      {{-- Scoring Guide --}}
+      @if(in_array($review->status, ['in_progress', 'accepted']))
+      <div class="ds-card" data-aos="fade-up" data-aos-delay="300">
+        <div class="ds-card-hdr"><span class="ds-card-title">Scoring Guide</span></div>
+        <div style="padding:16px 20px;">
+          <ul style="margin:0;padding-left:16px;font-size:13px;color:var(--text-muted);line-height:2;">
+            <li><strong style="color:var(--text-main);">5</strong> — Excellent / Outstanding</li>
+            <li><strong style="color:var(--text-main);">4</strong> — Good / Above Average</li>
+            <li><strong style="color:var(--text-main);">3</strong> — Fair / Acceptable</li>
+            <li><strong style="color:var(--text-main);">2</strong> — Poor / Needs Work</li>
+            <li><strong style="color:var(--text-main);">1</strong> — Very Poor / Unacceptable</li>
+          </ul>
         </div>
       </div>
       @endif
@@ -254,8 +291,8 @@
 
 @push('scripts')
 <script>
-// Interactive star rating
-document.querySelectorAll('.f-group .row.g-3 label').forEach(lbl => {
+// Interactive star rating for review form
+document.querySelectorAll('.rating-stars label').forEach(lbl => {
   lbl.addEventListener('mouseover', () => {
     const input = lbl.querySelector('input[type=radio]');
     if (!input) return;
@@ -263,18 +300,28 @@ document.querySelectorAll('.f-group .row.g-3 label').forEach(lbl => {
     const val  = parseInt(input.value);
     document.querySelectorAll(`input[name="${name}"]`).forEach((inp, i) => {
       const star = inp.closest('label').querySelector('i');
-      if (star) star.style.color = (i < val) ? '#f59e0b' : '#e2e8f0';
+      if (star) star.style.color = (i < val) ? '#F59E0B' : '#E2E8F0';
     });
   });
+  
+  const resetStars = (name) => {
+    const checked = document.querySelector(`input[name="${name}"]:checked`);
+    const val = checked ? parseInt(checked.value) : 0;
+    document.querySelectorAll(`input[name="${name}"]`).forEach((inp, i) => {
+      const star = inp.closest('label').querySelector('i');
+      if (star) star.style.color = (i < val) ? '#F59E0B' : '#E2E8F0';
+    });
+  };
+
+  lbl.closest('.rating-stars').addEventListener('mouseout', () => {
+    const input = lbl.querySelector('input[type=radio]');
+    if(input) resetStars(input.name);
+  });
+
   lbl.addEventListener('click', () => {
     const input = lbl.querySelector('input[type=radio]');
     if (!input) return;
-    const name = input.name;
-    const val  = parseInt(input.value);
-    document.querySelectorAll(`input[name="${name}"]`).forEach((inp, i) => {
-      const star = inp.closest('label').querySelector('i');
-      if (star) star.style.color = (i < val) ? '#f59e0b' : '#e2e8f0';
-    });
+    resetStars(input.name);
   });
 });
 </script>

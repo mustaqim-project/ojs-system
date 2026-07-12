@@ -1,74 +1,141 @@
 @extends('layouts.app')
 @section('content')
-{{-- Header --}}
-<div style="background:#fff;border-bottom:1px solid #e2e8f0;padding:40px 0 32px;">
-  <div class="container" style="max-width:1200px;">
-    <div style="font-size:12px;color:#94a3b8;margin-bottom:12px;">
-      <a href="{{ route('public.home') }}" style="color:#64748b;text-decoration:none;">Beranda</a> ›
-      <a href="{{ route('public.journals.index') }}" style="color:#64748b;text-decoration:none;"> Jurnal</a> ›
-      <span>{{ $journal->abbreviation ?? $journal->title }}</span>
+
+{{-- Hero Header --}}
+<div style="background:var(--bg-surface);border-bottom:1px solid var(--border);padding:60px 0 40px;">
+  <div class="container" style="max-width:1100px;">
+    
+    <div style="font-size:13px;color:var(--text-muted);margin-bottom:20px;font-weight:500;">
+      <a href="{{ route('public.home') }}" style="color:var(--text-muted);text-decoration:none;">Home</a> <span style="margin:0 6px;">›</span>
+      <a href="{{ route('public.journals.index') }}" style="color:var(--text-muted);text-decoration:none;">Journals</a> <span style="margin:0 6px;">›</span>
+      <span style="color:var(--text-main);">{{ $journal->abbreviation ?? $journal->title }}</span>
     </div>
-    <div class="d-flex align-items-start gap-4 flex-wrap">
-      <div style="width:60px;height:60px;border-radius:14px;background:#eff6ff;color:#2563eb;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">
-        <i class="bi bi-journal-text"></i>
+    
+    <div style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap;">
+      <div style="width:80px;height:80px;border-radius:20px;background:var(--primary-light);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:36px;flex-shrink:0;box-shadow:0 4px 12px rgba(37,99,235,0.15);">
+        <i class="bi bi-journal-bookmark-fill"></i>
       </div>
-      <div class="flex-1">
-        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap;">
+      
+      <div style="flex:1;min-width:300px;">
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap;">
           @if($journal->abbreviation)
-          <span style="font-size:11px;font-family:'Courier New',monospace;background:#f1f5f9;color:#64748b;padding:3px 9px;border-radius:5px;font-weight:600;">{{ $journal->abbreviation }}</span>
+            <span style="font-size:12px;font-family:monospace;background:var(--bg-app);color:var(--text-muted);padding:4px 10px;border-radius:6px;font-weight:700;border:1px solid var(--border);">{{ $journal->abbreviation }}</span>
           @endif
-          <span style="font-size:11px;background:#f0fdf4;color:#15803d;padding:3px 9px;border-radius:20px;font-weight:600;text-transform:capitalize;">{{ $journal->frequency }}</span>
-          <span style="font-size:11px;background:#f0fdf4;color:#047857;padding:3px 9px;border-radius:20px;font-weight:600;">Aktif</span>
+          <span style="font-size:12px;background:var(--bg-app);color:var(--text-main);border:1px solid var(--border);padding:4px 12px;border-radius:20px;font-weight:600;text-transform:capitalize;">
+            <i class="bi bi-arrow-repeat me-1" style="color:var(--primary);"></i> {{ $journal->frequency }} Issue
+          </span>
+          <span style="font-size:12px;background:var(--success-bg);color:var(--success);padding:4px 12px;border-radius:20px;font-weight:700;">
+            <i class="bi bi-check-circle-fill" style="font-size:10px;margin-right:4px;"></i> Active
+          </span>
         </div>
-        <h1 style="font-size:24px;font-weight:800;color:#0f172a;letter-spacing:-.04em;margin-bottom:6px;">{{ $journal->title }}</h1>
+        
+        <h1 style="font-size:32px;font-weight:800;color:var(--text-main);letter-spacing:-0.03em;margin-bottom:16px;line-height:1.2;">{{ $journal->title }}</h1>
+        
         @if($journal->description)
-        <p style="font-size:13px;color:#64748b;margin-bottom:10px;line-height:1.7;max-width:600px;">{{ $journal->description }}</p>
+        <p style="font-size:15px;color:var(--text-muted);margin-bottom:24px;line-height:1.75;max-width:800px;">{{ $journal->description }}</p>
         @endif
-        <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:#94a3b8;">
-          @if($journal->issn_print)<span><strong style="color:#475569;">ISSN Print:</strong> {{ $journal->issn_print }}</span>@endif
-          @if($journal->issn_online)<span><strong style="color:#475569;">ISSN Online:</strong> {{ $journal->issn_online }}</span>@endif
-          @if($journal->publisher)<span><strong style="color:#475569;">Penerbit:</strong> {{ $journal->publisher }}</span>@endif
-          @if($journal->editor)<span><strong style="color:#475569;">Editor:</strong> {{ $journal->editor->name }}</span>@endif
+        
+        <div style="display:flex;gap:20px;flex-wrap:wrap;font-size:13px;color:var(--text-muted);background:var(--bg-app);padding:16px 20px;border-radius:var(--radius-md);border:1px solid var(--border);display:inline-flex;">
+          @if($journal->issn_print)
+            <div style="display:flex;align-items:center;gap:6px;">
+              <i class="bi bi-upc-scan" style="color:var(--primary);"></i>
+              <strong style="color:var(--text-main);font-weight:600;">ISSN (Print):</strong> <span style="font-family:monospace;">{{ $journal->issn_print }}</span>
+            </div>
+          @endif
+          @if($journal->issn_online)
+            <div style="display:flex;align-items:center;gap:6px;">
+              <i class="bi bi-laptop" style="color:var(--primary);"></i>
+              <strong style="color:var(--text-main);font-weight:600;">ISSN (Online):</strong> <span style="font-family:monospace;">{{ $journal->issn_online }}</span>
+            </div>
+          @endif
+          @if($journal->publisher)
+            <div style="display:flex;align-items:center;gap:6px;">
+              <i class="bi bi-building" style="color:var(--primary);"></i>
+              <strong style="color:var(--text-main);font-weight:600;">Publisher:</strong> {{ $journal->publisher }}
+            </div>
+          @endif
+          @if($journal->editor)
+            <div style="display:flex;align-items:center;gap:6px;">
+              <i class="bi bi-person-badge" style="color:var(--primary);"></i>
+              <strong style="color:var(--text-main);font-weight:600;">Chief Editor:</strong> {{ $journal->editor->name }}
+            </div>
+          @endif
         </div>
       </div>
     </div>
   </div>
 </div>
-{{-- Issues --}}
-<div class="container" style="max-width:1200px;padding:40px 24px;">
+
+{{-- Issues & Articles --}}
+<div class="container" style="max-width:1100px;padding:48px 24px;">
+  
+  <h3 style="font-size:20px;font-weight:800;color:var(--text-main);margin-bottom:24px;letter-spacing:-0.02em;">Published Issues</h3>
+
   @forelse($journal->issues as $issue)
-  <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;margin-bottom:20px;">
-    <div style="padding:16px 24px;background:#f8f9fb;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+  <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:32px;box-shadow:var(--shadow-sm);">
+    
+    {{-- Issue Header --}}
+    <div style="padding:20px 24px;background:var(--bg-app);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
       <div>
-        <h2 style="font-size:14px;font-weight:700;color:#0f172a;margin:0;">{{ $issue->title }}</h2>
-        <span style="font-size:12px;color:#94a3b8;">{{ $issue->display_title }}</span>
+        <h2 style="font-size:16px;font-weight:700;color:var(--text-main);margin:0 0 4px 0;">{{ $issue->title }}</h2>
+        <div style="font-size:13px;color:var(--text-muted);font-weight:500;">{{ $issue->display_title }}</div>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;">
-        @if($issue->published_date)<span style="font-size:12px;color:#94a3b8;">{{ $issue->published_date->format('d M Y') }}</span>@endif
-        <span style="font-size:11px;background:#ecfdf5;color:#047857;padding:3px 10px;border-radius:20px;font-weight:600;">Published</span>
+      <div style="display:flex;align-items:center;gap:16px;">
+        @if($issue->published_date)
+          <span style="font-size:13px;color:var(--text-muted);font-weight:500;">
+            <i class="bi bi-calendar3 me-1"></i>{{ $issue->published_date->format('M d, Y') }}
+          </span>
+        @endif
+        <span style="font-size:12px;background:var(--success-bg);color:var(--success);padding:4px 12px;border-radius:20px;font-weight:700;">
+          Published
+        </span>
       </div>
     </div>
+
+    {{-- Articles in Issue --}}
     <div>
       @forelse($issue->publishedArticles as $article)
-      <div style="padding:14px 24px;border-bottom:1px solid #f8f9fb;display:flex;align-items:start;justify-content:space-between;gap:16px;transition:background .1s;" onmouseover="this.style.background='#fafbff'" onmouseout="this.style.background='';">
+      <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:20px;transition:background 0.2s;" onmouseover="this.style.background='var(--bg-app)'" onmouseout="this.style.background='transparent';">
+        
         <div style="flex:1;min-width:0;">
-          <a href="{{ route('public.articles.show', $article->slug) }}" style="font-size:13px;font-weight:600;color:#2563eb;text-decoration:none;line-height:1.4;display:block;margin-bottom:3px;">{{ $article->title }}</a>
-          <span style="font-size:12px;color:#94a3b8;">{{ $article->author->name }}
-            @if($article->pages_start) · Hal. {{ $article->pages_start }}–{{ $article->pages_end }}@endif
+          <a href="{{ route('public.articles.show', $article->slug) }}" style="font-size:15px;font-weight:700;color:var(--primary);text-decoration:none;line-height:1.4;display:block;margin-bottom:6px;">
+            {{ $article->title }}
+          </a>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+            <span style="font-size:13px;color:var(--text-main);font-weight:500;">
+              <i class="bi bi-person me-1" style="color:var(--text-muted);"></i>{{ $article->author->name }}
+            </span>
+            @if($article->pages_start)
+              <span style="font-size:13px;color:var(--text-muted);">
+                <i class="bi bi-file-text me-1"></i>Pages {{ $article->pages_start }}–{{ $article->pages_end }}
+              </span>
+            @endif
+          </div>
+        </div>
+        
+        @if($article->doi)
+        <div style="flex-shrink:0;text-align:right;">
+          <span style="display:inline-block;font-size:11px;font-family:monospace;color:var(--text-muted);background:var(--bg-app);border:1px solid var(--border);padding:4px 8px;border-radius:4px;">
+            DOI: {{ $article->doi }}
           </span>
         </div>
-        @if($article->doi)<span style="font-size:10px;font-family:'Courier New',monospace;color:#94a3b8;white-space:nowrap;">{{ $article->doi }}</span>@endif
+        @endif
+        
       </div>
       @empty
-      <div style="padding:24px;text-align:center;color:#94a3b8;font-size:13px;">Belum ada artikel di issue ini.</div>
+      <div style="padding:40px 24px;text-align:center;">
+        <i class="bi bi-file-earmark-text" style="font-size:32px;color:var(--border);display:block;margin-bottom:12px;"></i>
+        <div style="color:var(--text-muted);font-size:14px;">No articles have been published in this issue yet.</div>
+      </div>
       @endforelse
     </div>
+    
   </div>
   @empty
-  <div style="text-align:center;padding:64px 24px;">
-    <i class="bi bi-collection" style="font-size:40px;color:#e2e8f0;display:block;margin-bottom:16px;"></i>
-    <p style="color:#94a3b8;font-size:13px;margin:0;">Belum ada issue yang dipublish.</p>
+  <div style="padding:60px 0;">
+    <x-ui.empty-state icon="bi-collection" title="No published issues" description="This journal has not published any issues yet."/>
   </div>
   @endforelse
+
 </div>
 @endsection

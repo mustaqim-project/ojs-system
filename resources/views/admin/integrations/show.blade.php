@@ -1,59 +1,51 @@
 @extends('layouts.dashboard')
 @section('content')
-<div class="pg-hdr">
+
+<div class="ds-page-hdr" data-aos="fade-up">
   <div>
-    <div class="pg-crumb">
-      <a href="{{ route('admin.integrations.index') }}">Integrasi API</a>
-      <span>›</span><span class="cur">{{ $providerMeta['label'] }}</span>
-    </div>
-    <div style="display:flex;align-items:center;gap:12px;margin-top:6px;">
-      <div style="width:40px;height:40px;border-radius:10px;background:{{ $providerMeta['color'] ?? '#2563eb' }}18;color:{{ $providerMeta['color'] ?? '#2563eb' }};display:flex;align-items:center;justify-content:center;font-size:20px;">
+    <x-ui.breadcrumb :items="[['label'=>'Admin'],['label'=>'API Integrations','href'=>route('admin.integrations.index')],['label'=>$providerMeta['label']]]"/>
+    <div style="display:flex;align-items:center;gap:14px;margin-top:10px;">
+      <div style="width:44px;height:44px;border-radius:10px;background:{{ $providerMeta['color'] ?? 'var(--primary)' }}18;color:{{ $providerMeta['color'] ?? 'var(--primary)' }};display:flex;align-items:center;justify-content:center;font-size:22px;">
         <i class="{{ $providerMeta['icon'] ?? 'bi-plug' }}"></i>
       </div>
       <div>
-        <h2 class="pg-title" style="margin:0;">{{ $providerMeta['label'] }}</h2>
-        <p class="pg-desc" style="margin:0;">{{ $providerMeta['description'] }}</p>
+        <h1 class="ds-page-title" style="margin:0;">{{ $providerMeta['label'] }}</h1>
+        <p class="ds-page-subtitle" style="margin:0;">{{ $providerMeta['description'] }}</p>
       </div>
     </div>
   </div>
-  <div class="d-flex gap-2 align-items-center">
-    {{-- Test Koneksi --}}
-    <button id="btnTest" class="btn-o btn-out" onclick="testConnection()">
+  <div style="display:flex;gap:10px;">
+    <button id="btnTest" class="ds-btn ds-btn-out" onclick="testConnection()">
       <i class="bi bi-wifi" id="testIcon"></i>
-      <span id="testLabel">Test Koneksi</span>
+      <span id="testLabel">Test Connection</span>
     </button>
     @if($providerMeta['docs_url'] ?? false)
-    <a href="{{ $providerMeta['docs_url'] }}" target="_blank" class="btn-o btn-ghost">
+    <a href="{{ $providerMeta['docs_url'] }}" target="_blank" class="ds-btn ds-btn-ghost">
       <i class="bi bi-box-arrow-up-right"></i> Docs
     </a>
     @endif
   </div>
 </div>
 
-{{-- Test Result Alert --}}
-<div id="testResult" style="display:none;" class="alert-o fu mb-3"></div>
+{{-- Test Result --}}
+<div id="testResult" style="display:none;margin-bottom:20px;" class="ds-alert" data-aos="fade-up"></div>
 
-<div style="max-width:680px;">
-  <form method="POST" action="{{ route('admin.integrations.update', $provider) }}">
-    @csrf
-    @method('PUT')
+<div style="max-width:700px;">
+  <form method="POST" action="{{ route('admin.integrations.update', $provider) }}" novalidate>
+    @csrf @method('PUT')
 
-    {{-- Status Provider --}}
-    <div class="card-ojs fu fd1 mb-3">
-      <div class="card-hdr">
-        <span class="card-title">Status Integrasi</span>
-      </div>
+    {{-- Status --}}
+    <div class="ds-card" data-aos="fade-up" data-aos-delay="100" style="margin-bottom:20px;">
+      <div class="ds-card-hdr"><span class="ds-card-title">Integration Status</span></div>
       <div style="padding:16px 20px;">
-        <div style="display:flex;align-items:center;gap:16px;">
-          @php
-            $currentStatus = $fields->first()?->status ?? 'inactive';
-          @endphp
-          @foreach(['active' => ['Aktif','green','bi-check-circle-fill'], 'inactive' => ['Nonaktif','gray','bi-slash-circle'], 'testing' => ['Testing','yellow','bi-bug']] as $s => [$slabel, $scolor, $sicon])
-          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 14px;border-radius:8px;border:2px solid {{ $currentStatus===$s ? 'var(--acc)' : 'var(--brd)' }};flex:1;transition:all .15s;"
-                 id="status-label-{{ $s }}" onclick="selectStatus('{{ $s }}')">
-            <input type="radio" name="status" value="{{ $s }}" {{ $currentStatus===$s ? 'checked' : '' }} style="display:none;" id="status-{{ $s }}">
-            <i class="{{ $sicon }}" style="color:{{ $s==='active'?'var(--green)':($s==='testing'?'#d97706':'var(--txt3)') }};font-size:18px;"></i>
-            <span style="font-size:13px;font-weight:600;color:#0f172a;">{{ $slabel }}</span>
+        @php $currentStatus = $fields->first()?->status ?? 'inactive'; @endphp
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          @foreach(['active'=>['Active','var(--success)','bi-check-circle-fill'],'inactive'=>['Inactive','var(--text-muted)','bi-slash-circle'],'testing'=>['Testing','var(--warning)','bi-bug']] as $s=>[$slabel,$scol,$sicon])
+          <label id="status-label-{{ $s }}" onclick="selectStatus('{{ $s }}')"
+                 style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:12px 16px;border-radius:8px;border:2px solid {{ $currentStatus===$s ? $scol : 'var(--border)' }};flex:1;min-width:120px;transition:all 0.15s;background:{{ $currentStatus===$s ? 'var(--bg-app)' : 'var(--bg-surface)' }};">
+            <input type="radio" name="status" value="{{ $s }}" {{ $currentStatus===$s ? 'checked' : '' }} id="status-{{ $s }}" style="display:none;">
+            <i class="{{ $sicon }}" style="color:{{ $scol }};font-size:18px;"></i>
+            <span style="font-size:13px;font-weight:600;color:var(--text-main);">{{ $slabel }}</span>
           </label>
           @endforeach
         </div>
@@ -61,118 +53,100 @@
     </div>
 
     {{-- Fields --}}
-    <div class="card-ojs fu fd2">
-      <div class="card-hdr">
-        <span class="card-title">Konfigurasi {{ $providerMeta['label'] }}</span>
+    <div class="ds-card" data-aos="fade-up" data-aos-delay="200" style="margin-bottom:20px;">
+      <div class="ds-card-hdr">
+        <span class="ds-card-title">Configure {{ $providerMeta['label'] }}</span>
       </div>
-      <div style="padding:20px;">
+      <div style="padding:24px;">
         @foreach($fields as $field)
-        <div class="f-group" style="{{ $loop->last ? 'margin-bottom:0;' : '' }}">
+        <div style="margin-bottom:{{ $loop->last ? '0' : '20px' }};">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-            <label class="lbl" style="margin:0;">
-              {{ $field->label }}
-              @if($field->is_required)<span class="req">*</span>@endif
+            <label style="font-size:13px;font-weight:500;color:var(--text-main);">
+              {{ $field->label }}@if($field->is_required)<span style="color:var(--danger);margin-left:2px;">*</span>@endif
             </label>
-            <div style="display:flex;gap:6px;align-items:center;">
-              @if($field->is_secret)
-              <span style="font-size:10px;background:#fef2f2;color:#dc2626;padding:1px 7px;border-radius:10px;font-weight:700;border:1px solid #fecaca;">SECRET</span>
-              @endif
-              @if($field->field_type === 'boolean')
-              <span style="font-size:10px;color:#94a3b8;">Toggle</span>
-              @endif
-            </div>
+            @if($field->is_secret)
+              <span style="font-size:10px;background:#FEF2F2;color:#C53030;padding:1px 8px;border-radius:10px;font-weight:700;border:1px solid #FECACA;font-family:monospace;">SECRET</span>
+            @endif
           </div>
 
           @if($field->field_type === 'boolean')
-            {{-- Toggle switch --}}
-            <div style="display:flex;align-items:center;gap:12px;">
-              <label class="toggle-switch" style="position:relative;display:inline-block;width:44px;height:24px;">
-                <input type="checkbox" name="fields[{{ $field->key }}]" value="1"
-                  {{ $field->value == '1' ? 'checked' : '' }}
-                  style="opacity:0;width:0;height:0;">
-                <span class="toggle-slider" style="position:absolute;cursor:pointer;inset:0;background:#cbd5e1;border-radius:24px;transition:.3s;">
-                  <span style="position:absolute;content:'';height:18px;width:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s;"></span>
-                </span>
-              </label>
-              <span style="font-size:12px;color:#64748b;">{{ $field->value == '1' ? 'Aktif' : 'Nonaktif' }}</span>
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--bg-app);border:1px solid var(--border);border-radius:var(--radius-sm);">
+              <input type="hidden" name="fields[{{ $field->key }}]" value="0"/>
+              <x-ui.checkbox name="fields[{{ $field->key }}]" value="1" :checked="$field->value == '1'" label="{{ $field->value == '1' ? 'Enabled' : 'Disabled' }}"/>
             </div>
-
           @elseif($field->field_type === 'select')
-            <select name="fields[{{ $field->key }}]" class="sel">
+            <x-ui.select name="fields[{{ $field->key }}]">
               @foreach($field->field_options ?? [] as $optVal => $optLabel)
-              <option value="{{ $optVal }}" {{ $field->value === (string)$optVal ? 'selected' : '' }}>{{ $optLabel }}</option>
+                <option value="{{ $optVal }}" {{ $field->value === (string)$optVal ? 'selected' : '' }}>{{ $optLabel }}</option>
               @endforeach
-            </select>
-
+            </x-ui.select>
           @elseif($field->field_type === 'textarea')
-            <textarea name="fields[{{ $field->key }}]" class="txta" rows="4">{{ $field->is_secret ? '' : $field->value }}</textarea>
-
+            <x-ui.textarea name="fields[{{ $field->key }}]" rows="4">{{ $field->is_secret ? '' : $field->value }}</x-ui.textarea>
           @elseif($field->is_secret)
-            {{-- Password field — tampilkan placeholder jika sudah ada nilai --}}
-            <div style="position:relative;">
-              <input type="password" name="fields[{{ $field->key }}]" class="inp"
-                     placeholder="{{ !empty($field->getRawOriginal('value')) ? '••••••••  (sudah tersimpan — kosongkan untuk tidak mengubah)' : 'Masukkan ' . $field->label }}"
-                     autocomplete="new-password"/>
-              @if(!empty($field->getRawOriginal('value')))
-              <div style="display:flex;align-items:center;gap:6px;margin-top:6px;">
-                <input type="checkbox" name="clear[{{ $field->key }}]" id="clear_{{ $field->key }}" value="1">
-                <label for="clear_{{ $field->key }}" style="font-size:11px;color:#dc2626;cursor:pointer;">Hapus credential ini</label>
-              </div>
-              @endif
+            <x-ui.input type="password" name="fields[{{ $field->key }}]"
+                        :placeholder="!empty($field->getRawOriginal('value')) ? '••••••••  (saved — leave blank to keep)' : 'Enter '.$field->label"
+                        autocomplete="new-password"/>
+            @if(!empty($field->getRawOriginal('value')))
+            <div style="display:flex;align-items:center;gap:6px;margin-top:6px;">
+              <x-ui.checkbox name="clear[{{ $field->key }}]" value="1"/>
+              <label style="font-size:12px;color:var(--danger);cursor:pointer;">Remove this credential</label>
             </div>
-
+            @endif
           @else
-            <input type="{{ $field->field_type === 'url' ? 'url' : 'text' }}"
-                   name="fields[{{ $field->key }}]"
-                   class="inp {{ $errors->has('fields.'.$field->key) ? 'is-invalid' : '' }}"
-                   value="{{ old('fields.'.$field->key, $field->value) }}"
-                   placeholder="{{ $field->label }}"
-                   {{ $field->is_required ? 'required' : '' }}/>
+            <x-ui.input type="{{ $field->field_type === 'url' ? 'url' : 'text' }}"
+                        name="fields[{{ $field->key }}]"
+                        :value="old('fields.'.$field->key, $field->value)"
+                        :placeholder="$field->label"
+                        :error="$errors->has('fields.'.$field->key)"
+                        :required="$field->is_required"/>
           @endif
 
           @if($field->description)
-          <div class="f-hint-txt" style="margin-top:5px;">
-            <i class="bi bi-info-circle me-1" style="color:#94a3b8;"></i>{{ $field->description }}
-          </div>
+          <p style="font-size:12px;color:var(--text-muted);margin-top:5px;display:flex;align-items:center;gap:5px;">
+            <i class="bi bi-info-circle" style="color:#A0AEC0;"></i> {{ $field->description }}
+          </p>
           @endif
         </div>
         @endforeach
       </div>
     </div>
 
-    <div class="d-flex gap-3 mt-3 fu fd3">
-      <button type="submit" class="btn-o btn-pri btn-lg">
-        <i class="bi bi-floppy"></i> Simpan Konfigurasi
+    <div style="display:flex;gap:12px;" class="" data-aos="fade-up" data-aos-delay="300">
+      <button type="submit" class="ds-btn ds-btn-pri" style="height:42px;padding:0 24px;font-size:14px;">
+        <i class="bi bi-floppy"></i> Save Configuration
       </button>
-      <a href="{{ route('admin.integrations.index') }}" class="btn-o btn-out btn-lg">Batal</a>
+      <a href="{{ route('admin.integrations.index') }}" class="ds-btn ds-btn-out" style="height:42px;padding:0 20px;">Cancel</a>
     </div>
   </form>
 </div>
 
 @push('scripts')
 <script>
-// Radio status selector
 function selectStatus(val) {
+  const colors = { active:'var(--success)', inactive:'var(--text-muted)', testing:'var(--warning)' };
   document.querySelectorAll('[id^="status-label-"]').forEach(el => {
-    el.style.borderColor = 'var(--brd)';
+    el.style.borderColor = 'var(--border)';
+    el.style.background = 'var(--bg-surface)';
   });
-  document.getElementById('status-label-' + val).style.borderColor = 'var(--acc)';
+  const lbl = document.getElementById('status-label-' + val);
+  lbl.style.borderColor = colors[val] || 'var(--primary)';
+  lbl.style.background = 'var(--bg-app)';
   document.getElementById('status-' + val).checked = true;
 }
 
-// Test Connection
 async function testConnection() {
-  const btn   = document.getElementById('btnTest');
-  const icon  = document.getElementById('testIcon');
+  const btn = document.getElementById('btnTest');
+  const icon = document.getElementById('testIcon');
   const label = document.getElementById('testLabel');
-  const result= document.getElementById('testResult');
+  const result = document.getElementById('testResult');
 
   btn.disabled = true;
-  icon.className = 'bi bi-arrow-repeat spin';
+  icon.className = 'bi bi-arrow-repeat';
+  icon.style.animation = 'spin 0.7s linear infinite';
   label.textContent = 'Testing...';
 
   try {
-    const res  = await fetch('{{ route('admin.integrations.test', $provider) }}', {
+    const res = await fetch('{{ route('admin.integrations.test', $provider) }}', {
       method: 'POST',
       headers: {
         'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
@@ -182,36 +156,30 @@ async function testConnection() {
     const data = await res.json();
 
     result.style.display = 'flex';
-    result.className = 'alert-o fu mb-3 ' + (data.success ? 'a-suc' : 'a-err');
+    result.className = 'ds-alert fu ' + (data.success ? 'ds-alert-success' : 'ds-alert-danger');
     result.innerHTML = `<i class="bi bi-${data.success ? 'check-circle-fill' : 'x-circle-fill'}"></i> ${data.message}`;
-
     icon.className = 'bi bi-' + (data.success ? 'check-circle-fill' : 'x-circle-fill');
-    label.textContent = data.success ? 'Berhasil!' : 'Gagal';
+    icon.style.animation = '';
+    label.textContent = data.success ? 'Connected!' : 'Failed';
   } catch(e) {
     result.style.display = 'flex';
-    result.className = 'alert-o fu mb-3 a-err';
+    result.className = 'ds-alert fu ds-alert-danger';
     result.innerHTML = '<i class="bi bi-x-circle-fill"></i> Error: ' + e.message;
-    icon.className = 'bi bi-x-circle';
+    icon.style.animation = '';
     label.textContent = 'Error';
   } finally {
     btn.disabled = false;
     setTimeout(() => {
       icon.className = 'bi bi-wifi';
-      label.textContent = 'Test Koneksi';
-    }, 4000);
+      icon.style.animation = '';
+      label.textContent = 'Test Connection';
+    }, 5000);
   }
 }
 </script>
 <style>
-.spin { animation: spin .7s linear infinite; display:inline-block; }
-@keyframes spin { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
-
-.toggle-switch input:checked + .toggle-slider { background: var(--acc); }
-.toggle-switch input:checked + .toggle-slider span { transform: translateX(20px); }
-.toggle-slider span {
-  position:absolute;height:18px;width:18px;left:3px;bottom:3px;
-  background:#fff;border-radius:50%;transition:.3s;
-}
+@keyframes spin { from{transform:rotate(0deg);}to{transform:rotate(360deg);} }
 </style>
 @endpush
+
 @endsection

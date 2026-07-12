@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\IssueController;
 use App\Http\Controllers\Admin\JournalController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\SitePageController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ApiIntegrationController;
 use App\Http\Controllers\Admin\ExportController;
@@ -71,4 +72,10 @@ Route::middleware(['auth', 'role:admin'])
         // XML Exports (OJS 3.4 PKP compatible)
         Route::get('/export/article/{article}', [ExportController::class, 'exportArticle'])->name('export.article');
         Route::get('/export/issue/{issue}', [ExportController::class, 'exportIssue'])->name('export.issue');
+
+        // Site Pages (Admin-managed public content)
+        Route::get('/pages', [SitePageController::class, 'index'])->name('pages.index');
+        Route::get('/pages/{slug}/edit', [SitePageController::class, 'edit'])->name('pages.edit');
+        Route::put('/pages/{slug}', [SitePageController::class, 'update'])->name('pages.update');
+        Route::delete('/pages/{slug}/reset', [SitePageController::class, 'resetToDefault'])->name('pages.reset');
     });
