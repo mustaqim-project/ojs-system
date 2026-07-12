@@ -5,8 +5,8 @@
   <div class="row justify-content-center">
     <div class="col-12 col-md-8 col-lg-5">
       <div class="auth-card-header text-center mb-4">
-        <h1 class="auth-title">Reset Password</h1>
-        <p class="auth-sub text-muted">Enter your new password below.</p>
+        <h1 class="auth-title">Atur Ulang Kata Sandi</h1>
+        <p class="auth-sub text-muted">Masukkan kata sandi baru Anda di bawah ini.</p>
       </div>
 
       <div class="auth-card-body">
@@ -16,7 +16,7 @@
 
           <div class="mb-4">
             <label class="form-label" for="email">
-              Email Address 
+              Alamat Email 
               <span class="text-danger">*</span>
             </label>
             <div class="position-relative">
@@ -43,7 +43,7 @@
           
           <div class="mb-4">
             <label class="form-label" for="password">
-              New Password 
+              Kata Sandi Baru 
               <span class="text-danger">*</span>
             </label>
             <div class="position-relative">
@@ -72,7 +72,7 @@
           
           <div class="mb-4">
             <label class="form-label" for="password_confirmation">
-              Confirm Password 
+              Konfirmasi Kata Sandi 
               <span class="text-danger">*</span>
             </label>
             <div class="position-relative">
@@ -91,7 +91,7 @@
           </div>
           
           <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
-            <i class="bi bi-arrow-repeat me-2"></i> Reset Password
+            <i class="bi bi-arrow-repeat me-2"></i> Atur Ulang Kata Sandi
           </button>
         </form>
       </div>

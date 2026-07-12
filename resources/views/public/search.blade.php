@@ -5,18 +5,18 @@
 <div style="background:var(--bg-surface);border-bottom:1px solid var(--border);padding:60px 0 40px;">
   <div class="container" style="max-width:900px;">
     <h1 style="font-size:32px;font-weight:800;color:var(--text-main);letter-spacing:-0.03em;margin-bottom:24px;text-align:center;">
-      Search Articles
+      Cari Artikel
     </h1>
     <form action="{{ route('public.search') }}" method="GET" style="max-width:700px;margin:0 auto;">
       <div style="display:flex;gap:12px;background:var(--bg-surface);padding:8px;border-radius:16px;border:1px solid var(--border);box-shadow:0 10px 30px -10px rgba(0,0,0,0.08);">
         <div style="flex:1;position:relative;">
           <i class="bi bi-search" style="position:absolute;left:20px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:18px;"></i>
           <input type="text" name="q" value="{{ $query }}"
-                 placeholder="Search by title, abstract, keywords, or author name..."
+                 placeholder="Cari berdasarkan judul, abstrak, kata kunci, atau nama penulis..."
                  style="width:100%;height:52px;padding:0 20px 0 54px;border:none;background:transparent;font-size:16px;color:var(--text-main);outline:none;"/>
         </div>
         <button type="submit" class="ds-btn ds-btn-pri" style="height:52px;padding:0 32px;font-size:15px;border-radius:10px;">
-          Search
+          Cari
         </button>
       </div>
     </form>
@@ -31,16 +31,16 @@
       <div>
         @if($articles->total() > 0)
           <h2 style="font-size:16px;color:var(--text-main);margin:0;font-weight:600;">
-            Found {{ $articles->total() }} results for "<span style="color:var(--primary);">{{ $query }}</span>"
+            Ditemukan {{ $articles->total() }} hasil untuk "<span style="color:var(--primary);">{{ $query }}</span>"
           </h2>
         @else
           <h2 style="font-size:16px;color:var(--text-muted);margin:0;font-weight:500;">
-            No results found for "{{ $query }}"
+            Tidak ditemukan hasil untuk "{{ $query }}"
           </h2>
         @endif
       </div>
       @if($articles->total() > 0)
-      <span style="font-size:13px;color:var(--text-muted);font-weight:500;">Page {{ $articles->currentPage() }} of {{ $articles->lastPage() }}</span>
+      <span style="font-size:13px;color:var(--text-muted);font-weight:500;">Halaman {{ $articles->currentPage() }} dari {{ $articles->lastPage() }}</span>
       @endif
     </div>
 
@@ -99,14 +99,14 @@
       </div>
       @empty
       <div style="padding:60px 24px;">
-        <x-ui.empty-state icon="bi-search" title="No Results Found" description="Try adjusting your keywords or using broader search terms."/>
+        <x-ui.empty-state icon="bi-search" title="Tidak Ditemukan Hasil" description="Coba sesuaikan kata kunci Anda atau gunakan istilah pencarian yang lebih luas."/>
         
         <div style="display:flex;gap:12px;justify-content:center;margin-top:24px;">
           <a href="{{ route('public.articles.index') }}" class="ds-btn ds-btn-out">
-            <i class="bi bi-file-earmark-text"></i> Browse All Articles
+            <i class="bi bi-file-earmark-text"></i> Telusuri Semua Artikel
           </a>
           <a href="{{ route('public.journals.index') }}" class="ds-btn ds-btn-out">
-            <i class="bi bi-journals"></i> Explore Journals
+            <i class="bi bi-journals"></i> Jelajahi Jurnal
           </a>
         </div>
       </div>
@@ -124,14 +124,14 @@
       <div style="width:80px;height:80px;border-radius:24px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:36px;color:var(--primary);">
         <i class="bi bi-search"></i>
       </div>
-      <h2 style="font-size:24px;font-weight:800;color:var(--text-main);margin-bottom:12px;">Discover Academic Research</h2>
+      <h2 style="font-size:24px;font-weight:800;color:var(--text-main);margin-bottom:12px;">Temukan Penelitian Akademik</h2>
       <p style="font-size:15px;color:var(--text-muted);margin-bottom:40px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.7;">
-        Use the search bar above to query our extensive database of peer-reviewed articles by title, abstract, or author name.
+        Gunakan bilah pencarian di atas untuk mencari di basis data artikel tinjauan sejawat kami yang ekstensif berdasarkan judul, abstrak, atau nama penulis.
       </p>
       
       {{-- Popular Keywords --}}
       <div style="margin-bottom:40px;">
-        <div style="font-size:12px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px;">Trending Topics</div>
+        <div style="font-size:12px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px;">Topik Tren</div>
         <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
           @foreach(['Machine Learning','Artificial Intelligence','IoT','Cybersecurity','Data Science','Cloud Computing'] as $kw)
           <a href="{{ route('public.search', ['q' => $kw]) }}"
@@ -146,10 +146,10 @@
       
       <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
         <a href="{{ route('public.articles.index') }}" class="ds-btn ds-btn-pri" style="height:44px;padding:0 24px;">
-          <i class="bi bi-file-text"></i> View All Articles
+          <i class="bi bi-file-text"></i> Lihat Semua Artikel
         </a>
         <a href="{{ route('public.journals.index') }}" class="ds-btn ds-btn-out" style="height:44px;padding:0 24px;">
-          <i class="bi bi-journals"></i> Browse Journals
+          <i class="bi bi-journals"></i> Jelajahi Jurnal
         </a>
       </div>
     </div>

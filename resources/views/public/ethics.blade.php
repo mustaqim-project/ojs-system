@@ -7,9 +7,9 @@
     <div class="container">
         <div class="row align-items-center mb-5">
             <div class="col-lg-8" data-aos="fade-up">
-                <div class="section-tag">Policies</div>
-                <h1 class="hero-title">Publication <span class="accent">Ethics</span></h1>
-                <p class="hero-desc">{{ $page['meta_description'] ?? 'We are committed to maintaining the highest standards of publication ethics.' }}</p>
+                <div class="section-tag">Kebijakan</div>
+                <h1 class="hero-title">{!! $page['title'] ?? 'Etika <span class="accent">Publikasi</span>' !!}</h1>
+                <p class="hero-desc">{{ $page['meta_description'] ?? 'Kami berkomitmen untuk mempertahankan standar tertinggi etika publikasi.' }}</p>
             </div>
         </div>
     </div>
@@ -31,9 +31,9 @@
         <div class="row mb-5">
             <div class="col-12" data-aos="fade-up">
                 <div class="pub-card text-center" style="background: var(--primary); border: none; padding: 40px;">
-                    <h3 style="color: white; font-weight: 700; margin-bottom: 16px;">COPE Guidelines Statement</h3>
+                    <h3 style="color: white; font-weight: 700; margin-bottom: 16px;">Pernyataan Pedoman COPE</h3>
                     <p style="color: rgba(255,255,255,0.9); font-size: 16px; max-width: 800px; margin: 0 auto; line-height: 1.8;">
-                        This journal strictly follows the guidelines and core practices set by the <strong>Committee on Publication Ethics (COPE)</strong>. We expect all parties involved in the publication process—authors, editors, reviewers, and the publisher—to agree upon standards of expected ethical behavior.
+                        Jurnal ini dengan ketat mengikuti pedoman dan praktik inti yang ditetapkan oleh <strong>Committee on Publication Ethics (COPE)</strong>. Kami mengharapkan semua pihak yang terlibat dalam proses publikasi—penulis, editor, penelaah, dan penerbit—untuk menyetujui standar perilaku etis yang diharapkan.
                     </p>
                 </div>
             </div>
@@ -46,12 +46,12 @@
                     <div style="width: 48px; height: 48px; background: rgba(37,99,235,0.1); color: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px;">
                         <i class="bi bi-pen"></i>
                     </div>
-                    <h4 style="font-weight: 700; font-size: 18px; margin-bottom: 16px;">Duties of Authors</h4>
+                    <h4 style="font-weight: 700; font-size: 18px; margin-bottom: 16px;">Tugas Penulis</h4>
                     <ul style="color: var(--text-muted); font-size: 14px; line-height: 1.7; padding-left: 20px;">
-                        <li class="mb-2"><strong>Originality:</strong> Ensure all work is entirely original. Plagiarism in any form is unacceptable.</li>
-                        <li class="mb-2"><strong>Data Access:</strong> Be ready to provide raw data for editorial review upon request.</li>
-                        <li class="mb-2"><strong>Multiple Submissions:</strong> Do not submit the same manuscript to more than one journal concurrently.</li>
-                        <li class="mb-2"><strong>Authorship:</strong> Limit authorship to those who have made a significant contribution.</li>
+                        <li class="mb-2"><strong>Orisinalitas:</strong> Pastikan semua karya sepenuhnya asli. Plagiarisme dalam bentuk apa pun tidak dapat diterima.</li>
+                        <li class="mb-2"><strong>Akses Data:</strong> Bersiaplah untuk menyediakan data mentah untuk tinjauan editorial berdasarkan permintaan.</li>
+                        <li class="mb-2"><strong>Pengiriman Ganda:</strong> Jangan mengirimkan naskah yang sama ke lebih dari satu jurnal secara bersamaan.</li>
+                        <li class="mb-2"><strong>Kepenulisan:</strong> Batasi kepenulisan kepada mereka yang telah memberikan kontribusi signifikan.</li>
                     </ul>
                 </div>
             </div>
@@ -62,11 +62,11 @@
                     <div style="width: 48px; height: 48px; background: rgba(37,99,235,0.1); color: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px;">
                         <i class="bi bi-briefcase"></i>
                     </div>
-                    <h4 style="font-weight: 700; font-size: 18px; margin-bottom: 16px;">Duties of Editors</h4>
+                    <h4 style="font-weight: 700; font-size: 18px; margin-bottom: 16px;">Tugas Editor</h4>
                     <ul style="color: var(--text-muted); font-size: 14px; line-height: 1.7; padding-left: 20px;">
-                        <li class="mb-2"><strong>Fair Play:</strong> Evaluate manuscripts for their intellectual content without regard to race, gender, or citizenship.</li>
-                        <li class="mb-2"><strong>Confidentiality:</strong> Do not disclose any information about a submitted manuscript to anyone other than the corresponding author and reviewers.</li>
-                        <li class="mb-2"><strong>Conflict of Interest:</strong> Recuse themselves from considering manuscripts in which they have conflicts of interest.</li>
+                        <li class="mb-2"><strong>Keadilan:</strong> Mengevaluasi naskah berdasarkan konten intelektualnya tanpa memandang ras, jenis kelamin, atau kewarganegaraan.</li>
+                        <li class="mb-2"><strong>Kerahasiaan:</strong> Jangan mengungkapkan informasi apa pun tentang naskah yang dikirimkan kepada siapa pun selain penulis korespondensi dan penelaah.</li>
+                        <li class="mb-2"><strong>Konflik Kepentingan:</strong> Mengundurkan diri dari mempertimbangkan naskah di mana mereka memiliki konflik kepentingan.</li>
                     </ul>
                 </div>
             </div>
@@ -77,11 +77,11 @@
                     <div style="width: 48px; height: 48px; background: rgba(37,99,235,0.1); color: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px;">
                         <i class="bi bi-search"></i>
                     </div>
-                    <h4 style="font-weight: 700; font-size: 18px; margin-bottom: 16px;">Duties of Reviewers</h4>
+                    <h4 style="font-weight: 700; font-size: 18px; margin-bottom: 16px;">Tugas Penelaah</h4>
                     <ul style="color: var(--text-muted); font-size: 14px; line-height: 1.7; padding-left: 20px;">
-                        <li class="mb-2"><strong>Contribution:</strong> Peer review assists the editor in making editorial decisions and may assist the author in improving the paper.</li>
-                        <li class="mb-2"><strong>Promptness:</strong> Notify the editor immediately if unqualified or unable to review promptly.</li>
-                        <li class="mb-2"><strong>Objectivity:</strong> Reviews should be conducted objectively. Personal criticism of the author is inappropriate.</li>
+                        <li class="mb-2"><strong>Kontribusi:</strong> Tinjauan sejawat membantu editor dalam membuat keputusan editorial dan dapat membantu penulis dalam menyempurnakan makalah.</li>
+                        <li class="mb-2"><strong>Kecepatan:</strong> Beri tahu editor segera jika tidak memenuhi syarat atau tidak dapat meninjau dengan segera.</li>
+                        <li class="mb-2"><strong>Objektivitas:</strong> Tinjauan harus dilakukan secara objektif. Kritik pribadi terhadap penulis tidak pantas.</li>
                     </ul>
                 </div>
             </div>

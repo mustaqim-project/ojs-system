@@ -258,6 +258,14 @@ class ApiIntegrationController extends Controller
                 'docs_url'    => null,
                 'badge'       => 'Email',
             ],
+            'google' => [
+                'label'       => 'Google SSO',
+                'icon'        => 'bi-google',
+                'color'       => '#ea4335',
+                'description' => 'Konfigurasi OAuth 2.0 untuk Login dengan akun Google.',
+                'docs_url'    => 'https://console.cloud.google.com/',
+                'badge'       => 'Authentication',
+            ],
         ];
     }
 }

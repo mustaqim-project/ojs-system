@@ -44,7 +44,7 @@
     <div class="ds-card" data-aos="fade-up" data-aos-delay="200" style="margin-bottom:16px;">
       <div class="ds-card-hdr">
         <span class="ds-card-title"><i class="bi bi-image me-2" style="color:var(--primary);"></i>Proof of Payment</span>
-        <a href="{{ asset('storage/'.$payment->proof_file) }}" target="_blank" class="ds-btn ds-btn-out ds-btn-sm">
+        <a href="{{ asset($payment->proof_file) }}" target="_blank" class="ds-btn ds-btn-out ds-btn-sm">
           <i class="bi bi-box-arrow-up-right"></i> Open
         </a>
       </div>
@@ -52,7 +52,7 @@
         @php $ext = strtolower(pathinfo($payment->proof_file, PATHINFO_EXTENSION)); @endphp
         @if(in_array($ext, ['jpg','jpeg','png']))
           <div style="text-align:center;background:var(--bg-app);border-radius:8px;padding:12px;">
-            <img src="{{ asset('storage/'.$payment->proof_file) }}" alt="Proof" style="max-height:300px;max-width:100%;border-radius:8px;border:1px solid var(--border);"/>
+            <img src="{{ asset($payment->proof_file) }}" alt="Proof" style="max-height:300px;max-width:100%;border-radius:8px;border:1px solid var(--border);"/>
           </div>
         @else
           <div style="display:flex;align-items:center;gap:12px;padding:16px;background:var(--bg-app);border-radius:8px;border:1px solid var(--border);">
@@ -61,7 +61,7 @@
             </div>
             <div>
               <div style="font-size:13px;font-weight:600;color:var(--text-main);">Payment Receipt (PDF)</div>
-              <a href="{{ asset('storage/'.$payment->proof_file) }}" target="_blank" style="font-size:12px;color:var(--primary);">Open document →</a>
+              <a href="{{ asset($payment->proof_file) }}" target="_blank" style="font-size:12px;color:var(--primary);">Open document →</a>
             </div>
           </div>
         @endif

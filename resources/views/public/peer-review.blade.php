@@ -7,9 +7,9 @@
     <div class="container">
         <div class="row align-items-center mb-5">
             <div class="col-lg-8" data-aos="fade-up">
-                <div class="section-tag">Process</div>
-                <h1 class="hero-title">Peer Review <span class="accent">Process</span></h1>
-                <p class="hero-desc">{{ $page['meta_description'] ?? 'We utilize a stringent Double-Blind Peer Review system to ensure objective evaluation of every manuscript.' }}</p>
+                <div class="section-tag">Proses</div>
+                <h1 class="hero-title">Proses Tinjauan <span class="accent">Sejawat</span></h1>
+                <p class="hero-desc">{{ $page['meta_description'] ?? 'Kami menggunakan sistem Tinjauan Sejawat Double-Blind yang ketat untuk memastikan evaluasi objektif setiap naskah.' }}</p>
             </div>
         </div>
     </div>
@@ -31,16 +31,16 @@
                     <div style="font-size: 48px; color: var(--primary); margin-bottom: 16px;">
                         <i class="bi bi-eye-slash"></i>
                     </div>
-                    <h3 style="font-weight: 700; margin-bottom: 16px;">What is Double-Blind Review?</h3>
+                    <h3 style="font-weight: 700; margin-bottom: 16px;">Apa itu Tinjauan Double-Blind?</h3>
                     <p style="color: var(--text-muted); font-size: 15px; line-height: 1.8; margin: 0;">
-                        In a double-blind peer review process, both the reviewer and the author remain anonymous to each other throughout the entire process. This method prevents any reviewer bias based on an author's country of origin, institutional affiliation, or past publication record.
+                        Dalam proses tinjauan sejawat double-blind, baik penelaah maupun penulis tetap anonim satu sama lain di seluruh proses. Metode ini mencegah bias penelaah berdasarkan negara asal penulis, afiliasi institusional, atau catatan publikasi sebelumnya.
                     </p>
                 </div>
             </div>
         </div>
 
         {{-- Visual Workflow Timeline --}}
-        <h3 class="text-center mb-5" style="font-weight: 800; color: var(--text-main);" data-aos="fade-up">Publication Workflow</h3>
+        <h3 class="text-center mb-5" style="font-weight: 800; color: var(--text-main);" data-aos="fade-up">Alur Kerja Publikasi</h3>
         
         <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="100">
             <div class="col-lg-8">
@@ -49,8 +49,8 @@
                 <div class="d-flex mb-4">
                     <div style="width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex-shrink: 0; margin-right: 24px; z-index: 2;">1</div>
                     <div class="pub-card flex-grow-1" style="margin-top: -10px;">
-                        <h5 style="font-weight: 700; margin-bottom: 8px;">Manuscript Submission</h5>
-                        <p style="color: var(--text-muted); font-size: 14px; margin: 0;">The corresponding author submits the paper through our online system. Automated checks for plagiarism (similarity &lt; 20%) are conducted.</p>
+                        <h5 style="font-weight: 700; margin-bottom: 8px;">Pengiriman Naskah</h5>
+                        <p style="color: var(--text-muted); font-size: 14px; margin: 0;">Penulis korespondensi mengirimkan makalah melalui sistem online kami. Pemeriksaan otomatis untuk plagiarisme (kesamaan &lt; 20%) dilakukan.</p>
                     </div>
                 </div>
 
@@ -58,8 +58,8 @@
                 <div class="d-flex mb-4">
                     <div style="width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex-shrink: 0; margin-right: 24px; z-index: 2;">2</div>
                     <div class="pub-card flex-grow-1" style="margin-top: -10px;">
-                        <h5 style="font-weight: 700; margin-bottom: 8px;">Initial Editorial Screening</h5>
-                        <p style="color: var(--text-muted); font-size: 14px; margin: 0;">The Editor-in-Chief assesses the manuscript for fit with the journal's focus and scope, as well as basic formatting requirements.</p>
+                        <h5 style="font-weight: 700; margin-bottom: 8px;">Penyaringan Editorial Awal</h5>
+                        <p style="color: var(--text-muted); font-size: 14px; margin: 0;">Pemimpin Redaksi menilai naskah apakah sesuai dengan fokus dan ruang lingkup jurnal, serta persyaratan format dasar.</p>
                     </div>
                 </div>
 
@@ -67,8 +67,8 @@
                 <div class="d-flex mb-4">
                     <div style="width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex-shrink: 0; margin-right: 24px; z-index: 2;">3</div>
                     <div class="pub-card flex-grow-1" style="margin-top: -10px;">
-                        <h5 style="font-weight: 700; margin-bottom: 8px;">Peer Review (Double-Blind)</h5>
-                        <p style="color: var(--text-muted); font-size: 14px; margin: 0;">The manuscript is sent to at least two independent expert reviewers. This phase typically takes 3-4 weeks.</p>
+                        <h5 style="font-weight: 700; margin-bottom: 8px;">Tinjauan Sejawat (Double-Blind)</h5>
+                        <p style="color: var(--text-muted); font-size: 14px; margin: 0;">Naskah dikirim ke setidaknya dua penelaah ahli independen. Fase ini biasanya memakan waktu 3-4 minggu.</p>
                     </div>
                 </div>
 
@@ -76,8 +76,8 @@
                 <div class="d-flex mb-4">
                     <div style="width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex-shrink: 0; margin-right: 24px; z-index: 2;">4</div>
                     <div class="pub-card flex-grow-1" style="margin-top: -10px;">
-                        <h5 style="font-weight: 700; margin-bottom: 8px;">Revision & Decision</h5>
-                        <p style="color: var(--text-muted); font-size: 14px; margin: 0;">Based on reviewer feedback, the author may need to make revisions (Minor/Major). The final decision (Accept/Reject) is made by the Editor.</p>
+                        <h5 style="font-weight: 700; margin-bottom: 8px;">Revisi & Keputusan</h5>
+                        <p style="color: var(--text-muted); font-size: 14px; margin: 0;">Berdasarkan umpan balik penelaah, penulis mungkin perlu melakukan revisi (Kecil/Besar). Keputusan akhir (Terima/Tolak) dibuat oleh Editor.</p>
                     </div>
                 </div>
 
@@ -85,8 +85,8 @@
                 <div class="d-flex mb-4">
                     <div style="width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex-shrink: 0; margin-right: 24px; z-index: 2;">5</div>
                     <div class="pub-card flex-grow-1" style="margin-top: -10px;">
-                        <h5 style="font-weight: 700; margin-bottom: 8px;">Copyediting & Publication</h5>
-                        <p style="color: var(--text-muted); font-size: 14px; margin: 0;">Once accepted, the manuscript undergoes layout formatting, proofreading, and is finally published online with a registered DOI.</p>
+                        <h5 style="font-weight: 700; margin-bottom: 8px;">Penyuntingan Salinan & Publikasi</h5>
+                        <p style="color: var(--text-muted); font-size: 14px; margin: 0;">Setelah diterima, naskah menjalani pemformatan tata letak, pemeriksaan ejaan, dan akhirnya diterbitkan secara online dengan DOI yang terdaftar.</p>
                     </div>
                 </div>
 

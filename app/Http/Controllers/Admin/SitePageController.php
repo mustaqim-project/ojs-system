@@ -96,9 +96,9 @@ class SitePageController extends Controller
         if ($slug === 'author-guidelines' && $request->hasFile('template_file')) {
             $file = $request->file('template_file');
             $filename = 'manuscript_template_' . time() . '.' . $file->getClientOriginalExtension();
-            // Simpan ke storage/app/public/templates
-            $path = $file->storeAs('templates', $filename, 'public');
-            $extra['template_url'] = asset('storage/' . $path);
+            $file->move(public_path('uploads/templates'), $filename);
+            $path = 'uploads/templates/' . $filename;
+            $extra['template_url'] = asset($path);
         }
 
         // Ambil data lama agar extra tidak hilang seluruhnya jika salah satu tidak diupdate

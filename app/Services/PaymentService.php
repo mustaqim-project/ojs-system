@@ -50,7 +50,8 @@ class PaymentService
         }
 
         $filename  = 'payment-proof-' . Str::uuid() . '.' . $file->getClientOriginalExtension();
-        $proofPath = $file->storeAs('payments', $filename, 'public');
+        $file->move(public_path('uploads/payments'), $filename);
+        $proofPath = 'uploads/payments/' . $filename;
 
         $payment->update([
             'proof_file'  => $proofPath,

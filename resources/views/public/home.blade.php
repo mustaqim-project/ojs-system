@@ -7,29 +7,29 @@
     <div class="row align-items-center g-5">
       <div class="col-12 col-lg-7">
         <div class="hero-tag mb-3" data-aos="fade-up" data-aos-delay="100">
-          <i class="bi bi-patch-check-fill text-primary"></i> Premier Academic Publisher
+          <i class="bi bi-patch-check-fill text-primary"></i> Penerbit Akademik Terkemuka
         </div>
         <h1 class="hero-title" data-aos="fade-up" data-aos-delay="200" style="font-size:3.5rem; line-height:1.2; font-weight:800; letter-spacing:-0.03em;">
-          {!! $global_settings['hero_title'] ?? 'Advance Knowledge.<br>Publish with <span class="accent">Excellence.</span>' !!}
+          {!! $global_settings['hero_title'] ?? 'Majukan Pengetahuan.<br>Terbitkan dengan <span class="accent">Unggul.</span>' !!}
         </h1>
         <p class="hero-desc" data-aos="fade-up" data-aos-delay="300" style="font-size:1.1rem; color:var(--text-muted); max-width:600px; margin:24px 0;">
-          {{ $global_settings['hero_subtitle'] ?? $siteDescription ?: 'Enterprise-grade scholarly publishing platform offering rigorous peer review, transparent workflows, and global reach for researchers and academicians.' }}
+          {{ $global_settings['hero_subtitle'] ?? $siteDescription ?: 'Platform penerbitan ilmiah tingkat perusahaan yang menawarkan tinjauan sejawat yang ketat, alur kerja yang transparan, dan jangkauan global untuk peneliti dan akademisi.' }}
         </p>
         
         <div class="d-flex flex-wrap gap-3 mt-4" data-aos="fade-up" data-aos-delay="400">
           <a href="{{ $global_settings['hero_button_link'] ?? route('register') }}" class="btn btn-primary shadow" style="padding:12px 28px; font-weight:600; font-size:16px; border-radius:8px;">
-            {{ $global_settings['hero_button_text'] ?? 'Submit Manuscript' }} <i class="bi bi-arrow-right ms-2"></i>
+            {{ $global_settings['hero_button_text'] ?? 'Kirim Naskah' }} <i class="bi bi-arrow-right ms-2"></i>
           </a>
           <a href="{{ route('public.articles.index') }}" class="btn btn-light shadow-sm" style="padding:12px 28px; font-weight:600; font-size:16px; border-radius:8px; border:1px solid var(--border);">
-            Browse Articles <i class="bi bi-journal-text ms-2"></i>
+            Jelajahi Artikel <i class="bi bi-journal-text ms-2"></i>
           </a>
         </div>
 
         <div class="mt-5" data-aos="fade-up" data-aos-delay="500">
           <form action="{{ route('public.search') }}" method="GET" class="d-flex" style="max-width:500px; position:relative;">
             <i class="bi bi-search" style="position:absolute; left:16px; top:50%; transform:translateY(-50%); color:var(--text-muted);"></i>
-            <input type="text" name="q" class="form-control form-control-lg shadow-sm" placeholder="Search for articles, authors, or keywords..." style="padding-left:44px; border-radius:8px; font-size:15px; border-color:var(--border);">
-            <button type="submit" class="btn btn-primary" style="position:absolute; right:6px; top:6px; bottom:6px; border-radius:6px; font-weight:600;">Search</button>
+            <input type="text" name="q" class="form-control form-control-lg shadow-sm" placeholder="Cari artikel, penulis, atau kata kunci..." style="padding-left:44px; border-radius:8px; font-size:15px; border-color:var(--border);">
+            <button type="submit" class="btn btn-primary" style="position:absolute; right:6px; top:6px; bottom:6px; border-radius:6px; font-weight:600;">Cari</button>
           </form>
         </div>
       </div>
@@ -40,8 +40,8 @@
           {{-- Animated Abstract Graphic --}}
           <div style="position:absolute; right:20px; top:50px; width:340px; background:var(--bg-app); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px; box-shadow:0 20px 40px rgba(0,0,0,0.08); z-index:2;" class="hover-shadow">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:12px;">
-              <span style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px;">Latest Publication</span>
-              <span class="badge bg-success" style="font-size:10px;">Peer Reviewed</span>
+              <span style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px;">Publikasi Terbaru</span>
+              <span class="badge bg-success" style="font-size:10px;">Ditinjau Sejawat</span>
             </div>
             @if($latestArticles->isNotEmpty())
               @php $featured = $latestArticles->first(); @endphp
@@ -51,20 +51,20 @@
                   {{ substr($featured->author->name ?? 'A', 0, 1) }}
                 </div>
                 <div>
-                  <div style="font-size:13px; font-weight:600;">{{ $featured->author->name ?? 'Unknown Author' }}</div>
-                  <div style="font-size:11px; color:var(--text-muted);">Published: {{ $featured->published_at ? $featured->published_at->format('M d, Y') : 'N/A' }}</div>
+                  <div style="font-size:13px; font-weight:600;">{{ $featured->author->name ?? 'Penulis Tidak Diketahui' }}</div>
+                  <div style="font-size:11px; color:var(--text-muted);">Diterbitkan: {{ $featured->published_at ? $featured->published_at->format('d M, Y') : 'N/A' }}</div>
                 </div>
               </div>
-              <a href="{{ route('public.articles.show', $featured->slug ?? '') }}" class="btn btn-sm btn-outline-primary w-100" style="border-radius:6px; font-weight:600;">Read Article</a>
+              <a href="{{ route('public.articles.show', $featured->slug ?? '') }}" class="btn btn-sm btn-outline-primary w-100" style="border-radius:6px; font-weight:600;">Baca Artikel</a>
             @else
-              <p class="text-muted small">No articles published yet.</p>
+              <p class="text-muted small">Belum ada artikel yang diterbitkan.</p>
             @endif
           </div>
           {{-- Floating Badge --}}
           <div style="position:absolute; left:40px; bottom:120px; background:var(--bg-app); border:1px solid var(--border); border-radius:50px; padding:12px 24px; display:flex; align-items:center; gap:12px; box-shadow:0 10px 30px rgba(0,0,0,0.05); z-index:3; animation: float 6s ease-in-out infinite;">
             <i class="bi bi-globe-americas text-primary" style="font-size:24px;"></i>
             <div>
-              <div style="font-size:12px; font-weight:700; color:var(--text-muted);">Indexed in</div>
+              <div style="font-size:12px; font-weight:700; color:var(--text-muted);">Terindeks di</div>
               <div style="font-size:15px; font-weight:800; color:var(--text-main);">Crossref & DOAJ</div>
             </div>
           </div>
@@ -80,19 +80,19 @@
     <div class="row g-4 text-center">
       <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="100">
         <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="{{ $totalPublished }}">0</h2>
-        <p style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">Published Articles</p>
+        <p style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">Artikel Diterbitkan</p>
       </div>
       <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="200">
         <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="150">+0</h2>
-        <p style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">Active Authors</p>
+        <p style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">Penulis Aktif</p>
       </div>
       <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="300">
         <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="45">0</h2>
-        <p style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">Global Reviewers</p>
+        <p style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">Peninjau Global</p>
       </div>
       <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="400">
         <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="28">0</h2>
-        <p style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">Days to First Decision</p>
+        <p style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">Hari ke Keputusan Pertama</p>
       </div>
     </div>
   </div>
@@ -104,17 +104,17 @@
     
     <div class="d-flex justify-content-between align-items-end mb-5" data-aos="fade-up">
       <div>
-        <div class="section-tag">New Releases</div>
-        <h2 class="section-title mb-0">Latest Articles</h2>
+        <div class="section-tag">Rilis Baru</div>
+        <h2 class="section-title mb-0">Artikel Terbaru</h2>
       </div>
-      <a href="{{ route('public.articles.index') }}" class="btn btn-light" style="font-weight:600; border-radius:20px; padding:8px 20px;">View All <i class="bi bi-arrow-right ms-1"></i></a>
+      <a href="{{ route('public.articles.index') }}" class="btn btn-light" style="font-weight:600; border-radius:20px; padding:8px 20px;">Lihat Semua <i class="bi bi-arrow-right ms-1"></i></a>
     </div>
 
     <div class="row g-4">
       @forelse($latestArticles as $index => $article)
         <div class="col-12 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ $index * 100 }}">
           <div class="pub-card d-flex flex-column" style="height:100%; position:relative; padding:24px;">
-            <div style="font-size:12px; font-weight:700; color:var(--primary); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px;">Research Article</div>
+            <div style="font-size:12px; font-weight:700; color:var(--primary); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px;">Artikel Penelitian</div>
             <h4 style="font-weight:700; font-size:18px; line-height:1.4; margin-bottom:12px;">
               <a href="{{ route('public.articles.show', $article->slug ?? '') }}" style="text-decoration:none; color:var(--text-main);" class="hover-primary">{{ Str::limit($article->title, 75) }}</a>
             </h4>
@@ -128,17 +128,17 @@
                   {{ substr($article->author->name ?? 'A', 0, 1) }}
                 </div>
                 <div style="font-size:13px; font-weight:600; color:var(--text-main);">
-                  {{ $article->author->name ?? 'Unknown Author' }}
-                  <div style="color:var(--text-muted); font-weight:400; font-size:11px;">University Institute</div>
+                  {{ $article->author->name ?? 'Penulis Tidak Diketahui' }}
+                  <div style="color:var(--text-muted); font-weight:400; font-size:11px;">Institut Universitas</div>
                 </div>
               </div>
               
               <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:12px;">
                 <div style="display:flex; gap:16px; font-size:12px; color:var(--text-muted);">
-                  <span title="Views"><i class="bi bi-eye me-1"></i> {{ rand(100, 1500) }}</span>
-                  <span title="Downloads"><i class="bi bi-download me-1"></i> {{ rand(50, 500) }}</span>
+                  <span title="Dilihat"><i class="bi bi-eye me-1"></i> {{ rand(100, 1500) }}</span>
+                  <span title="Diunduh"><i class="bi bi-download me-1"></i> {{ rand(50, 500) }}</span>
                 </div>
-                <a href="{{ route('public.articles.show', $article->slug ?? '') }}" style="font-size:13px; font-weight:700; color:var(--primary); text-decoration:none;">Read More <i class="bi bi-arrow-right"></i></a>
+                <a href="{{ route('public.articles.show', $article->slug ?? '') }}" style="font-size:13px; font-weight:700; color:var(--primary); text-decoration:none;">Baca Selengkapnya <i class="bi bi-arrow-right"></i></a>
               </div>
             </div>
           </div>
@@ -146,7 +146,7 @@
       @empty
         <div class="col-12 text-center text-muted py-5">
           <i class="bi bi-journal-x" style="font-size:48px;"></i>
-          <p class="mt-3">No articles published yet.</p>
+          <p class="mt-3">Belum ada artikel yang diterbitkan.</p>
         </div>
       @endforelse
     </div>
@@ -159,37 +159,37 @@
   <div class="container" style="max-width:1400px;">
     <div class="row g-5 align-items-center">
       <div class="col-lg-5" data-aos="fade-right">
-        <div class="section-tag">Benefits</div>
-        <h2 class="section-title mb-4">Why Publish With Us?</h2>
-        <p class="section-desc mb-4">We are dedicated to providing authors with an exceptional publishing experience, ensuring your research reaches the global scientific community effectively.</p>
+        <div class="section-tag">Manfaat</div>
+        <h2 class="section-title mb-4">Mengapa Menerbitkan Bersama Kami?</h2>
+        <p class="section-desc mb-4">Kami berdedikasi untuk memberikan pengalaman penerbitan yang luar biasa kepada penulis, memastikan penelitian Anda menjangkau komunitas ilmiah global secara efektif.</p>
         
         <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:16px;">
           <li style="display:flex; gap:16px; align-items:flex-start;">
             <div style="width:28px; height:28px; border-radius:50%; background:var(--success-bg); color:var(--success); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><i class="bi bi-check2"></i></div>
             <div>
-              <h5 style="font-size:16px; font-weight:700; margin-bottom:4px;">Rigorous Double-Blind Review</h5>
-              <p style="font-size:14px; color:var(--text-muted); margin:0;">Ensures objective and high-quality assessment of all manuscripts.</p>
+              <h5 style="font-size:16px; font-weight:700; margin-bottom:4px;">Tinjauan Double-Blind yang Ketat</h5>
+              <p style="font-size:14px; color:var(--text-muted); margin:0;">Memastikan penilaian yang objektif dan berkualitas tinggi dari semua naskah.</p>
             </div>
           </li>
           <li style="display:flex; gap:16px; align-items:flex-start;">
             <div style="width:28px; height:28px; border-radius:50%; background:var(--success-bg); color:var(--success); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><i class="bi bi-check2"></i></div>
             <div>
-              <h5 style="font-size:16px; font-weight:700; margin-bottom:4px;">Global Indexing</h5>
-              <p style="font-size:14px; color:var(--text-muted); margin:0;">Indexed in Google Scholar, Crossref (DOI), DOAJ, and Scopus.</p>
+              <h5 style="font-size:16px; font-weight:700; margin-bottom:4px;">Pengindeksan Global</h5>
+              <p style="font-size:14px; color:var(--text-muted); margin:0;">Terindeks di Google Scholar, Crossref (DOI), DOAJ, dan Scopus.</p>
             </div>
           </li>
           <li style="display:flex; gap:16px; align-items:flex-start;">
             <div style="width:28px; height:28px; border-radius:50%; background:var(--success-bg); color:var(--success); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><i class="bi bi-check2"></i></div>
             <div>
-              <h5 style="font-size:16px; font-weight:700; margin-bottom:4px;">True Open Access</h5>
-              <p style="font-size:14px; color:var(--text-muted); margin:0;">Immediate, free access to your work under CC BY-SA 4.0 license.</p>
+              <h5 style="font-size:16px; font-weight:700; margin-bottom:4px;">Akses Terbuka Penuh</h5>
+              <p style="font-size:14px; color:var(--text-muted); margin:0;">Akses langsung dan gratis ke karya Anda di bawah lisensi CC BY-SA 4.0.</p>
             </div>
           </li>
           <li style="display:flex; gap:16px; align-items:flex-start;">
             <div style="width:28px; height:28px; border-radius:50%; background:var(--success-bg); color:var(--success); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><i class="bi bi-check2"></i></div>
             <div>
-              <h5 style="font-size:16px; font-weight:700; margin-bottom:4px;">Fast Turnaround</h5>
-              <p style="font-size:14px; color:var(--text-muted); margin:0;">Average time to first decision is 28 days without compromising quality.</p>
+              <h5 style="font-size:16px; font-weight:700; margin-bottom:4px;">Proses Cepat</h5>
+              <p style="font-size:14px; color:var(--text-muted); margin:0;">Waktu rata-rata untuk keputusan pertama adalah 28 hari tanpa mengorbankan kualitas.</p>
             </div>
           </li>
         </ul>
@@ -200,29 +200,29 @@
           <div class="col-sm-6">
             <div class="pub-card text-center hover-shadow" style="padding:40px 24px; transition:transform 0.3s;">
               <i class="bi bi-cpu text-primary mb-3" style="font-size:40px;"></i>
-              <h5 style="font-weight:700;">Computer Science</h5>
-              <p style="font-size:13px; color:var(--text-muted); margin:0;">AI, Software Engineering, Networks</p>
+              <h5 style="font-weight:700;">Ilmu Komputer</h5>
+              <p style="font-size:13px; color:var(--text-muted); margin:0;">AI, Rekayasa Perangkat Lunak, Jaringan</p>
             </div>
           </div>
           <div class="col-sm-6">
             <div class="pub-card text-center hover-shadow" style="padding:40px 24px; transition:transform 0.3s;">
               <i class="bi bi-heart-pulse text-danger mb-3" style="font-size:40px;"></i>
-              <h5 style="font-weight:700;">Health Sciences</h5>
-              <p style="font-size:13px; color:var(--text-muted); margin:0;">Public Health, Clinical, BioMed</p>
+              <h5 style="font-weight:700;">Ilmu Kesehatan</h5>
+              <p style="font-size:13px; color:var(--text-muted); margin:0;">Kesehatan Masyarakat, Klinis, BioMedis</p>
             </div>
           </div>
           <div class="col-sm-6">
             <div class="pub-card text-center hover-shadow" style="padding:40px 24px; transition:transform 0.3s;">
               <i class="bi bi-globe text-success mb-3" style="font-size:40px;"></i>
-              <h5 style="font-weight:700;">Social Sciences</h5>
-              <p style="font-size:13px; color:var(--text-muted); margin:0;">Economics, Education, Sociology</p>
+              <h5 style="font-weight:700;">Ilmu Sosial</h5>
+              <p style="font-size:13px; color:var(--text-muted); margin:0;">Ekonomi, Pendidikan, Sosiologi</p>
             </div>
           </div>
           <div class="col-sm-6">
             <div class="pub-card text-center hover-shadow" style="padding:40px 24px; transition:transform 0.3s;">
               <i class="bi bi-lightning-charge text-warning mb-3" style="font-size:40px;"></i>
-              <h5 style="font-weight:700;">Engineering</h5>
-              <p style="font-size:13px; color:var(--text-muted); margin:0;">Mechanical, Electrical, Materials</p>
+              <h5 style="font-weight:700;">Teknik</h5>
+              <p style="font-size:13px; color:var(--text-muted); margin:0;">Mekanik, Listrik, Material</p>
             </div>
           </div>
         </div>
@@ -235,9 +235,9 @@
 <section class="section" style="background:var(--bg-app);">
   <div class="container" style="max-width:1000px;">
     <div class="text-center mb-5" data-aos="fade-up">
-      <div class="section-tag">Process</div>
-      <h2 class="section-title">Publication Workflow</h2>
-      <p class="section-desc mx-auto">Our transparent 4-step process from submission to publication.</p>
+      <div class="section-tag">Proses</div>
+      <h2 class="section-title">Alur Kerja Publikasi</h2>
+      <p class="section-desc mx-auto">Proses 4 langkah kami yang transparan dari penyerahan hingga publikasi.</p>
     </div>
     
     <div class="row g-4 position-relative">
@@ -246,10 +246,10 @@
       
       @php
       $workflow = [
-        ['icon'=>'bi-cloud-arrow-up', 'title'=>'1. Submission', 'desc'=>'Author submits manuscript via OJS.'],
-        ['icon'=>'bi-search', 'title'=>'2. Screening & Review', 'desc'=>'Plagiarism check and double-blind peer review.'],
-        ['icon'=>'bi-pencil-square', 'title'=>'3. Revision', 'desc'=>'Author revises based on reviewer feedback.'],
-        ['icon'=>'bi-globe', 'title'=>'4. Publication', 'desc'=>'Copyediting, layout, and global release.']
+        ['icon'=>'bi-cloud-arrow-up', 'title'=>'1. Penyerahan', 'desc'=>'Penulis menyerahkan naskah melalui OJS.'],
+        ['icon'=>'bi-search', 'title'=>'2. Penyaringan & Tinjauan', 'desc'=>'Pemeriksaan plagiarisme dan tinjauan sejawat double-blind.'],
+        ['icon'=>'bi-pencil-square', 'title'=>'3. Revisi', 'desc'=>'Penulis merevisi berdasarkan umpan balik peninjau.'],
+        ['icon'=>'bi-globe', 'title'=>'4. Publikasi', 'desc'=>'Penyuntingan salinan, tata letak, dan rilis global.']
       ];
       @endphp
       
@@ -271,29 +271,29 @@
   <div class="container" style="max-width:1400px;">
     <div class="row g-5">
       <div class="col-lg-6" data-aos="fade-right">
-        <h3 style="font-weight:800; margin-bottom:24px;">Journal Metrics 2026</h3>
+        <h3 style="font-weight:800; margin-bottom:24px;">Metrik Jurnal 2026</h3>
         <div class="row g-3">
           <div class="col-sm-6">
             <div style="background:var(--bg-app); border:1px solid var(--border); padding:20px; border-radius:var(--radius-md);">
-              <div style="font-size:13px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Acceptance Rate</div>
+              <div style="font-size:13px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Tingkat Penerimaan</div>
               <div style="font-size:28px; font-weight:800; color:var(--primary);">34%</div>
             </div>
           </div>
           <div class="col-sm-6">
             <div style="background:var(--bg-app); border:1px solid var(--border); padding:20px; border-radius:var(--radius-md);">
-              <div style="font-size:13px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Days to First Decision</div>
+              <div style="font-size:13px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Hari ke Keputusan Pertama</div>
               <div style="font-size:28px; font-weight:800; color:var(--primary);">28</div>
             </div>
           </div>
           <div class="col-sm-6">
             <div style="background:var(--bg-app); border:1px solid var(--border); padding:20px; border-radius:var(--radius-md);">
-              <div style="font-size:13px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Days to Publication</div>
+              <div style="font-size:13px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Hari ke Publikasi</div>
               <div style="font-size:28px; font-weight:800; color:var(--primary);">75</div>
             </div>
           </div>
           <div class="col-sm-6">
             <div style="background:var(--bg-app); border:1px solid var(--border); padding:20px; border-radius:var(--radius-md);">
-              <div style="font-size:13px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Downloads (Yearly)</div>
+              <div style="font-size:13px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Unduhan (Tahunan)</div>
               <div style="font-size:28px; font-weight:800; color:var(--primary);">45K+</div>
             </div>
           </div>
@@ -301,7 +301,7 @@
       </div>
       
       <div class="col-lg-6" data-aos="fade-left">
-        <h3 style="font-weight:800; margin-bottom:24px;">Indexed & Abstracted In</h3>
+        <h3 style="font-weight:800; margin-bottom:24px;">Terindeks & Diabstrak Di</h3>
         <div class="row g-3">
           @php
           $indexes = ['Google Scholar', 'Crossref', 'DOAJ', 'Scopus', 'SINTA', 'Dimensions'];
@@ -315,7 +315,7 @@
           @endforeach
         </div>
         <div class="mt-4 text-end">
-          <a href="{{ route('public.indexing') }}" style="font-weight:600; color:var(--primary); text-decoration:none;">View all indexing <i class="bi bi-arrow-right"></i></a>
+          <a href="{{ route('public.indexing') }}" style="font-weight:600; color:var(--primary); text-decoration:none;">Lihat semua pengindeksan <i class="bi bi-arrow-right"></i></a>
         </div>
       </div>
     </div>
@@ -325,11 +325,11 @@
 {{-- ── NEWSLETTER & CALL FOR PAPERS CTA ── --}}
 <section class="section text-center" style="background:var(--primary); color:white;">
   <div class="container" style="max-width:800px;" data-aos="zoom-in">
-    <h2 style="font-weight:800; margin-bottom:16px;">Ready to Publish Your Research?</h2>
-    <p style="font-size:18px; opacity:0.9; margin-bottom:32px;">Join thousands of authors who have published their groundbreaking research with us. Submissions are open for the next issue.</p>
+    <h2 style="font-weight:800; margin-bottom:16px;">Siap Menerbitkan Penelitian Anda?</h2>
+    <p style="font-size:18px; opacity:0.9; margin-bottom:32px;">Bergabunglah dengan ribuan penulis yang telah menerbitkan penelitian inovatif mereka bersama kami. Penyerahan terbuka untuk terbitan berikutnya.</p>
     <div class="d-flex flex-wrap justify-content-center gap-3">
-      <a href="{{ route('register') }}" class="btn btn-light" style="font-weight:700; font-size:16px; padding:12px 32px; border-radius:8px; color:var(--primary);">Submit Manuscript</a>
-      <a href="{{ route('public.author-guidelines') }}" class="btn btn-outline-light" style="font-weight:600; font-size:16px; padding:12px 32px; border-radius:8px;">Read Guidelines</a>
+      <a href="{{ route('register') }}" class="btn btn-light" style="font-weight:700; font-size:16px; padding:12px 32px; border-radius:8px; color:var(--primary);">Kirim Naskah</a>
+      <a href="{{ route('public.author-guidelines') }}" class="btn btn-outline-light" style="font-weight:600; font-size:16px; padding:12px 32px; border-radius:8px;">Baca Panduan</a>
     </div>
   </div>
 </section>

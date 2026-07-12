@@ -30,11 +30,11 @@
       <div class="ds-card-hdr">
         <span class="ds-card-title">Manuscript for Review</span>
         <div style="display:flex;gap:8px;">
-          <a href="{{ asset('storage/'.$review->article->manuscript_file) }}" target="_blank" class="ds-btn ds-btn-out ds-btn-sm">
+          <a href="{{ asset($review->article->manuscript_file) }}" target="_blank" class="ds-btn ds-btn-out ds-btn-sm">
             <i class="bi bi-download"></i> Manuscript
           </a>
           @if($review->article->revision_file)
-          <a href="{{ asset('storage/'.$review->article->revision_file) }}" target="_blank" class="ds-btn ds-btn-sm" style="background:var(--warning-bg);color:var(--warning);border-color:var(--warning);">
+          <a href="{{ asset($review->article->revision_file) }}" target="_blank" class="ds-btn ds-btn-sm" style="background:var(--warning-bg);color:var(--warning);border-color:var(--warning);">
             <i class="bi bi-download"></i> Revision
           </a>
           @endif

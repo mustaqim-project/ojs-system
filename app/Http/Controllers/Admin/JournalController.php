@@ -43,7 +43,9 @@ class JournalController extends Controller
         $data['slug'] = Str::slug($request->title);
 
         if ($request->hasFile('cover_image')) {
-            $data['cover_image'] = $request->file('cover_image')->store('journals', 'public');
+            $filename = time() . '_' . $request->file('cover_image')->getClientOriginalName();
+            $request->file('cover_image')->move(public_path('uploads/journals'), $filename);
+            $data['cover_image'] = 'uploads/journals/' . $filename;
         }
 
         Journal::create($data);
@@ -68,7 +70,9 @@ class JournalController extends Controller
 
         $data = $request->except('cover_image', '_token', '_method');
         if ($request->hasFile('cover_image')) {
-            $data['cover_image'] = $request->file('cover_image')->store('journals', 'public');
+            $filename = time() . '_' . $request->file('cover_image')->getClientOriginalName();
+            $request->file('cover_image')->move(public_path('uploads/journals'), $filename);
+            $data['cover_image'] = 'uploads/journals/' . $filename;
         }
 
         $journal->update($data);

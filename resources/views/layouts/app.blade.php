@@ -31,6 +31,31 @@
 
   <!-- Core CSS is in ojs.css -->
   <link rel="stylesheet" href="{{ asset('css/ojs.css') }}">
+  {{-- TinyMCE --}}
+  <script src="https://cdn.tiny.cloud/1/7o263mkoo1n6fgu9o0m6ecqeb7vh1gqfepr6a1m4j9dvdsns/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
+  <script>
+    tinymce.init({
+      selector: 'textarea',
+      plugins: [
+        // Core editing features
+        'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
+        // Premium features
+        'checklist', 'mediaembed', 'casechange', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'advtemplate', 'tinymceai', 'uploadcare', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown','importword', 'exportword', 'exportpdf'
+      ],
+      toolbar: 'undo redo | tinymceai-chat tinymceai-quickactions tinymceai-review | blocks fontfamily fontsize | bold italic underline strikethrough | link media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography uploadcare | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+      tinycomments_mode: 'embedded',
+      tinycomments_author: 'Author name',
+      mergetags_list: [
+        { value: 'First.Name', title: 'First Name' },
+        { value: 'Email', title: 'Email' },
+      ],
+      tinymceai_token_provider: async () => {
+        await fetch(`https://demo.api.tiny.cloud/1/7o263mkoo1n6fgu9o0m6ecqeb7vh1gqfepr6a1m4j9dvdsns/auth/random`, { method: "POST", credentials: "include" });
+        return { token: await fetch(`https://demo.api.tiny.cloud/1/7o263mkoo1n6fgu9o0m6ecqeb7vh1gqfepr6a1m4j9dvdsns/jwt/tinymceai`, { credentials: "include" }).then(r => r.text()) };
+      },
+      uploadcare_public_key: '137d33e81e0749e4b7ff',
+    });
+  </script>
   @stack('styles')
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -88,22 +113,21 @@
       {{-- Actions --}}
       <div class="d-flex align-items-center gap-3 mt-3 mt-xl-0">
 
-
-        <a href="{{ route('public.search') }}" class="btn btn-light shadow-sm" style="background: var(--bg-app); border: 1px solid var(--border); color: var(--text-main); font-weight: 500; padding: 8px 16px; border-radius: 8px;" title="Search">
-          <i class="bi bi-search me-1"></i> Search
+        <a href="{{ route('public.search') }}" class="btn btn-light shadow-sm" style="background: var(--bg-app); border: 1px solid var(--border); color: var(--text-main); font-weight: 500; padding: 8px 16px; border-radius: 8px;" title="Cari">
+          <i class="bi bi-search me-1"></i> Cari
         </a>
 
         @auth
           <a href="{{ route(auth()->user()->dashboardRoute()) }}" class="btn btn-light shadow-sm" style="background: var(--bg-app); border: 1px solid var(--border); color: var(--text-main); font-weight: 500; padding: 8px 16px; border-radius: 8px;">
-            <i class="bi bi-grid me-1"></i> Dashboard
+            <i class="bi bi-grid me-1"></i> Dasbor
           </a>
           <form method="POST" action="{{ route('logout') }}" style="margin:0;">
             @csrf
-            <button type="submit" class="btn btn-danger shadow-sm" style="font-weight: 500; padding: 8px 16px; border-radius: 8px;">Sign Out</button>
+            <button type="submit" class="btn btn-danger shadow-sm" style="font-weight: 500; padding: 8px 16px; border-radius: 8px;">Keluar</button>
           </form>
         @else
-          <a href="{{ route('login') }}" class="btn btn-light shadow-sm" style="background: var(--bg-app); border: 1px solid var(--border); color: var(--text-main); font-weight: 500; padding: 8px 16px; border-radius: 8px;">Login</a>
-          <a href="{{ route('register') }}" class="btn btn-primary shadow-sm" style="font-weight: 600; padding: 8px 20px; border-radius: 8px;">Submit Article <i class="bi bi-arrow-right ms-1"></i></a>
+          <a href="{{ route('login') }}" class="btn btn-light shadow-sm" style="background: var(--bg-app); border: 1px solid var(--border); color: var(--text-main); font-weight: 500; padding: 8px 16px; border-radius: 8px;">Masuk</a>
+          <a href="{{ route('register') }}" class="btn btn-primary shadow-sm" style="font-weight: 600; padding: 8px 20px; border-radius: 8px;">Kirim Artikel <i class="bi bi-arrow-right ms-1"></i></a>
         @endauth
       </div>
     </div>
@@ -149,27 +173,27 @@
       </div>
       
       <div class="col-6 col-lg-2">
-        <div style="font-size: 12px; font-weight: 700; color: #E2E8F0; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 24px;">Explore</div>
+        <div style="font-size: 12px; font-weight: 700; color: #E2E8F0; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 24px;">Eksplorasi</div>
         <div style="display: flex; flex-direction: column; gap: 12px;">
-          <a href="{{ route('public.home') }}" class="footer-link" style="padding: 0; font-weight: 500;">Home</a>
-          <a href="{{ route('public.journals.index') }}" class="footer-link" style="padding: 0; font-weight: 500;">Journals</a>
-          <a href="{{ route('public.articles.index') }}" class="footer-link" style="padding: 0; font-weight: 500;">Articles</a>
-          <a href="{{ route('public.search') }}" class="footer-link" style="padding: 0; font-weight: 500;">Search</a>
+          <a href="{{ route('public.home') }}" class="footer-link" style="padding: 0; font-weight: 500;">Beranda</a>
+          <a href="{{ route('public.journals.index') }}" class="footer-link" style="padding: 0; font-weight: 500;">Jurnal</a>
+          <a href="{{ route('public.articles.index') }}" class="footer-link" style="padding: 0; font-weight: 500;">Artikel</a>
+          <a href="{{ route('public.search') }}" class="footer-link" style="padding: 0; font-weight: 500;">Pencarian</a>
         </div>
       </div>
       
       <div class="col-6 col-lg-2">
-        <div style="font-size: 12px; font-weight: 700; color: #E2E8F0; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 24px;">Authors</div>
+        <div style="font-size: 12px; font-weight: 700; color: #E2E8F0; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 24px;">Penulis</div>
         <div style="display: flex; flex-direction: column; gap: 12px;">
-          <a href="{{ route('register') }}" class="footer-link" style="padding: 0; font-weight: 500;">Submit Manuscript</a>
-          <a href="{{ route('login') }}" class="footer-link" style="padding: 0; font-weight: 500;">Author Portal</a>
-          <a href="{{ route('public.author-guidelines') }}" class="footer-link" style="padding: 0; font-weight: 500;">Submission Guide</a>
-          <a href="{{ route('public.ethics') }}" class="footer-link" style="padding: 0; font-weight: 500;">Publication Ethics</a>
+          <a href="{{ route('register') }}" class="footer-link" style="padding: 0; font-weight: 500;">Kirim Naskah</a>
+          <a href="{{ route('login') }}" class="footer-link" style="padding: 0; font-weight: 500;">Portal Penulis</a>
+          <a href="{{ route('public.author-guidelines') }}" class="footer-link" style="padding: 0; font-weight: 500;">Panduan Penulis</a>
+          <a href="{{ route('public.ethics') }}" class="footer-link" style="padding: 0; font-weight: 500;">Etika Publikasi</a>
         </div>
       </div>
       
       <div class="col-12 col-lg-3">
-        <div style="font-size: 12px; font-weight: 700; color: #E2E8F0; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 24px;">Contact Us</div>
+        <div style="font-size: 12px; font-weight: 700; color: #E2E8F0; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 24px;">Hubungi Kami</div>
         <div style="display: flex; flex-direction: column; gap: 16px;">
           <div style="display: flex; gap: 14px; align-items: flex-start;">
             <i class="bi bi-envelope" style="color: #64748B; font-size: 18px; margin-top: 1px;"></i>
@@ -194,9 +218,9 @@
     <hr style="border-color: #1e293b; margin: 48px 0 24px; opacity: 1;"/>
     
     <div class="d-flex align-items-center justify-content-between flex-wrap gap-3" style="padding-bottom: 12px;">
-      <span style="font-size: 13px; color: #64748B; font-weight: 500;">{{ $global_settings['footer_text'] ?? '&copy; ' . date('Y') . ' ' . \App\Models\Setting::get('site_name','OJS System') . '. All rights reserved.' }}</span>
+      <span style="font-size: 13px; color: #64748B; font-weight: 500;">{{ $global_settings['footer_text'] ?? '&copy; ' . date('Y') . ' ' . \App\Models\Setting::get('site_name','OJS System') . '. Hak cipta dilindungi undang-undang.' }}</span>
       <span style="font-size: 13px; color: #64748B; font-weight: 500; display: flex; align-items: center; gap: 6px;">
-        Built by <a href="https://cooca.id" target="_blank" rel="noopener noreferrer" style="color: #94A3B8; text-decoration: none; border-bottom: 1px solid rgba(148,163,184,0.3); padding-bottom: 1px; transition: all 0.2s;" onmouseover="this.style.color='#F8FAFC'; this.style.borderColor='rgba(248,250,252,0.5)';" onmouseout="this.style.color='#94A3B8'; this.style.borderColor='rgba(148,163,184,0.3)';">Cooca.id</a>
+        Dibuat oleh <a href="https://cooca.id" target="_blank" rel="noopener noreferrer" style="color: #94A3B8; text-decoration: none; border-bottom: 1px solid rgba(148,163,184,0.3); padding-bottom: 1px; transition: all 0.2s;" onmouseover="this.style.color='#F8FAFC'; this.style.borderColor='rgba(248,250,252,0.5)';" onmouseout="this.style.color='#94A3B8'; this.style.borderColor='rgba(148,163,184,0.3)';">Cooca.id</a>
       </span>
     </div>
   </div>
@@ -212,9 +236,9 @@
   <div id="globalToast" class="toast align-items-center text-white border-0" role="alert" aria-live="assertive" aria-atomic="true" style="background:var(--success);">
     <div class="d-flex">
       <div class="toast-body" id="toastMessage">
-        Success!
+        Berhasil!
       </div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Tutup"></button>
     </div>
   </div>
 </div>

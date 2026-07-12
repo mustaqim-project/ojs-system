@@ -163,6 +163,7 @@ class ArticleService
     private function uploadFile(UploadedFile $file, string $folder): string
     {
         $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
-        return $file->storeAs($folder, $filename, 'public');
+        $file->move(public_path('uploads/' . $folder), $filename);
+        return 'uploads/' . $folder . '/' . $filename;
     }
 }

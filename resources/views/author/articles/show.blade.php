@@ -34,7 +34,7 @@
       <div class="ds-card-hdr">
         <span class="ds-card-title">Manuscript Information</span>
         @if($article->manuscript_file)
-          <a href="{{ asset('storage/'.$article->manuscript_file) }}" target="_blank" class="ds-btn ds-btn-out ds-btn-sm">
+          <a href="{{ asset($article->manuscript_file) }}" target="_blank" class="ds-btn ds-btn-out ds-btn-sm">
             <i class="bi bi-download"></i> Manuscript
           </a>
         @endif

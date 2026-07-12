@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $page['title'] ?? 'Indexing & Abstracting')
+@section('title', $page['title'] ?? 'Pengindeksan & Pengabstrakan')
 @section('meta_description', $page['meta_description'] ?? '')
 
 @section('content')
@@ -8,9 +8,9 @@
     <div class="container">
         <div class="row align-items-center mb-5">
             <div class="col-lg-8" data-aos="fade-up">
-                <div class="section-tag">Recognition</div>
-                <h1 class="hero-title">Indexing &amp; <span class="accent">Abstracting</span></h1>
-                <p class="hero-desc">{{ $page['meta_description'] ?? 'Our journal is indexed in leading global databases.' }}</p>
+                <div class="section-tag">Pengakuan</div>
+                <h1 class="hero-title">{!! $page['title'] ?? 'Pengindeksan &amp; <span class="accent">Pengabstrakan</span>' !!}</h1>
+                <p class="hero-desc">{{ $page['meta_description'] ?? 'Jurnal kami diindeks dalam basis data global terkemuka.' }}</p>
             </div>
         </div>
     </div>

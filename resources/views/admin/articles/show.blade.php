@@ -65,12 +65,12 @@
         <span class="ds-card-title">Manuscript Details</span>
         <div style="display:flex;gap:8px;">
           @if($article->manuscript_file)
-            <a href="{{ asset('storage/'.$article->manuscript_file) }}" target="_blank" class="ds-btn ds-btn-out ds-btn-sm">
+            <a href="{{ asset($article->manuscript_file) }}" target="_blank" class="ds-btn ds-btn-out ds-btn-sm">
               <i class="bi bi-download"></i> Manuscript
             </a>
           @endif
           @if($article->revision_file)
-            <a href="{{ asset('storage/'.$article->revision_file) }}" target="_blank" class="ds-btn ds-btn-sm" style="background:var(--warning-bg);color:var(--warning);border-color:var(--warning);">
+            <a href="{{ asset($article->revision_file) }}" target="_blank" class="ds-btn ds-btn-sm" style="background:var(--warning-bg);color:var(--warning);border-color:var(--warning);">
               <i class="bi bi-download"></i> Revision
             </a>
           @endif

@@ -104,8 +104,9 @@ class SettingController extends Controller
         // Process file uploads for image settings
         if ($request->hasFile('files')) {
             foreach ($request->file('files') as $key => $file) {
-                $path = $file->store('settings', 'public');
-                Setting::set($key, 'storage/' . $path);
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('uploads/settings'), $filename);
+                Setting::set($key, 'uploads/settings/' . $filename);
             }
         }
 

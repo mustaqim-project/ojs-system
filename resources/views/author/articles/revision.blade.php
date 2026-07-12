@@ -67,7 +67,7 @@
             <div style="font-size:13px;font-weight:600;color:var(--text-main);">A revision file already exists</div>
             <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Uploading a new file will replace the current revision</div>
           </div>
-          <a href="{{ asset('storage/'.$article->revision_file) }}" target="_blank" class="ds-btn ds-btn-out ds-btn-sm">
+          <a href="{{ asset($article->revision_file) }}" target="_blank" class="ds-btn ds-btn-out ds-btn-sm">
             <i class="bi bi-download"></i> View
           </a>
         </div>

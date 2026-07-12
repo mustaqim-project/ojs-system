@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>{{ $title ?? 'Dashboard' }} — {{ config('app.name', 'OJS') }}</title>
+    <title>{{ $title ?? 'Dasbor' }} — {{ config('app.name', 'OJS') }}</title>
     
     {{-- Bootstrap 5 CSS --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -195,6 +195,31 @@
             .ds-overlay.show { display: block; }
         }
     </style>
+    {{-- TinyMCE --}}
+    <script src="https://cdn.tiny.cloud/1/7o263mkoo1n6fgu9o0m6ecqeb7vh1gqfepr6a1m4j9dvdsns/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
+    <script>
+      tinymce.init({
+        selector: 'textarea',
+        plugins: [
+          // Core editing features
+          'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
+          // Premium features
+          'checklist', 'mediaembed', 'casechange', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'advtemplate', 'tinymceai', 'uploadcare', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown','importword', 'exportword', 'exportpdf'
+        ],
+        toolbar: 'undo redo | tinymceai-chat tinymceai-quickactions tinymceai-review | blocks fontfamily fontsize | bold italic underline strikethrough | link media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography uploadcare | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+        tinycomments_mode: 'embedded',
+        tinycomments_author: 'Author name',
+        mergetags_list: [
+          { value: 'First.Name', title: 'First Name' },
+          { value: 'Email', title: 'Email' },
+        ],
+        tinymceai_token_provider: async () => {
+          await fetch(`https://demo.api.tiny.cloud/1/7o263mkoo1n6fgu9o0m6ecqeb7vh1gqfepr6a1m4j9dvdsns/auth/random`, { method: "POST", credentials: "include" });
+          return { token: await fetch(`https://demo.api.tiny.cloud/1/7o263mkoo1n6fgu9o0m6ecqeb7vh1gqfepr6a1m4j9dvdsns/jwt/tinymceai`, { credentials: "include" }).then(r => r.text()) };
+        },
+        uploadcare_public_key: '137d33e81e0749e4b7ff',
+      });
+    </script>
     @stack('styles')
 </head>
 
@@ -208,7 +233,7 @@
                 <i class="bi bi-journal-bookmark-fill" style="font-size: 26px; color: #38bdf8;"></i>
                 <div style="line-height: 1.2;">
                     <div style="font-size: 16px; color: #fff; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif;">{{ \App\Models\Setting::get('site_name', 'OJS') }}</div>
-                    <div style="font-size: 11px; color: #94a3b8; font-weight: 500;">Publication Platform</div>
+                    <div style="font-size: 11px; color: #94a3b8; font-weight: 500;">Platform Publikasi</div>
                 </div>
             </div>
 
@@ -224,52 +249,52 @@
 
             <ul class="sidebar-menu">
                 @if (auth()->user()->isAdmin())
-                    <li class="sidebar-category">Administration</li>
-                    <li><a href="{{ route('admin.dashboard') }}" class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"><i class="bi bi-grid-1x2"></i> Dashboard</a></li>
-                    <li><a href="{{ route('admin.users.index') }}" class="sidebar-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}"><i class="bi bi-people"></i> Users</a></li>
-                    <li><a href="{{ route('admin.journals.index') }}" class="sidebar-link {{ request()->routeIs('admin.journals*') ? 'active' : '' }}"><i class="bi bi-journals"></i> Journals</a></li>
-                    <li><a href="{{ route('admin.issues.index') }}" class="sidebar-link {{ request()->routeIs('admin.issues*') ? 'active' : '' }}"><i class="bi bi-collection"></i> Issues</a></li>
-                    <li><a href="{{ route('admin.articles.index') }}" class="sidebar-link {{ request()->routeIs('admin.articles*') ? 'active' : '' }}"><i class="bi bi-file-earmark-text"></i> Articles</a></li>
+                    <li class="sidebar-category">Administrasi</li>
+                    <li><a href="{{ route('admin.dashboard') }}" class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"><i class="bi bi-grid-1x2"></i> Dasbor</a></li>
+                    <li><a href="{{ route('admin.users.index') }}" class="sidebar-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}"><i class="bi bi-people"></i> Pengguna</a></li>
+                    <li><a href="{{ route('admin.journals.index') }}" class="sidebar-link {{ request()->routeIs('admin.journals*') ? 'active' : '' }}"><i class="bi bi-journals"></i> Jurnal</a></li>
+                    <li><a href="{{ route('admin.issues.index') }}" class="sidebar-link {{ request()->routeIs('admin.issues*') ? 'active' : '' }}"><i class="bi bi-collection"></i> Terbitan</a></li>
+                    <li><a href="{{ route('admin.articles.index') }}" class="sidebar-link {{ request()->routeIs('admin.articles*') ? 'active' : '' }}"><i class="bi bi-file-earmark-text"></i> Artikel</a></li>
                     <li>
                         <a href="{{ route('admin.payments.index') }}" class="sidebar-link {{ request()->routeIs('admin.payments*') ? 'active' : '' }}">
-                            <i class="bi bi-credit-card"></i> Payments
+                            <i class="bi bi-credit-card"></i> Pembayaran
                             @php $pc = \App\Models\Payment::where('status','uploaded')->count(); @endphp
                             @if($pc)<span class="badge rounded-pill" style="background-color: #ef4444; font-size: 10px; margin-left: auto;">{{ $pc }}</span>@endif
                         </a>
                     </li>
-                    <li class="sidebar-category">Settings</li>
-                    <li><a href="{{ route('admin.settings.index') }}" class="sidebar-link {{ request()->routeIs('admin.settings*') ? 'active' : '' }}"><i class="bi bi-sliders"></i> Settings</a></li>
-                    <li><a href="{{ route('admin.pages.index') }}" class="sidebar-link {{ request()->routeIs('admin.pages*') ? 'active' : '' }}"><i class="bi bi-file-earmark-richtext"></i> Site Pages</a></li>
-                    <li><a href="{{ route('admin.integrations.index') }}" class="sidebar-link {{ request()->routeIs('admin.integrations*') ? 'active' : '' }}"><i class="bi bi-plug"></i> API Integrations</a></li>
+                    <li class="sidebar-category">Pengaturan</li>
+                    <li><a href="{{ route('admin.settings.index') }}" class="sidebar-link {{ request()->routeIs('admin.settings*') ? 'active' : '' }}"><i class="bi bi-sliders"></i> Pengaturan</a></li>
+                    <li><a href="{{ route('admin.pages.index') }}" class="sidebar-link {{ request()->routeIs('admin.pages*') ? 'active' : '' }}"><i class="bi bi-file-earmark-richtext"></i> Halaman Situs</a></li>
+                    <li><a href="{{ route('admin.integrations.index') }}" class="sidebar-link {{ request()->routeIs('admin.integrations*') ? 'active' : '' }}"><i class="bi bi-plug"></i> Integrasi API</a></li>
                 @endif
 
                 @if (auth()->user()->isEditor())
-                    <li class="sidebar-category">Editorial</li>
-                    <li><a href="{{ route('editor.dashboard') }}" class="sidebar-link {{ request()->routeIs('editor.dashboard') ? 'active' : '' }}"><i class="bi bi-grid-1x2"></i> Dashboard</a></li>
-                    <li><a href="{{ route('editor.articles.index') }}" class="sidebar-link {{ request()->routeIs('editor.articles*') ? 'active' : '' }}"><i class="bi bi-file-earmark-text"></i> Manuscripts</a></li>
+                    <li class="sidebar-category">Redaksi</li>
+                    <li><a href="{{ route('editor.dashboard') }}" class="sidebar-link {{ request()->routeIs('editor.dashboard') ? 'active' : '' }}"><i class="bi bi-grid-1x2"></i> Dasbor</a></li>
+                    <li><a href="{{ route('editor.articles.index') }}" class="sidebar-link {{ request()->routeIs('editor.articles*') ? 'active' : '' }}"><i class="bi bi-file-earmark-text"></i> Naskah</a></li>
                 @endif
 
                 @if (auth()->user()->isReviewer())
-                    <li class="sidebar-category">Reviewer</li>
-                    <li><a href="{{ route('reviewer.dashboard') }}" class="sidebar-link {{ request()->routeIs('reviewer.dashboard') ? 'active' : '' }}"><i class="bi bi-grid-1x2"></i> Dashboard</a></li>
-                    <li><a href="{{ route('reviewer.reviews.index') }}" class="sidebar-link {{ request()->routeIs('reviewer.reviews*') ? 'active' : '' }}"><i class="bi bi-clipboard-check"></i> Review Queue</a></li>
+                    <li class="sidebar-category">Peninjau</li>
+                    <li><a href="{{ route('reviewer.dashboard') }}" class="sidebar-link {{ request()->routeIs('reviewer.dashboard') ? 'active' : '' }}"><i class="bi bi-grid-1x2"></i> Dasbor</a></li>
+                    <li><a href="{{ route('reviewer.reviews.index') }}" class="sidebar-link {{ request()->routeIs('reviewer.reviews*') ? 'active' : '' }}"><i class="bi bi-clipboard-check"></i> Antrean Tinjauan</a></li>
                 @endif
 
                 @if (auth()->user()->isAuthor())
-                    <li class="sidebar-category">Author</li>
-                    <li><a href="{{ route('author.dashboard') }}" class="sidebar-link {{ request()->routeIs('author.dashboard') ? 'active' : '' }}"><i class="bi bi-grid-1x2"></i> Dashboard</a></li>
-                    <li><a href="{{ route('author.articles.index') }}" class="sidebar-link {{ request()->routeIs('author.articles.index') ? 'active' : '' }}"><i class="bi bi-file-earmark-text"></i> My Submissions</a></li>
-                    <li><a href="{{ route('author.articles.create') }}" class="sidebar-link {{ request()->routeIs('author.articles.create') ? 'active' : '' }}"><i class="bi bi-plus-circle"></i> Submit Manuscript</a></li>
+                    <li class="sidebar-category">Penulis</li>
+                    <li><a href="{{ route('author.dashboard') }}" class="sidebar-link {{ request()->routeIs('author.dashboard') ? 'active' : '' }}"><i class="bi bi-grid-1x2"></i> Dasbor</a></li>
+                    <li><a href="{{ route('author.articles.index') }}" class="sidebar-link {{ request()->routeIs('author.articles.index') ? 'active' : '' }}"><i class="bi bi-file-earmark-text"></i> Kiriman Saya</a></li>
+                    <li><a href="{{ route('author.articles.create') }}" class="sidebar-link {{ request()->routeIs('author.articles.create') ? 'active' : '' }}"><i class="bi bi-plus-circle"></i> Kirim Naskah</a></li>
                 @endif
 
                 <li style="margin: 16px 16px 8px; border-top: 1px solid #1e293b;"></li>
-                <li><a href="{{ route('public.home') }}" class="sidebar-link" target="_blank"><i class="bi bi-arrow-up-right-square"></i> View Journal</a></li>
+                <li><a href="{{ route('public.home') }}" class="sidebar-link" target="_blank"><i class="bi bi-arrow-up-right-square"></i> Lihat Jurnal</a></li>
                 
                 <li>
                     <form method="POST" action="{{ route('logout') }}" class="m-0 w-100">
                         @csrf
                         <button type="submit" class="sidebar-link" style="width: 100%; border: none; background: transparent; text-align: left; margin: 0;">
-                            <i class="bi bi-box-arrow-left"></i> Sign Out
+                            <i class="bi bi-box-arrow-left"></i> Keluar
                         </button>
                     </form>
                 </li>
@@ -285,7 +310,7 @@
                         <i class="bi bi-list" style="font-size: 24px; color: var(--text-main);"></i>
                     </button>
                     <div>
-                        <h1 class="m-0" style="font-size: 18px; font-weight: 700; color: var(--text-main, #1e293b);">{{ $title ?? 'Dashboard' }}</h1>
+                        <h1 class="m-0" style="font-size: 18px; font-weight: 700; color: var(--text-main, #1e293b);">{{ $title ?? 'Dasbor' }}</h1>
                         @if(isset($breadcrumbs))
                         <nav aria-label="breadcrumb" style="margin-top:2px;">
                             <ol class="breadcrumb m-0" style="font-size: 12px; font-weight: 500;">
@@ -314,9 +339,9 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="width: 320px; padding: 0; border-radius: 8px; border: 1px solid var(--border, #e2e8f0);">
                             <li style="padding: 12px 16px; border-bottom: 1px solid var(--border, #e2e8f0); background: var(--bg-app, #f8fafc); display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-weight: 600; font-size: 14px; color: var(--text-main, #1e293b);">Notifications</span>
+                                <span style="font-weight: 600; font-size: 14px; color: var(--text-main, #1e293b);">Notifikasi</span>
                                 @if(auth()->user()->unreadNotifications->count() > 0)
-                                    <a href="{{ route('notifications.markAll') }}" style="font-size: 12px; color: var(--primary, #0f4c81); text-decoration: none; font-weight: 500;">Mark all read</a>
+                                    <a href="{{ route('notifications.markAll') }}" style="font-size: 12px; color: var(--primary, #0f4c81); text-decoration: none; font-weight: 500;">Tandai semua dibaca</a>
                                 @endif
                             </li>
                             <div style="max-height: 300px; overflow-y: auto;">
@@ -327,7 +352,7 @@
                                                 <i class="bi {{ $notification->data['icon'] ?? 'bi-bell-fill' }}"></i>
                                             </div>
                                             <div>
-                                                <div style="font-size: 13px; font-weight: 500; color: var(--text-main, #1e293b); line-height: 1.4;">{{ $notification->data['message'] ?? 'New notification' }}</div>
+                                                <div style="font-size: 13px; font-weight: 500; color: var(--text-main, #1e293b); line-height: 1.4;">{{ $notification->data['message'] ?? 'Notifikasi baru' }}</div>
                                                 <div style="font-size: 11px; color: var(--text-muted, #64748b); margin-top: 4px;">{{ $notification->created_at->diffForHumans() }}</div>
                                             </div>
                                         </a>
@@ -335,7 +360,7 @@
                                 @empty
                                     <li style="padding: 24px 16px; text-align: center;">
                                         <i class="bi bi-bell-slash text-muted" style="font-size: 20px; display: block; margin-bottom: 8px;"></i>
-                                        <span class="text-muted" style="font-size: 13px;">No new notifications</span>
+                                        <span class="text-muted" style="font-size: 13px;">Tidak ada notifikasi baru</span>
                                     </li>
                                 @endforelse
                             </div>
@@ -355,13 +380,13 @@
                                 <div style="font-weight: 600; font-size: 14px; color: var(--text-main, #1e293b);">{{ auth()->user()->name }}</div>
                                 <div style="font-size: 12px; color: var(--text-muted, #64748b);">{{ auth()->user()->email }}</div>
                             </li>
-                            <li><a class="dropdown-item" href="{{ route('profile.edit') }}" style="font-size: 14px;"><i class="bi bi-person me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="{{ route('profile.edit') }}" style="font-size: 14px;"><i class="bi bi-person me-2"></i>Profil</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form method="POST" action="{{ route('logout') }}" class="m-0">
                                     @csrf
                                     <button type="submit" class="dropdown-item text-danger" style="font-size: 14px;">
-                                        <i class="bi bi-box-arrow-left me-2"></i>Sign Out
+                                        <i class="bi bi-box-arrow-left me-2"></i>Keluar
                                     </button>
                                 </form>
                             </li>

@@ -54,6 +54,22 @@ class SettingSeeder extends Seeder
                 'type'        => 'textarea',
                 'description' => '',
             ],
+            [
+                'key'         => 'site_logo',
+                'value'       => '',
+                'group'       => 'general',
+                'label'       => 'Logo Website',
+                'type'        => 'image',
+                'description' => 'Upload logo website Anda',
+            ],
+            [
+                'key'         => 'site_favicon',
+                'value'       => '',
+                'group'       => 'general',
+                'label'       => 'Favicon Website',
+                'type'        => 'image',
+                'description' => 'Upload favicon (ikon browser) website Anda',
+            ],
 
             // ===== PUBLIC SITE SETTINGS =====
             [

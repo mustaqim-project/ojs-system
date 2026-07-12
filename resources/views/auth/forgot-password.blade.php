@@ -5,8 +5,8 @@
   <div class="row justify-content-center">
     <div class="col-12 col-md-8 col-lg-5">
       <div class="auth-card-header text-center mb-4">
-        <h1 class="auth-title">Forgot Password</h1>
-        <p class="auth-sub text-muted">Forgot your password? No problem. Just let us know your email address and we will email you a password reset link.</p>
+        <h1 class="auth-title">Lupa Kata Sandi</h1>
+        <p class="auth-sub text-muted">Lupa kata sandi Anda? Tidak masalah. Cukup beri tahu kami alamat email Anda dan kami akan mengirimkan tautan pengaturan ulang kata sandi.</p>
       </div>
 
       <div class="auth-card-body">
@@ -22,7 +22,7 @@
 
           <div class="mb-4">
             <label class="form-label" for="email">
-              Email Address 
+              Alamat Email 
               <span class="text-danger">*</span>
             </label>
             <div class="position-relative">
@@ -49,13 +49,13 @@
           </div>
           
           <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
-            <i class="bi bi-send me-2"></i> Email Password Reset Link
+            <i class="bi bi-send me-2"></i> Kirim Tautan Atur Ulang Kata Sandi
           </button>
           
           <p class="text-center text-muted mb-0 mt-4">
-            Remember your password?
+            Ingat kata sandi Anda?
             <a href="{{ route('login') }}" class="text-decoration-none fw-semibold">
-              Sign in
+              Masuk
             </a>
           </p>
         </form>

@@ -48,8 +48,7 @@ Route::get('/archive', [App\Http\Controllers\Public\PublicPageController::class,
 Route::get('/oai', \App\Http\Controllers\Public\OaiController::class)->name('public.oai');
 
 // Notifications
-Route::get('/auth/google', [\App\Http\Controllers\Auth\OAuthController::class, 'redirectToGoogle'])->name('auth.google');
-Route::get('/auth/google/callback', [\App\Http\Controllers\Auth\OAuthController::class, 'handleGoogleCallback']);
+
 
 Route::middleware([
     'auth',

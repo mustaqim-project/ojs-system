@@ -20,7 +20,8 @@ class ReviewService
             $reviewFilePath = null;
             if (!empty($data['review_file'])) {
                 $filename       = 'review-' . Str::uuid() . '.' . $data['review_file']->getClientOriginalExtension();
-                $reviewFilePath = $data['review_file']->storeAs('reviews', $filename, 'public');
+                $data['review_file']->move(public_path('uploads/reviews'), $filename);
+                $reviewFilePath = 'uploads/reviews/' . $filename;
             }
 
             $review->update([

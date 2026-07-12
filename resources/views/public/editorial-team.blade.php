@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $page['title'] ?? 'Editorial Team')
+@section('title', $page['title'] ?? 'Tim Redaksi')
 @section('meta_description', $page['meta_description'] ?? '')
 
 @section('content')
@@ -8,9 +8,9 @@
     <div class="container">
         <div class="row align-items-center mb-5">
             <div class="col-lg-8" data-aos="fade-up">
-                <div class="section-tag">People</div>
-                <h1 class="hero-title">Editorial <span class="accent">Team</span></h1>
-                <p class="hero-desc">{{ $page['meta_description'] ?? 'Our diverse and internationally recognized editorial board.' }}</p>
+                <div class="section-tag">Orang</div>
+                <h1 class="hero-title">{!! $page['title'] ?? 'Tim <span class="accent">Redaksi</span>' !!}</h1>
+                <p class="hero-desc">{{ $page['meta_description'] ?? 'Dewan redaksi kami yang beragam dan diakui secara internasional.' }}</p>
             </div>
         </div>
     </div>
@@ -32,7 +32,7 @@
         {{-- Editor in Chief --}}
         @php $eic = $page['extra']['editor_in_chief'] ?? null; @endphp
         @if($eic)
-        <h3 class="mb-4" style="font-weight:700;color:var(--text-main);" data-aos="fade-up">Editor-in-Chief</h3>
+        <h3 class="mb-4" style="font-weight:700;color:var(--text-main);" data-aos="fade-up">Pemimpin Redaksi</h3>
         <div class="row mb-5">
             <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
                 <div class="pub-card text-center">
@@ -56,7 +56,7 @@
         {{-- Section Editors --}}
         @php $editors = $page['extra']['section_editors'] ?? []; @endphp
         @if(count($editors))
-        <h3 class="mb-4" style="font-weight:700;color:var(--text-main);" data-aos="fade-up">Section Editors</h3>
+        <h3 class="mb-4" style="font-weight:700;color:var(--text-main);" data-aos="fade-up">Editor Bagian</h3>
         <div class="row g-4 mb-5">
             @foreach($editors as $i => $ed)
             <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ ($i % 3) * 100 }}">
