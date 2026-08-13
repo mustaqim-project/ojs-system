@@ -36,16 +36,16 @@ return new class extends Migration
                 // Drop old primary key
                 $table->dropPrimary('model_has_roles_role_model_type_primary');
                 
-                // Add journal_id column
-                $table->unsignedBigInteger('journal_id')->default(1)->after('role_id');
+                // Add journal_id column (nullable = global role, not journal-scoped)
+                $table->unsignedBigInteger('journal_id')->nullable()->after('role_id');
                 
-                // Add new primary key
-                $table->primary(['journal_id', 'role_id', 'model_id', 'model_type'], 'model_has_roles_role_model_type_primary');
+                // Add new primary key (without journal_id since it can be null)
+                $table->primary(['role_id', 'model_id', 'model_type'], 'model_has_roles_role_model_type_primary');
                 
                 // Restore foreign key on role_id
                 $table->foreign('role_id')->references('id')->on('roles')->cascadeOnDelete();
                 
-                // Foreign key relation on journal_id
+                // Foreign key relation on journal_id (nullable)
                 $table->foreign('journal_id')->references('id')->on('journals')->cascadeOnDelete();
             });
         }
@@ -59,16 +59,16 @@ return new class extends Migration
                 // Drop old primary key
                 $table->dropPrimary('model_has_permissions_permission_model_type_primary');
                 
-                // Add journal_id column
-                $table->unsignedBigInteger('journal_id')->default(1)->after('permission_id');
+                // Add journal_id column (nullable = global permission, not journal-scoped)
+                $table->unsignedBigInteger('journal_id')->nullable()->after('permission_id');
                 
-                // Add new primary key
-                $table->primary(['journal_id', 'permission_id', 'model_id', 'model_type'], 'model_has_permissions_permission_model_type_primary');
+                // Add new primary key (without journal_id since it can be null)
+                $table->primary(['permission_id', 'model_id', 'model_type'], 'model_has_permissions_permission_model_type_primary');
                 
                 // Restore foreign key on permission_id
                 $table->foreign('permission_id')->references('id')->on('permissions')->cascadeOnDelete();
                 
-                // Foreign key relation on journal_id
+                // Foreign key relation on journal_id (nullable)
                 $table->foreign('journal_id')->references('id')->on('journals')->cascadeOnDelete();
             });
         }
