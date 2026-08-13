@@ -43,9 +43,21 @@ class JournalController extends Controller
         $data['slug'] = Str::slug($request->title);
 
         if ($request->hasFile('cover_image')) {
-            $filename = time() . '_' . $request->file('cover_image')->getClientOriginalName();
-            $request->file('cover_image')->move(public_path('uploads/journals'), $filename);
-            $data['cover_image'] = 'uploads/journals/' . $filename;
+            $file = $request->file('cover_image');
+            $filename = 'journal_' . time() . '_' . Str::random(5) . '.webp';
+            $destPath = public_path('upload/' . $filename);
+
+            if (!file_exists(public_path('upload'))) {
+                mkdir(public_path('upload'), 0777, true);
+            }
+
+            if ($this->convertToWebp($file->getPathname(), $destPath)) {
+                $data['cover_image'] = 'upload/' . $filename;
+            } else {
+                $normalFilename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('upload'), $normalFilename);
+                $data['cover_image'] = 'upload/' . $normalFilename;
+            }
         }
 
         Journal::create($data);
@@ -66,16 +78,80 @@ class JournalController extends Controller
             'frequency'   => ['required', 'in:monthly,bimonthly,quarterly,semiannual,annual'],
             'editor_id'   => ['nullable', 'exists:users,id'],
             'is_active'   => ['boolean'],
+            'cover_image' => ['nullable', 'image', 'max:2048'],
         ]);
 
         $data = $request->except('cover_image', '_token', '_method');
+        
         if ($request->hasFile('cover_image')) {
-            $filename = time() . '_' . $request->file('cover_image')->getClientOriginalName();
-            $request->file('cover_image')->move(public_path('uploads/journals'), $filename);
-            $data['cover_image'] = 'uploads/journals/' . $filename;
+            $file = $request->file('cover_image');
+            $filename = 'journal_' . time() . '_' . Str::random(5) . '.webp';
+            $destPath = public_path('upload/' . $filename);
+
+            if (!file_exists(public_path('upload'))) {
+                mkdir(public_path('upload'), 0777, true);
+            }
+
+            if ($this->convertToWebp($file->getPathname(), $destPath)) {
+                if ($journal->cover_image && file_exists(public_path($journal->cover_image))) {
+                    @unlink(public_path($journal->cover_image));
+                }
+                $data['cover_image'] = 'upload/' . $filename;
+            } else {
+                $normalFilename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('upload'), $normalFilename);
+                if ($journal->cover_image && file_exists(public_path($journal->cover_image))) {
+                    @unlink(public_path($journal->cover_image));
+                }
+                $data['cover_image'] = 'upload/' . $normalFilename;
+            }
         }
 
         $journal->update($data);
         return redirect()->route('admin.journals.index')->with('success', 'Jurnal berhasil diupdate!');
+    }
+
+    private function convertToWebp(string $sourcePath, string $destinationPath): bool
+    {
+        $info = getimagesize($sourcePath);
+        if (!$info) {
+            return false;
+        }
+
+        $mime = $info['mime'];
+        switch ($mime) {
+            case 'image/jpeg':
+            case 'image/jpg':
+                $image = imagecreatefromjpeg($sourcePath);
+                break;
+            case 'image/png':
+                $image = imagecreatefrompng($sourcePath);
+                if ($image) {
+                    imagepalettetotruecolor($image);
+                    imagealphablending($image, true);
+                    imagesavealpha($image, true);
+                }
+                break;
+            case 'image/gif':
+                $image = imagecreatefromgif($sourcePath);
+                if ($image) {
+                    imagepalettetotruecolor($image);
+                }
+                break;
+            case 'image/webp':
+                $image = imagecreatefromwebp($sourcePath);
+                break;
+            default:
+                return false;
+        }
+
+        if (!$image) {
+            return false;
+        }
+
+        $result = imagewebp($image, $destinationPath, 80);
+        imagedestroy($image);
+
+        return $result;
     }
 }

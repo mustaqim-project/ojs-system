@@ -215,13 +215,9 @@
           </button>
 
           @if($page['from_db'] ?? false)
-          <form method="POST" action="{{ route('admin.pages.reset', $page['slug']) }}" onsubmit="return confirm('Reset ke konten default? Perubahan akan hilang.')">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="ds-btn ds-btn-ghost w-100" style="height:38px;color:var(--danger);">
-              <i class="bi bi-arrow-counterclockwise me-1"></i> Reset to Default
-            </button>
-          </form>
+          <button type="button" class="ds-btn ds-btn-ghost w-100" style="height:38px;color:var(--danger);" onclick="if(confirm('Reset ke konten default? Perubahan akan hilang.')) document.getElementById('reset-form').submit();">
+            <i class="bi bi-arrow-counterclockwise me-1"></i> Reset to Default
+          </button>
           @endif
 
         </div>
@@ -243,5 +239,12 @@
     </div>
   </div>
 </form>
+
+@if($page['from_db'] ?? false)
+<form id="reset-form" method="POST" action="{{ route('admin.pages.reset', $page['slug']) }}" style="display:none;">
+  @csrf
+  @method('DELETE')
+</form>
+@endif
 
 @endsection

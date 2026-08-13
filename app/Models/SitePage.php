@@ -68,138 +68,146 @@ class SitePage extends Model
     {
         return [
             'about' => [
-                'title'            => 'About This Journal',
-                'meta_description' => 'Learn about our journal, its mission, vision, and publication history.',
-                'body'             => '<h2>About Us</h2>
-<p>This journal is an open-access, peer-reviewed publication dedicated to advancing knowledge across multiple disciplines. Since our founding, we have been committed to publishing high-quality research that contributes to the global academic community.</p>
-<h3>Our Mission</h3>
-<p>To promote the dissemination of scientific knowledge through rigorous peer review and open access publishing, making research freely available to scholars and the public worldwide.</p>
-<h3>Our Vision</h3>
-<p>To be a leading international journal recognized for academic excellence, integrity, and innovation in scholarly communication.</p>',
+                'title'            => 'Tentang Jurnal',
+                'meta_description' => 'Pelajari lebih lanjut tentang jurnal kami, visi, misi, dan sejarah penerbitannya.',
+                'body'             => '<h2>Tentang Kami</h2>
+<p>Jurnal ini merupakan publikasi ilmiah peer-reviewed dengan akses terbuka (open-access) yang didedikasikan untuk memajukan pengetahuan di berbagai disiplin ilmu. Sejak didirikan, kami berkomitmen untuk menerbitkan penelitian berkualitas tinggi yang memberikan kontribusi nyata bagi komunitas akademik global.</p>
+<h3>Visi & Misi</h3>
+<p>Visi kami adalah menjadi platform akses terbuka utama untuk penelitian inovatif, membina ekosistem inklusif di mana pengetahuan dibagikan tanpa batas.</p>
+<p>Misi kami adalah mempromosikan penyebaran pengetahuan ilmiah melalui proses peninjauan sejawat (peer-review) yang ketat dan penerbitan akses terbuka, membuat hasil penelitian tersedia secara bebas bagi para akademisi dan masyarakat luas di seluruh dunia.</p>',
                 'extra' => [
                     'founded_year'     => '2010',
                     'issn_print'       => '0000-0000',
                     'issn_online'      => '0000-0001',
                     'publisher'        => 'OJS Publishing',
-                    'frequency'        => 'Quarterly',
+                    'frequency'        => 'Kuartalan',
                 ],
             ],
 
             'editorial-team' => [
-                'title'            => 'Editorial Team',
-                'meta_description' => 'Meet the editorial board and team behind the journal.',
-                'body'             => '<p>Our editorial team consists of distinguished scholars and practitioners from around the world, committed to maintaining the highest standards of academic peer review.</p>',
+                'title'            => 'Tim Redaksi',
+                'meta_description' => 'Temui dewan redaksi dan tim di balik jurnal ini.',
+                'body'             => '<p>Tim redaksi kami terdiri dari para akademisi dan praktisi terkemuka dari seluruh dunia, yang berkomitmen untuk menjaga standar tertinggi peninjauan sejawat akademis.</p>',
                 'extra' => [
-                    'editor_in_chief' => ['name' => 'Prof. Dr. John Smith', 'affiliation' => 'University of Science', 'email' => 'editor@journal.com', 'orcid' => ''],
+                    'editor_in_chief' => ['name' => 'Prof. Dr. John Smith', 'affiliation' => 'Universitas Ilmu Pengetahuan', 'email' => 'editor@jurnal.com', 'orcid' => ''],
                     'section_editors'  => [
-                        ['name' => 'Dr. Jane Doe', 'affiliation' => 'MIT, USA', 'area' => 'Computer Science'],
-                        ['name' => 'Dr. Ahmad Fauzi', 'affiliation' => 'UI, Indonesia', 'area' => 'Information Systems'],
-                        ['name' => 'Dr. Maria Santos', 'affiliation' => 'USP, Brazil', 'area' => 'Data Engineering'],
+                        ['name' => 'Dr. Jane Doe', 'affiliation' => 'MIT, AS', 'area' => 'Ilmu Komputer'],
+                        ['name' => 'Dr. Ahmad Fauzi', 'affiliation' => 'UI, Indonesia', 'area' => 'Sistem Informasi'],
+                        ['name' => 'Dr. Maria Santos', 'affiliation' => 'USP, Brasil', 'area' => 'Rekayasa Data'],
                     ],
                 ],
             ],
 
             'reviewer-board' => [
-                'title'            => 'Reviewer Board',
-                'meta_description' => 'Our expert reviewer board who ensure quality peer review.',
-                'body'             => '<p>We are grateful to our dedicated reviewer board members who voluntarily contribute their expertise to maintain the quality of published research.</p>',
+                'title'            => 'Dewan Penelaah',
+                'meta_description' => 'Dewan penelaah ahli kami yang memastikan kualitas peninjauan sejawat.',
+                'body'             => '<p>Kami sangat berterima kasih kepada anggota dewan penelaah kami yang berdedikasi yang secara sukarela menyumbangkan keahlian mereka untuk menjaga kualitas penelitian yang diterbitkan.</p>',
                 'extra' => [
                     'reviewers' => [
-                        ['name' => 'Dr. Reviewer One', 'affiliation' => 'Harvard University, USA', 'area' => 'Machine Learning'],
-                        ['name' => 'Dr. Reviewer Two', 'affiliation' => 'Oxford University, UK', 'area' => 'Algorithms'],
-                        ['name' => 'Dr. Reviewer Three', 'affiliation' => 'ETH Zurich, Switzerland', 'area' => 'Systems'],
-                        ['name' => 'Dr. Reviewer Four', 'affiliation' => 'NUS, Singapore', 'area' => 'Databases'],
-                        ['name' => 'Dr. Reviewer Five', 'affiliation' => 'IIT Delhi, India', 'area' => 'Networks'],
-                        ['name' => 'Dr. Reviewer Six', 'affiliation' => 'UGM, Indonesia', 'area' => 'Software Engineering'],
+                        ['name' => 'Dr. Reviewer Satu', 'affiliation' => 'Harvard University, AS', 'area' => 'Pembelajaran Mesin'],
+                        ['name' => 'Dr. Reviewer Dua', 'affiliation' => 'Oxford University, Inggris', 'area' => 'Algoritma'],
+                        ['name' => 'Dr. Reviewer Tiga', 'affiliation' => 'ETH Zurich, Swiss', 'area' => 'Sistem'],
+                        ['name' => 'Dr. Reviewer Empat', 'affiliation' => 'NUS, Singapura', 'area' => 'Basis Data'],
+                        ['name' => 'Dr. Reviewer Lima', 'affiliation' => 'IIT Delhi, India', 'area' => 'Jaringan'],
+                        ['name' => 'Dr. Reviewer Enam', 'affiliation' => 'UGM, Indonesia', 'area' => 'Rekayasa Perangkat Lunak'],
                     ],
                 ],
             ],
 
             'author-guidelines' => [
-                'title'            => 'Author Guidelines',
-                'meta_description' => 'Complete submission guidelines for authors.',
-                'body'             => '<h3>Submission Requirements</h3>
+                'title'            => 'Panduan Penulis',
+                'meta_description' => 'Semua yang perlu Anda ketahui untuk mempersiapkan dan mengirimkan naskah Anda.',
+                'body'             => '<h3>Daftar Periksa Penyerahan</h3>
+<p>Sebelum mengirimkan naskah Anda, pastikan naskah tersebut memenuhi semua persyaratan berikut:</p>
 <ul>
-  <li>Manuscripts must be original and not under consideration elsewhere.</li>
-  <li>File format: Microsoft Word (.docx) or RTF.</li>
-  <li>Length: 4,000 – 8,000 words (excluding references).</li>
-  <li>Abstract: 150–250 words with 3–5 keywords.</li>
-  <li>Use APA 7th Edition for citations and references.</li>
+  <li>Kiriman tersebut belum pernah dipublikasikan sebelumnya, dan juga tidak sedang dipertimbangkan oleh jurnal lain.</li>
+  <li>File naskah dalam format dokumen OpenOffice, Microsoft Word, atau RTF.</li>
+  <li>Bila tersedia, URL dan DOI untuk referensi telah disertakan.</li>
+  <li>Teks tersebut mematuhi persyaratan gaya dan bibliografi yang diuraikan dalam pedoman ini.</li>
+  <li>Surat pengantar disertakan, ditujukan kepada editor dan merinci kebaruan penelitian.</li>
 </ul>
-<h3>Formatting</h3>
-<p>Font: Times New Roman 12pt, double-spaced, A4 paper with 2.5 cm margins. Use the IMRaD structure (Introduction, Methods, Results, Discussion).</p>
-<h3>Figures &amp; Tables</h3>
-<p>All figures and tables must be numbered sequentially and cited in the text. High-resolution images (min 300 DPI) required.</p>',
+<h3>Pemformatan Naskah</h3>
+<p>Naskah harus ditulis dalam bahasa Inggris (atau Indonesia) yang jelas dan ringkas. Struktur artikel biasanya harus mengikuti format IMRaD (Pendahuluan, Metode, Hasil, dan Pembahasan).</p>
+<h5>Halaman Judul</h5>
+<p>Halaman judul harus mencantumkan judul artikel, nama lengkap penulis, afiliasi, dan alamat email penulis korespondensi. Abstrak 150-250 kata dan 3-5 kata kunci juga harus disertakan.</p>
+<h5>Gambar & Tabel</h5>
+<p>Semua gambar dan tabel harus dikutip dalam teks dan diberi nomor secara berurutan. Gambar beresolusi tinggi (minimal 300 DPI) harus diunggah sebagai file terpisah selama pengiriman jika diperlukan.</p>
+<h3>Gaya Referensi</h3>
+<p>Kami menggunakan gaya <strong>APA (American Psychological Association) Edisi ke-7</strong> untuk kutipan dan referensi. Penulis sangat didorong untuk menggunakan perangkat lunak manajemen referensi seperti Mendeley, Zotero, atau EndNote.</p>
+<div style="background: var(--bg-app); padding: 20px; border-radius: 8px; margin-top: 20px;">
+    <h6 style="font-weight: 700; margin-bottom: 12px; font-size: 14px;">Contoh Kutipan Artikel Jurnal:</h6>
+    <p style="font-size: 14px; color: var(--text-muted); font-family: monospace; margin: 0;">Grady, J. S., Her, M., Moreno, G., Perez, C., & Yelinek, J. (2019). Emotions in storybooks: A comparison of storybooks that represent ethnic and racial groups in the United States. Psychology of Popular Media Culture, 8(3), 207–217. https://doi.org/10.1037/ppm0000185</p>
+</div>',
                 'extra' => [
                     'template_url' => '',
-                    'apc_waiver'   => 'Waivers are available for authors from low-income countries.',
+                    'apc_waiver'   => 'Keringanan biaya tersedia bagi penulis dari negara berpenghasilan rendah.',
                 ],
             ],
 
             'ethics' => [
-                'title'            => 'Publication Ethics',
-                'meta_description' => 'Our commitment to ethical publishing practices.',
-                'body'             => '<h3>Editorial Standards</h3>
-<p>This journal follows the <a href="https://publicationethics.org/" target="_blank">COPE (Committee on Publication Ethics)</a> guidelines for responsible publication practices.</p>
-<h3>Authorship</h3>
-<p>All listed authors must have made significant contributions to the research. Guest or ghost authorship is not permitted.</p>
-<h3>Plagiarism</h3>
-<p>All manuscripts are screened for plagiarism using automated tools. Plagiarism in any form is strictly prohibited.</p>
-<h3>Conflicts of Interest</h3>
-<p>Authors must disclose any financial or personal relationships that could be perceived as influencing their work.</p>',
+                'title'            => 'Etika Publikasi',
+                'meta_description' => 'Komitmen kami terhadap praktik penerbitan yang etis.',
+                'body'             => '<h3>Standar Editorial</h3>
+<p>Jurnal ini mengikuti pedoman <a href="https://publicationethics.org/" target="_blank">COPE (Committee on Publication Ethics)</a> untuk praktik publikasi yang bertanggung jawab.</p>
+<h3>Kepenulisan</h3>
+<p>Semua penulis yang terdaftar harus memberikan kontribusi signifikan terhadap penelitian. Kepenulisan tamu (guest) atau siluman (ghost) tidak diizinkan.</p>
+<h3>Plagiarisme</h3>
+<p>Semua naskah disaring dari plagiarisme menggunakan perangkat lunak otomatis. Plagiarisme dalam bentuk apa pun dilarang keras.</p>
+<h3>Konflik Kepentingan</h3>
+<p>Penulis harus mengungkapkan hubungan keuangan atau pribadi yang dapat dianggap memengaruhi hasil kerja mereka.</p>',
                 'extra' => [],
             ],
 
             'peer-review' => [
-                'title'            => 'Peer Review Process',
-                'meta_description' => 'Transparent, double-blind peer review process.',
+                'title'            => 'Proses Tinjauan Sejawat',
+                'meta_description' => 'Proses peninjauan sejawat yang transparan dan double-blind.',
                 'body'             => '<h3>Double-Blind Review</h3>
-<p>This journal uses double-blind peer review, where both authors and reviewers remain anonymous throughout the review process.</p>
-<h3>Review Timeline</h3>
+<p>Jurnal ini menggunakan peninjauan sejawat double-blind, di mana penulis dan penelaah tetap anonim selama proses peninjauan.</p>
+<h3>Lini Masa Peninjauan</h3>
 <ul>
-  <li><strong>Initial editorial check:</strong> 1–2 weeks</li>
-  <li><strong>Peer review:</strong> 4–8 weeks</li>
-  <li><strong>Revision &amp; decision:</strong> 2–4 weeks</li>
-  <li><strong>Publication after acceptance:</strong> 2–4 weeks</li>
+  <li><strong>Pemeriksaan awal editor:</strong> 1–2 minggu</li>
+  <li><strong>Peninjauan sejawat:</strong> 4–8 minggu</li>
+  <li><strong>Revisi &amp; keputusan:</strong> 2–4 minggu</li>
+  <li><strong>Publikasi setelah diterima:</strong> 2–4 minggu</li>
 </ul>
-<h3>Review Criteria</h3>
-<p>Reviewers evaluate manuscripts based on originality, methodology, significance of results, clarity of writing, and adherence to ethical standards.</p>',
+<h3>Kriteria Penilaian</h3>
+<p>Penelaah mengevaluasi naskah berdasarkan orisinalitas, metodologi, signifikansi hasil, kejelasan penulisan, dan kepatuhan terhadap standar etika.</p>',
                 'extra' => [],
             ],
 
             'focus-and-scope' => [
-                'title'            => 'Focus and Scope',
-                'meta_description' => 'The scope and focus areas of our journal.',
-                'body'             => '<h3>Scope</h3>
-<p>This journal publishes peer-reviewed research across a broad range of disciplines, with a focus on interdisciplinary work that bridges theory and practice.</p>
-<h3>Topics of Interest</h3>
+                'title'            => 'Fokus dan Ruang Lingkup',
+                'meta_description' => 'Ruang lingkup dan fokus area dari jurnal kami.',
+                'body'             => '<h3>Ruang Lingkup</h3>
+<p>Jurnal ini menerbitkan penelitian peer-reviewed di berbagai disiplin ilmu, dengan fokus pada karya interdisipliner yang menjembatani teori dan praktik.</p>
+<h3>Topik yang Diminati</h3>
 <ul>
-  <li>Computer Science &amp; Artificial Intelligence</li>
-  <li>Information Systems &amp; Technology</li>
-  <li>Data Science &amp; Analytics</li>
-  <li>Software Engineering &amp; Development</li>
-  <li>Cybersecurity &amp; Privacy</li>
-  <li>Human-Computer Interaction</li>
+  <li>Ilmu Komputer &amp; Kecerdasan Buatan</li>
+  <li>Sistem Informasi &amp; Teknologi</li>
+  <li>Sains Data &amp; Analisis</li>
+  <li>Rekayasa Perangkat Lunak &amp; Pengembangan</li>
+  <li>Keamanan Siber &amp; Privasi</li>
+  <li>Interaksi Manusia-Komputer</li>
 </ul>',
                 'extra' => [],
             ],
 
             'journal-policies' => [
-                'title'            => 'Journal Policies',
-                'meta_description' => 'Access policies and archiving policies.',
-                'body'             => '<h3>Open Access Policy</h3>
-<p>This is an open-access journal which means that all content is freely available without charge. Users are allowed to read, download, copy, distribute, print, search, or link to the full texts of the articles.</p>
-<h3>Self-Archiving Policy</h3>
-<p>Authors may self-archive the accepted manuscript (post-print) in their institutional repository immediately upon acceptance.</p>
-<h3>Article Processing Charges (APC)</h3>
-<p>This journal charges an Article Processing Charge (APC) upon acceptance. Waivers are available. See our APC policy for details.</p>',
+                'title'            => 'Kebijakan Jurnal',
+                'meta_description' => 'Kebijakan akses dan kebijakan pengarsipan.',
+                'body'             => '<h3>Kebijakan Akses Terbuka</h3>
+<p>Jurnal ini merupakan jurnal akses terbuka (open-access) yang berarti semua konten tersedia secara bebas tanpa biaya bagi pengguna atau lembaga mereka. Pengguna diizinkan untuk membaca, mengunduh, menyalin, mendistribusikan, mencetak, mencari, atau menautkan ke teks lengkap artikel.</p>
+<h3>Kebijakan Pengarsipan Mandiri</h3>
+<p>Penulis dapat mengarsipkan naskah yang diterima (post-print) di repositori institusional mereka segera setelah naskah diterima.</p>
+<h3>Biaya Pemrosesan Artikel (APC)</h3>
+<p>Jurnal ini mengenakan Biaya Pemrosesan Artikel (APC) setelah naskah dinyatakan diterima. Keringanan biaya tersedia. Lihat kebijakan APC kami untuk detailnya.</p>',
                 'extra' => [],
             ],
 
             'indexing' => [
-                'title'            => 'Indexing & Abstracting',
-                'meta_description' => 'Databases and indexes that cover our journal.',
-                'body'             => '<p>This journal is indexed and abstracted in the following databases:</p>',
+                'title'            => 'Pengindeksan & Abstrak',
+                'meta_description' => 'Basis data dan indeks yang mencakup jurnal kami.',
+                'body'             => '<p>Jurnal ini terindeks dan terabstrak dalam basis data berikut:</p>',
                 'extra' => [
                     'indexes' => [
                         ['name' => 'DOAJ', 'url' => 'https://doaj.org', 'logo' => ''],
@@ -213,11 +221,11 @@ class SitePage extends Model
             ],
 
             'contact' => [
-                'title'            => 'Contact Us',
-                'meta_description' => 'Get in touch with the editorial team.',
-                'body'             => '<p>We welcome queries regarding manuscript submissions, peer review, and general journal matters.</p>',
+                'title'            => 'Hubungi Kami',
+                'meta_description' => 'Hubungi tim editorial kami.',
+                'body'             => '<p>Kami menyambut baik pertanyaan mengenai pengiriman naskah, proses peninjauan sejawat, dan masalah jurnal umum lainnya.</p>',
                 'extra' => [
-                    'email'   => 'editor@journal.com',
+                    'email'   => 'editor@jurnal.com',
                     'phone'   => '+62 21 1234 5678',
                     'address' => 'Jl. Contoh No. 1, Jakarta 12345, Indonesia',
                     'maps_embed_url' => '',
@@ -225,45 +233,45 @@ class SitePage extends Model
             ],
 
             'privacy-policy' => [
-                'title'            => 'Privacy Policy',
-                'meta_description' => 'How we collect, use, and protect your personal data.',
-                'body'             => '<h3>1. Introduction</h3>
-<p>The names and email addresses entered in this journal site will be used exclusively for the stated purposes of this journal and will not be made available for any other purpose or to any other party.</p>
-<h3>2. Data We Collect</h3>
-<p>We collect information you provide during registration, submission, and review processes, including your name, email address, affiliation, and manuscript content.</p>
-<h3>3. How We Use Your Data</h3>
-<p>Your data is used solely to manage the editorial workflow, communicate with you about your submissions, and improve our services.</p>',
+                'title'            => 'Kebijakan Privasi',
+                'meta_description' => 'Bagaimana kami mengumpulkan, menggunakan, dan melindungi data pribadi Anda.',
+                'body'             => '<h3>1. Pendahuluan</h3>
+<p>Nama dan alamat email yang dimasukkan dalam situs jurnal ini akan digunakan secara eksklusif untuk tujuan jurnal ini dan tidak akan tersedia untuk tujuan lain atau pihak lain.</p>
+<h3>2. Data yang Kami Kumpulkan</h3>
+<p>Kami mengumpulkan informasi yang Anda berikan selama pendaftaran, pengiriman, dan proses peninjauan, termasuk nama, alamat email, afiliasi, dan konten naskah Anda.</p>
+<h3>3. Bagaimana Kami Menggunakan Data Anda</h3>
+<p>Data Anda digunakan semata-mata untuk mengelola alur kerja editorial, berkomunikasi dengan Anda tentang kiriman Anda, dan meningkatkan layanan kami.</p>',
                 'extra' => [],
             ],
 
             'terms-conditions' => [
-                'title'            => 'Terms & Conditions',
-                'meta_description' => 'Terms and conditions for using this platform.',
-                'body'             => '<h3>1. Acceptance of Terms</h3>
-<p>By registering, accessing, or using this scholarly publishing platform, you agree to comply with and be bound by these Terms and Conditions.</p>
-<h3>2. User Responsibilities</h3>
-<p>You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.</p>
-<h3>3. Intellectual Property</h3>
-<p>Published articles are protected under Creative Commons licenses as specified in each article. The platform design and software remain the property of the publisher.</p>',
+                'title'            => 'Syarat & Ketentuan',
+                'meta_description' => 'Syarat dan ketentuan untuk menggunakan platform ini.',
+                'body'             => '<h3>1. Penerimaan Syarat</h3>
+<p>Dengan mendaftar, mengakses, atau menggunakan platform penerbitan ilmiah ini, Anda setuju untuk mematuhi dan terikat oleh Syarat dan Ketentuan ini.</p>
+<h3>2. Tanggung Jawab Pengguna</h3>
+<p>Anda bertanggung jawab untuk menjaga kerahasiaan kredensial akun Anda dan untuk semua aktivitas yang terjadi di bawah akun Anda.</p>
+<h3>3. Kekayaan Intelektual</h3>
+<p>Artikel yang diterbitkan dilindungi di bawah lisensi Creative Commons sebagaimana ditentukan dalam setiap artikel. Desain platform dan perangkat lunak tetap menjadi milik penerbit.</p>',
                 'extra' => [],
             ],
 
             'announcements' => [
-                'title'            => 'Announcements',
-                'meta_description' => 'Latest news and announcements from the editorial office.',
-                'body'             => '<p>No announcements at this time. Check back soon for updates from our editorial team.</p>',
+                'title'            => 'Pengumuman',
+                'meta_description' => 'Berita dan pengumuman terbaru dari kantor redaksi.',
+                'body'             => '<p>Belum ada pengumuman saat ini. Silakan periksa kembali nanti untuk pembaruan dari tim redaksi kami.</p>',
                 'extra' => [
                     'items' => [],
                 ],
             ],
 
             'call-for-papers' => [
-                'title'            => 'Call for Papers',
-                'meta_description' => 'Submit your research to our upcoming issues.',
-                'body'             => '<h3>Open Call for Papers</h3>
-<p>We are currently accepting submissions for our upcoming issues. We invite original research articles, review papers, and short communications in all areas within our scope.</p>
-<h3>Submission Deadline</h3>
-<p>Manuscripts may be submitted at any time. We operate on a rolling submission basis.</p>',
+                'title'            => 'Panggilan untuk Makalah',
+                'meta_description' => 'Kirimkan penelitian Anda ke terbitan kami yang akan datang.',
+                'body'             => '<h3>Panggilan Makalah Terbuka</h3>
+<p>Kami saat ini menerima pengiriman naskah untuk terbitan kami yang akan datang. Kami mengundang artikel penelitian asli, makalah ulasan, dan komunikasi singkat di semua bidang dalam ruang lingkup kami.</p>
+<h3>Batas Waktu Pengiriman</h3>
+<p>Manuskrip dapat dikirimkan kapan saja. Kami beroperasi berdasarkan pengiriman bergulir (rolling submission).</p>',
                 'extra' => [
                     'deadline'    => '',
                     'volume'      => '',

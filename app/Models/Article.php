@@ -117,6 +117,11 @@ class Article extends Model
         return $this->hasOne(Invoice::class, 'submission_id');
     }
 
+    public function payment()
+    {
+        return $this->hasOneThrough(Payment::class, Invoice::class, 'submission_id', 'invoice_id');
+    }
+
     public function canBePublished(): bool
     {
         if (!$this->invoice) {

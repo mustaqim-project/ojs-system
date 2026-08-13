@@ -41,17 +41,31 @@ class UserController extends Controller
             'password'    => ['required', Password::min(8)],
             'role'        => ['required', 'in:admin,editor,reviewer,author,reader'],
             'affiliation' => ['nullable', 'string', 'max:255'],
+            'institution_id' => ['nullable', 'integer', 'exists:institutions,id'],
             'phone'       => ['nullable', 'string', 'max:20'],
         ]);
 
+        $institutionId = $request->institution_id;
+        if (!$institutionId && $request->filled('affiliation')) {
+            $institution = \App\Models\Institution::firstOrCreate(
+                ['name' => $request->affiliation],
+                [
+                    'acronym' => $this->generateAcronym($request->affiliation),
+                    'country_code' => 'ID',
+                ]
+            );
+            $institutionId = $institution->id;
+        }
+
         User::create([
-            'name'        => $request->name,
-            'email'       => $request->email,
-            'password'    => Hash::make($request->password),
-            'role'        => $request->role,
-            'affiliation' => $request->affiliation,
-            'phone'       => $request->phone,
-            'is_active'   => true,
+            'name'           => $request->name,
+            'email'          => $request->email,
+            'password'       => Hash::make($request->password),
+            'role'           => $request->role,
+            'affiliation'    => $request->affiliation,
+            'institution_id' => $institutionId,
+            'phone'          => $request->phone,
+            'is_active'      => true,
         ]);
 
         return redirect()->route('admin.users.index')->with('success', 'User berhasil ditambahkan!');
@@ -70,10 +84,31 @@ class UserController extends Controller
             'email'       => ['required', 'email', "unique:users,email,{$user->id}"],
             'role'        => ['required', 'in:admin,editor,reviewer,author,reader'],
             'affiliation' => ['nullable', 'string', 'max:255'],
+            'institution_id' => ['nullable', 'integer', 'exists:institutions,id'],
             'is_active'   => ['boolean'],
         ]);
 
-        $user->update($request->only('name', 'email', 'role', 'affiliation', 'phone', 'is_active'));
+        $institutionId = $request->institution_id;
+        if (!$institutionId && $request->filled('affiliation')) {
+            $institution = \App\Models\Institution::firstOrCreate(
+                ['name' => $request->affiliation],
+                [
+                    'acronym' => $this->generateAcronym($request->affiliation),
+                    'country_code' => 'ID',
+                ]
+            );
+            $institutionId = $institution->id;
+        }
+
+        $user->update([
+            'name'           => $request->name,
+            'email'          => $request->email,
+            'role'           => $request->role,
+            'affiliation'    => $request->affiliation,
+            'institution_id' => $institutionId,
+            'phone'          => $request->phone,
+            'is_active'      => $request->is_active,
+        ]);
 
         if ($request->filled('password')) {
             $request->validate(['password' => [Password::min(8)]]);
@@ -103,5 +138,17 @@ class UserController extends Controller
         $user->update(['is_active' => !$user->is_active]);
         $status = $user->is_active ? 'diaktifkan' : 'dinonaktifkan';
         return back()->with('success', "User berhasil {$status}!");
+    }
+
+    private function generateAcronym(string $name): ?string
+    {
+        $words = explode(' ', preg_replace('/[^a-zA-Z\s]/', '', $name));
+        $acronym = '';
+        foreach ($words as $word) {
+            if (!empty($word) && !in_array(strtolower($word), ['of', 'in', 'and', 'dan', 'di', 'ke', 'the'])) {
+                $acronym .= strtoupper($word[0]);
+            }
+        }
+        return !empty($acronym) ? $acronym : null;
     }
 }

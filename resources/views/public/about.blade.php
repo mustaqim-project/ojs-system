@@ -22,21 +22,11 @@
     <div class="container">
         <div class="row g-5">
             <div class="col-lg-8">
-                @if(!empty($page['body']))
                 <div class="pub-card mb-4" data-aos="fade-up">
                     <div class="prose" style="color:var(--text-muted);line-height:1.8;">
                         {!! $page['body'] !!}
                     </div>
                 </div>
-                @else
-                {{-- Fallback default content --}}
-                <div class="pub-card mb-4" data-aos="fade-up">
-                    <h3 class="mb-4" style="font-weight: 700; color: var(--text-main);">Visi & Misi</h3>
-                    <p style="color: var(--text-muted); line-height: 1.8;">
-                        Visi kami adalah menjadi platform akses terbuka utama untuk penelitian inovatif, membina ekosistem inklusif di mana pengetahuan dibagikan tanpa batas.
-                    </p>
-                </div>
-                @endif
             </div>
 
             {{-- Sidebar --}}

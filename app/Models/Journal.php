@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Journal extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         'title',
         'slug',
@@ -24,6 +26,11 @@ class Journal extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    public function editor()
+    {
+        return $this->belongsTo(User::class, 'editor_id');
+    }
 
     public function settings()
     {

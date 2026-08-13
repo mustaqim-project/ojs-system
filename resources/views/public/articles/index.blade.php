@@ -48,9 +48,9 @@
                 <label style="font-size:13px; font-weight:700; color:var(--text-muted); margin-bottom:8px; display:block;">Kategori</label>
                 <select name="category" class="form-select shadow-sm" style="border-radius:8px;">
                   <option value="">Semua Kategori</option>
-                  <option value="research">Penelitian Asli</option>
-                  <option value="review">Artikel Ulasan</option>
-                  <option value="case">Studi Kasus</option>
+                  <option value="research" {{ request('category') === 'research' ? 'selected' : '' }}>Penelitian Asli</option>
+                  <option value="review" {{ request('category') === 'review' ? 'selected' : '' }}>Artikel Ulasan</option>
+                  <option value="case" {{ request('category') === 'case' ? 'selected' : '' }}>Studi Kasus</option>
                 </select>
               </div>
 
@@ -58,8 +58,8 @@
               <div class="mb-4">
                 <label style="font-size:13px; font-weight:700; color:var(--text-muted); margin-bottom:8px; display:block;">Tahun Publikasi</label>
                 <div class="d-flex gap-2">
-                  <input type="number" name="year_from" placeholder="Dari" class="form-control shadow-sm" style="border-radius:8px;">
-                  <input type="number" name="year_to" placeholder="Sampai" class="form-control shadow-sm" style="border-radius:8px;">
+                  <input type="number" name="year_from" value="{{ request('year_from') }}" placeholder="Dari" class="form-control shadow-sm" style="border-radius:8px;">
+                  <input type="number" name="year_to" value="{{ request('year_to') }}" placeholder="Sampai" class="form-control shadow-sm" style="border-radius:8px;">
                 </div>
               </div>
 
@@ -67,9 +67,9 @@
               <div class="mb-4">
                 <label style="font-size:13px; font-weight:700; color:var(--text-muted); margin-bottom:8px; display:block;">Urutkan Berdasarkan</label>
                 <select name="sort" class="form-select shadow-sm" style="border-radius:8px;">
-                  <option value="latest">Terbaru Diterbitkan</option>
-                  <option value="views">Paling Banyak Dilihat</option>
-                  <option value="citations">Paling Banyak Disitasi</option>
+                  <option value="latest" {{ request('sort') === 'latest' ? 'selected' : '' }}>Terbaru Diterbitkan</option>
+                  <option value="views" {{ request('sort') === 'views' ? 'selected' : '' }}>Paling Banyak Dilihat</option>
+                  <option value="citations" {{ request('sort') === 'citations' ? 'selected' : '' }}>Paling Banyak Disitasi</option>
                 </select>
               </div>
 
@@ -90,11 +90,12 @@
         <h4 style="font-weight:700; font-size:18px; margin:0;">{{ $articles->total() }} Hasil Ditemukan</h4>
         <div class="dropdown">
           <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" style="font-weight:600; border-radius:6px; border:1px solid var(--border);">
-            Urutan: Terbaru
+            Urutan: {{ request('sort') === 'views' ? 'Paling Banyak Dilihat' : (request('sort') === 'citations' ? 'Paling Banyak Disitasi' : 'Terbaru') }}
           </button>
           <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="border-radius:8px; font-size:14px;">
-            <li><a class="dropdown-item active" href="?sort=latest">Terbaru</a></li>
-            <li><a class="dropdown-item" href="?sort=views">Paling Banyak Dilihat</a></li>
+            <li><a class="dropdown-item {{ request('sort', 'latest') === 'latest' ? 'active' : '' }}" href="?{{ http_build_query(array_merge(request()->query(), ['sort' => 'latest'])) }}">Terbaru</a></li>
+            <li><a class="dropdown-item {{ request('sort') === 'views' ? 'active' : '' }}" href="?{{ http_build_query(array_merge(request()->query(), ['sort' => 'views'])) }}">Paling Banyak Dilihat</a></li>
+            <li><a class="dropdown-item {{ request('sort') === 'citations' ? 'active' : '' }}" href="?{{ http_build_query(array_merge(request()->query(), ['sort' => 'citations'])) }}">Paling Banyak Disitasi</a></li>
           </ul>
         </div>
       </div>
@@ -106,14 +107,14 @@
           <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
             <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
               <span class="badge bg-primary-subtle text-primary" style="padding:6px 12px; border-radius:20px; font-weight:700; font-size:11px; letter-spacing:0.5px; text-transform:uppercase;">
-                Artikel Penelitian
+                {{ $article->section === 'research' ? 'Penelitian Asli' : ($article->section === 'review' ? 'Artikel Ulasan' : ($article->section === 'case' ? 'Studi Kasus' : 'Artikel Penelitian')) }}
               </span>
               <a href="{{ route('public.journals.show', $article->journal->slug) }}" class="text-decoration-none" style="font-size:13px; font-weight:600; color:var(--text-main);">
                 <i class="bi bi-journal-bookmark text-muted me-1"></i> {{ $article->journal->abbreviation ?? $article->journal->title }}
               </a>
               @if($article->issue)
                 <span style="font-size:13px; font-weight:500; color:var(--text-muted);">
-                  Vol {{ $article->issue->volume ?? 'N/A' }}, No {{ $article->issue->issue ?? 'N/A' }} ({{ $article->issue->year ?? 'Year' }})
+                  Vol {{ $article->issue->volume ?? 'N/A' }}, No {{ $article->issue->number ?? 'N/A' }} ({{ $article->issue->year ?? 'Year' }})
                 </span>
               @endif
             </div>

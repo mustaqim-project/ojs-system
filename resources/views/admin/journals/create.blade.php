@@ -76,6 +76,9 @@
         <x-ui.form-field label="Journal Description">
           <x-ui.textarea name="description" rows="3" placeholder="Brief description of the journal's scope and aims...">{{ old('description') }}</x-ui.textarea>
         </x-ui.form-field>
+        <x-ui.form-field label="Cover Image" hint="Max 2MB (Converted to WebP format)" :error="$errors->first('cover_image')">
+          <x-ui.input type="file" name="cover_image" accept="image/*" :error="$errors->has('cover_image')"/>
+        </x-ui.form-field>
       </div>
     </div>
 

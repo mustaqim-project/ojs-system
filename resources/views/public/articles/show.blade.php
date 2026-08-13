@@ -17,7 +17,7 @@
       </a>
       @if($article->issue)
         <span class="badge bg-light text-dark border" style="padding:6px 12px; font-weight:600; font-size:12px; border-radius:4px;">
-          Vol {{ $article->issue->volume ?? '-' }}, No {{ $article->issue->issue ?? '-' }} ({{ $article->issue->year ?? '-' }})
+          Vol {{ $article->issue->volume ?? '-' }}, No {{ $article->issue->number ?? '-' }} ({{ $article->issue->year ?? '-' }})
         </span>
       @endif
       <span class="badge bg-success-subtle text-success border" style="padding:6px 12px; font-weight:600; font-size:12px; border-radius:4px;">
@@ -184,7 +184,7 @@
           <h5 style="font-weight:700; margin-bottom:16px;">Cara Mensitasi</h5>
           
           <div style="background:var(--bg-app); border:1px solid var(--border); border-radius:8px; padding:12px; font-size:13px; color:var(--text-main); line-height:1.6; margin-bottom:16px;">
-            {{ $article->author->name }}. ({{ $article->published_at ? $article->published_at->format('Y') : date('Y') }}). {{ $article->title }}. <em>{{ $article->journal->title }}</em>, @if($article->issue) {{ $article->issue->volume }}({{ $article->issue->issue }}). @endif
+            {{ $article->author->name }}. ({{ $article->published_at ? $article->published_at->format('Y') : date('Y') }}). {{ $article->title }}. <em>{{ $article->journal->title }}</em>, @if($article->issue) {{ $article->issue->volume }}({{ $article->issue->number }}). @endif
           </div>
 
           <div class="dropdown w-100">

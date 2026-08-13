@@ -11,16 +11,50 @@ class ArticleController extends Controller
     public function index(): View
     {
         $sort = request('sort', 'latest');
+        $q = request('q', '');
+        $category = request('category', '');
+        $yearFrom = request('year_from', '');
+        $yearTo = request('year_to', '');
         
         $query = Article::published()->with(['journal', 'author', 'issue']);
         
+        // Search Query (q)
+        if (!empty($q)) {
+            $query->where(function ($query) use ($q) {
+                $query->where('title', 'like', "%{$q}%")
+                      ->orWhere('abstract', 'like', "%{$q}%")
+                      ->orWhere('doi', 'like', "%{$q}%")
+                      ->orWhereHas('author', function ($authorQuery) use ($q) {
+                          $authorQuery->where('name', 'like', "%{$q}%");
+                      });
+            });
+        }
+        
+        // Category/Section filter
+        if (!empty($category)) {
+            $query->where('section', $category);
+        }
+        
+        // Year filters
+        if (!empty($yearFrom)) {
+            $query->whereYear('published_at', '>=', $yearFrom);
+        }
+        if (!empty($yearTo)) {
+            $query->whereYear('published_at', '<=', $yearTo);
+        }
+        
+        // Sorting logic
         if ($sort === 'oldest') {
             $query->oldest('published_at');
+        } elseif ($sort === 'views') {
+            $query->orderByDesc('views_count');
+        } elseif ($sort === 'citations' || $sort === 'downloads') {
+            $query->orderByDesc('downloads_count');
         } else {
             $query->latest('published_at');
         }
 
-        $articles = $query->paginate(15);
+        $articles = $query->paginate(15)->withQueryString();
 
         return view('public.articles.index', compact('articles'));
     }

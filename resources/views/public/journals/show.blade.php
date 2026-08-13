@@ -11,13 +11,27 @@
       <span style="color:var(--text-main);">{{ $journal->abbreviation ?? $journal->title }}</span>
     </div>
     
-    <div style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap;">
-      <div style="width:80px;height:80px;border-radius:20px;background:var(--primary-light);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:36px;flex-shrink:0;box-shadow:0 4px 12px rgba(37,99,235,0.15);">
-        <i class="bi bi-journal-bookmark-fill"></i>
+    <div style="display:flex;align-items:flex-start;gap:36px;flex-wrap:wrap;">
+      {{-- Cover Image Card --}}
+      <div style="flex-shrink:0;width:220px;background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;box-shadow:var(--shadow-md);">
+        @if($journal->cover_image)
+          <img src="{{ asset($journal->cover_image) }}" alt="{{ $journal->title }}" style="width:100%;height:280px;border-radius:var(--radius-md);object-fit:cover;border:1px solid var(--border);box-shadow:0 4px 12px rgba(0,0,0,0.05);display:block;margin-bottom:16px;">
+        @else
+          <div style="width:100%;height:280px;border-radius:var(--radius-md);background:linear-gradient(135deg, var(--primary-light), rgba(37,99,235,0.05));color:var(--primary);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:48px;box-shadow:0 4px 12px rgba(37,99,235,0.15);margin-bottom:16px;gap:8px;">
+            <i class="bi bi-journal-bookmark-fill"></i>
+            <span style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:0.8;">No Cover</span>
+          </div>
+        @endif
+        
+        {{-- Submission Button --}}
+        <a href="{{ route('author.articles.create', ['journal_id' => $journal->id]) }}" class="btn btn-primary w-100" style="font-weight:700;font-size:13px;border-radius:8px;padding:10px 12px;box-shadow:0 2px 8px rgba(37,99,235,0.25);">
+          <i class="bi bi-cloud-arrow-up-fill me-1"></i> Kirim Naskah
+        </a>
       </div>
-      
+
+      {{-- Journal Info Column --}}
       <div style="flex:1;min-width:300px;">
-        <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap;">
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
           @if($journal->abbreviation)
             <span style="font-size:12px;font-family:monospace;background:var(--bg-app);color:var(--text-muted);padding:4px 10px;border-radius:6px;font-weight:700;border:1px solid var(--border);">{{ $journal->abbreviation }}</span>
           @endif
@@ -32,7 +46,7 @@
         <h1 style="font-size:32px;font-weight:800;color:var(--text-main);letter-spacing:-0.03em;margin-bottom:16px;line-height:1.2;">{{ $journal->title }}</h1>
         
         @if($journal->description)
-        <p style="font-size:15px;color:var(--text-muted);margin-bottom:24px;line-height:1.75;max-width:800px;">{{ $journal->description }}</p>
+          <p style="font-size:15px;color:var(--text-muted);margin-bottom:24px;line-height:1.75;max-width:800px;">{{ $journal->description }}</p>
         @endif
         
         <div style="display:flex;gap:20px;flex-wrap:wrap;font-size:13px;color:var(--text-muted);background:var(--bg-app);padding:16px 20px;border-radius:var(--radius-md);border:1px solid var(--border);display:inline-flex;">

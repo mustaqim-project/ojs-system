@@ -46,6 +46,15 @@
         <x-ui.form-field label="Journal Description">
           <x-ui.textarea name="description" rows="3">{{ old('description',$journal->description) }}</x-ui.textarea>
         </x-ui.form-field>
+        @if($journal->cover_image)
+          <div class="mb-3">
+            <label style="font-size: 13px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 8px;">Current Cover Image</label>
+            <img src="{{ asset($journal->cover_image) }}" alt="Cover Image" style="max-height: 100px; border-radius: 8px; border: 1px solid var(--border); display: block;">
+          </div>
+        @endif
+        <x-ui.form-field label="Cover Image" hint="Max 2MB (Converted to WebP format)" :error="$errors->first('cover_image')">
+          <x-ui.input type="file" name="cover_image" accept="image/*" :error="$errors->has('cover_image')"/>
+        </x-ui.form-field>
         <x-ui.form-field label="Status">
           <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg-app);border:1px solid var(--border);border-radius:var(--radius-sm);">
             <input type="hidden" name="is_active" value="0"/>

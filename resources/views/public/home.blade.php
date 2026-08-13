@@ -110,23 +110,123 @@
                         Artikel Diterbitkan</p>
                 </div>
                 <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="200">
-                    <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="{{ $totalAuthors }}">+0</h2>
+                    <h2 class="display-5" style="font-weight:800; color:var(--primary);"
+                        data-countup="{{ $totalAuthors }}">+0</h2>
                     <p class="stat-label-text"
                         style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">
                         Penulis Aktif</p>
                 </div>
                 <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="300">
-                    <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="{{ $totalReviewers }}">0</h2>
+                    <h2 class="display-5" style="font-weight:800; color:var(--primary);"
+                        data-countup="{{ $totalReviewers }}">0</h2>
                     <p class="stat-label-text"
                         style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">
                         Mitra Bestari Global</p>
                 </div>
                 <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="400">
-                    <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="{{ $avgFirstDecisionDays }}">0</h2>
+                    <h2 class="display-5" style="font-weight:800; color:var(--primary);"
+                        data-countup="{{ $avgFirstDecisionDays }}">0</h2>
                     <p class="stat-label-text"
                         style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">
                         Waktu hingga Keputusan Pertama</p>
                 </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+    {{-- ── JARINGAN JURNAL ── --}}
+    <section class="section" style="background:var(--bg-app); border-top:1px solid var(--border);">
+        <div class="container" style="max-width:1100px;">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <div class="section-tag">Ekosistem</div>
+                <h2 class="section-title">Jaringan Jurnal Kami</h2>
+                <p class="section-desc mx-auto">Kami terhubung dengan berbagai jurnal ilmiah bereputasi di bawah Indonesia
+                    Madani. Jelajahi portal jurnal lainnya dalam jaringan kami.</p>
+            </div>
+
+            <div class="row g-4 justify-content-center">
+
+                {{-- JHAM --}}
+                <div class="col-12 col-sm-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
+                    <a href="https://jham.indonesiamadani.com/" target="_blank" rel="noopener noreferrer"
+                        style="text-decoration:none;">
+                        <div class="pub-card h-100 text-center"
+                            style="padding:32px 24px; transition:transform 0.3s, box-shadow 0.3s;"
+                            onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 20px 48px rgba(37,99,235,0.15)';"
+                            onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='';">
+                            <div
+                                style="width:96px; height:96px; border-radius:16px; overflow:hidden; margin:0 auto 20px; box-shadow:0 8px 24px rgba(0,0,0,0.12); border:1px solid var(--border);">
+                                <img src="https://jpstem.indonesiamadani.com/uploads/settings/1784561717_WhatsApp%20Image%202026-07-12%20at%2013.34.49(1).jpeg"
+                                    alt="JHAM Logo" style="width:100%; height:100%; object-fit:cover;">
+                            </div>
+                            <h5 style="font-weight:800; font-size:17px; color:var(--text-main); margin-bottom:8px;">JHAM
+                            </h5>
+                            <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.6;">Jurnal
+                                Humaniora dan Agama Madani — Publikasi ilmiah bidang humaniora & keagamaan.</p>
+                            <div
+                                style="font-size:12px; font-weight:700; color:var(--primary); background:var(--primary-light); display:inline-block; padding:5px 14px; border-radius:20px;">
+                                jham.indonesiamadani.com <i class="bi bi-box-arrow-up-right ms-1"
+                                    style="font-size:10px;"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                {{-- JPSTEM --}}
+                <div class="col-12 col-sm-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                    <a href="https://jpstem.indonesiamadani.com/" target="_blank" rel="noopener noreferrer"
+                        style="text-decoration:none;">
+                        <div class="pub-card h-100 text-center"
+                            style="padding:32px 24px; transition:transform 0.3s, box-shadow 0.3s;"
+                            onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 20px 48px rgba(16,185,129,0.15)';"
+                            onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='';">
+                            <div
+                                style="width:96px; height:96px; border-radius:16px; overflow:hidden; margin:0 auto 20px; box-shadow:0 8px 24px rgba(0,0,0,0.12); border:1px solid var(--border);">
+                                <img src="https://jpstem.indonesiamadani.com/uploads/settings/1784561717_WhatsApp%20Image%202026-07-12%20at%2013.34.49(1).jpeg"
+                                    alt="JPSTEM Logo" style="width:100%; height:100%; object-fit:cover;">
+                            </div>
+                            <h5 style="font-weight:800; font-size:17px; color:var(--text-main); margin-bottom:8px;">JPSTEM
+                            </h5>
+                            <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.6;">Jurnal
+                                Pendidikan Sains, Teknologi, Engineering & Matematika — Inovasi riset STEM Indonesia.</p>
+                            <div
+                                style="font-size:12px; font-weight:700; color:#059669; background:rgba(16,185,129,0.08); display:inline-block; padding:5px 14px; border-radius:20px;">
+                                jpstem.indonesiamadani.com <i class="bi bi-box-arrow-up-right ms-1"
+                                    style="font-size:10px;"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                {{-- Indonesia Madani Portal --}}
+                <div class="col-12 col-sm-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                    <a href="https://indonesiamadani.com/" target="_blank" rel="noopener noreferrer"
+                        style="text-decoration:none;">
+                        <div class="pub-card h-100 text-center"
+                            style="padding:32px 24px; transition:transform 0.3s, box-shadow 0.3s;"
+                            onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 20px 48px rgba(234,88,12,0.15)';"
+                            onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='';">
+                            <div
+                                style="width:96px; height:96px; border-radius:16px; overflow:hidden; margin:0 auto 20px; box-shadow:0 8px 24px rgba(0,0,0,0.12); border:1px solid var(--border);">
+                                <img src="https://jpstem.indonesiamadani.com/uploads/settings/1784561717_WhatsApp%20Image%202026-07-12%20at%2013.34.49(1).jpeg"
+                                    alt="Indonesia Madani Logo" style="width:100%; height:100%; object-fit:cover;">
+                            </div>
+                            <h5 style="font-weight:800; font-size:17px; color:var(--text-main); margin-bottom:8px;">
+                                Indonesia Madani</h5>
+                            <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.6;">Portal
+                                utama Indonesia Madani — Pusat ekosistem jurnal dan publikasi ilmiah nasional.</p>
+                            <div
+                                style="font-size:12px; font-weight:700; color:#c2410c; background:rgba(249,115,22,0.08); display:inline-block; padding:5px 14px; border-radius:20px;">
+                                indonesiamadani.com <i class="bi bi-box-arrow-up-right ms-1" style="font-size:10px;"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
             </div>
         </div>
     </section>
@@ -179,7 +279,8 @@
                                 <div
                                     style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:12px;">
                                     <div style="display:flex; gap:16px; font-size:12px; color:var(--text-muted);">
-                                        <span title="Dilihat"><i class="bi bi-eye me-1"></i> {{ $article->views_count }}</span>
+                                        <span title="Dilihat"><i class="bi bi-eye me-1"></i>
+                                            {{ $article->views_count }}</span>
                                         <span title="Diunduh"><i class="bi bi-download me-1"></i>
                                             {{ $article->downloads_count }}</span>
                                     </div>
@@ -201,6 +302,82 @@
         </div>
     </section>
 
+
+    {{-- ── JURNAL KAMI ── --}}
+    <section class="section" style="background:var(--bg-surface); border-top:1px solid var(--border);">
+        <div class="container" style="max-width:1200px;">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <div class="section-tag">Publikasi</div>
+                <h2 class="section-title">Jurnal Kami</h2>
+                <p class="section-desc mx-auto">Temukan jurnal ilmiah kami yang telah terindeks dan bereputasi di berbagai
+                    bidang keilmuan.</p>
+            </div>
+
+            <div class="row g-4">
+                @forelse($journals as $index => $journal)
+                    <div class="col-12 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ $index * 80 }}">
+                        <a href="{{ route('public.journals.show', $journal->slug) }}" style="text-decoration:none;">
+                            <div class="pub-card h-100"
+                                style="padding:0; overflow:hidden; transition:transform 0.3s, box-shadow 0.3s; cursor:pointer;"
+                                onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 16px 40px rgba(0,0,0,0.12)';"
+                                onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='';">
+                                {{-- Cover --}}
+                                <div
+                                    style="position:relative; height:160px; overflow:hidden; background:linear-gradient(135deg, var(--primary-light) 0%, rgba(37,99,235,0.04) 100%);">
+                                    @if ($journal->cover_image)
+                                        <img src="{{ asset($journal->cover_image) }}" alt="{{ $journal->title }}"
+                                            style="width:100%; height:100%; object-fit:cover;">
+                                    @else
+                                        <div
+                                            style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:60px; color:var(--primary); opacity:0.25;">
+                                            <i class="bi bi-journal-bookmark-fill"></i>
+                                        </div>
+                                    @endif
+                                    @if ($journal->abbreviation)
+                                        <span
+                                            style="position:absolute; top:12px; left:12px; background:rgba(255,255,255,0.92); backdrop-filter:blur(8px); color:var(--primary); font-size:11px; font-weight:800; font-family:monospace; padding:4px 10px; border-radius:6px; letter-spacing:0.5px; box-shadow:0 2px 8px rgba(0,0,0,0.08);">{{ $journal->abbreviation }}</span>
+                                    @endif
+                                </div>
+
+                                {{-- Info --}}
+                                <div style="padding:20px;">
+                                    <h5
+                                        style="font-weight:700; font-size:16px; color:var(--text-main); margin-bottom:8px; line-height:1.4;">
+                                        {{ Str::limit($journal->title, 60) }}</h5>
+                                    @if ($journal->description)
+                                        <p
+                                            style="font-size:13px; color:var(--text-muted); margin-bottom:14px; line-height:1.6;">
+                                            {{ Str::limit(strip_tags($journal->description), 90) }}</p>
+                                    @endif
+                                    <div
+                                        style="display:flex; align-items:center; justify-content:space-between; font-size:12px; color:var(--text-muted); border-top:1px solid var(--border); padding-top:12px;">
+                                        <span><i class="bi bi-file-earmark-text me-1" style="color:var(--primary);"></i>
+                                            {{ $journal->published_articles_count }} Artikel</span>
+                                        <span style="color:var(--primary); font-weight:700;">Lihat Jurnal <i
+                                                class="bi bi-arrow-right"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                @empty
+                    <div class="col-12 text-center text-muted py-5">
+                        <i class="bi bi-journal-x" style="font-size:48px;"></i>
+                        <p class="mt-3">Belum ada jurnal yang tersedia.</p>
+                    </div>
+                @endforelse
+            </div>
+
+            @if ($journals->count() > 0)
+                <div class="text-center mt-5" data-aos="fade-up">
+                    <a href="{{ route('public.journals.index') }}" class="btn btn-outline-primary"
+                        style="font-weight:700; border-radius:20px; padding:10px 28px;">
+                        Lihat Semua Jurnal <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            @endif
+        </div>
+    </section>
 
     {{-- ── WORKFLOW TIMELINE ── --}}
     <section class="section" style="background:var(--bg-app);">
@@ -258,77 +435,7 @@
         </div>
     </section>
 
-    {{-- ── JOURNAL METRICS & INDEXING ── --}}
-    <section class="section" style="background:var(--bg-surface); border-top:1px solid var(--border);">
-        <div class="container" style="max-width:1400px;">
-            <div class="row g-5">
-                <div class="col-lg-6" data-aos="fade-right">
-                    <h3 style="font-weight:800; margin-bottom:24px;">Metrik Jurnal 2026</h3>
-                    <div class="row g-3">
-                        <div class="col-sm-6">
-                            <div
-                                style="background:var(--bg-app); border:1px solid var(--border); padding:20px; border-radius:var(--radius-md);">
-                                <div
-                                    style="font-size:13px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">
-                                    Tingkat Penerimaan</div>
-                                <div style="font-size:28px; font-weight:800; color:var(--primary);">{{ $acceptanceRate }}%</div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div
-                                style="background:var(--bg-app); border:1px solid var(--border); padding:20px; border-radius:var(--radius-md);">
-                                <div
-                                    style="font-size:13px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">
-                                    Waktu hingga Keputusan Pertama (Hari)</div>
-                                <div style="font-size:28px; font-weight:800; color:var(--primary);">{{ $avgFirstDecisionDays }}</div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div
-                                style="background:var(--bg-app); border:1px solid var(--border); padding:20px; border-radius:var(--radius-md);">
-                                <div
-                                    style="font-size:13px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">
-                                    Waktu hingga Publikasi (Hari)</div>
-                                <div style="font-size:28px; font-weight:800; color:var(--primary);">{{ $avgPublicationDays }}</div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div
-                                style="background:var(--bg-app); border:1px solid var(--border); padding:20px; border-radius:var(--radius-md);">
-                                <div
-                                    style="font-size:13px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">
-                                    Unduhan (Tahunan)</div>
-                                <div style="font-size:28px; font-weight:800; color:var(--primary);">{{ $totalDownloads }}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="col-lg-6" data-aos="fade-left">
-                    <h3 style="font-weight:800; margin-bottom:24px;">Terindeks & Terabstrak di</h3>
-                    <div class="row g-3">
-                        @php
-                            $indexes = ['Google Scholar', 'Crossref', 'DOAJ', 'Scopus', 'SINTA', 'Dimensions'];
-                        @endphp
-                        @foreach ($indexes as $idx)
-                            <div class="col-4 col-sm-4">
-                                <div
-                                    style="background:var(--bg-app); border:1px solid var(--border); padding:20px 10px; border-radius:var(--radius-md); text-align:center; height:100%; display:flex; align-items:center; justify-content:center;">
-                                    <span
-                                        style="font-weight:700; font-size:14px; color:var(--text-main);">{{ $idx }}</span>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                    <div class="mt-4 text-end">
-                        <a href="{{ route('public.indexing') }}"
-                            style="font-weight:600; color:var(--primary); text-decoration:none;">Lihat semua indeksasi <i
-                                class="bi bi-arrow-right"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
     {{-- ── NEWSLETTER & AJAKAN PENGAJUAN NASKAH ── --}}
     <section class="section text-center" style="background:var(--primary); color:white;">

@@ -9,9 +9,11 @@ use App\Http\Controllers\Api\V1\ReviewController;
 use App\Http\Controllers\Api\V1\FinanceController;
 use App\Http\Controllers\Api\V1\NotificationController;
 use App\Http\Controllers\Api\V1\ReportController;
+use App\Http\Controllers\Api\V1\InstitutionController;
 
-Route::prefix('v1')->group(function () {
+$registerRoutes = function () {
     // Public endpoints
+    Route::get('/institutions', [InstitutionController::class, 'index']);
     Route::get('/journals', [JournalController::class, 'index']);
     Route::get('/journals/{journal}', [JournalController::class, 'show']);
     Route::get('/articles', [SubmissionController::class, 'index']);
@@ -52,4 +54,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/reports/journals/{journal}/submissions', [ReportController::class, 'submissionTrend']);
         Route::get('/reports/journals/{journal}/reviews', [ReportController::class, 'reviewStats']);
     });
-});
+};
+
+Route::prefix('v1')->group($registerRoutes);
+Route::prefix('api/v1')->group($registerRoutes);
