@@ -160,7 +160,7 @@
                             onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='';">
                             <div
                                 style="width:96px; height:96px; border-radius:16px; overflow:hidden; margin:0 auto 20px; box-shadow:0 8px 24px rgba(0,0,0,0.12); border:1px solid var(--border);">
-                                <img src="https://jpstem.indonesiamadani.com/uploads/settings/1784561717_WhatsApp%20Image%202026-07-12%20at%2013.34.49(1).jpeg"
+                                <img src="https://jham.indonesiamadani.com/uploads/settings/1786621030_WhatsApp%20Image%202026-07-12%20at%2013.34.49(2).jpeg"
                                     alt="JHAM Logo" style="width:100%; height:100%; object-fit:cover;">
                             </div>
                             <h5 style="font-weight:800; font-size:17px; color:var(--text-main); margin-bottom:8px;">JHAM
@@ -186,7 +186,7 @@
                             onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='';">
                             <div
                                 style="width:96px; height:96px; border-radius:16px; overflow:hidden; margin:0 auto 20px; box-shadow:0 8px 24px rgba(0,0,0,0.12); border:1px solid var(--border);">
-                                <img src="https://jpstem.indonesiamadani.com/uploads/settings/1784561717_WhatsApp%20Image%202026-07-12%20at%2013.34.49(1).jpeg"
+                                <img src="https://jpstem.indonesiamadani.com/uploads/settings/1786625429_WhatsApp%20Image%202026-07-12%20at%2013.34.49(1).jpeg"
                                     alt="JPSTEM Logo" style="width:100%; height:100%; object-fit:cover;">
                             </div>
                             <h5 style="font-weight:800; font-size:17px; color:var(--text-main); margin-bottom:8px;">JPSTEM
@@ -204,7 +204,7 @@
 
                 {{-- Indonesia Madani Portal --}}
                 <div class="col-12 col-sm-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
-                    <a href="https://indonesiamadani.com/" target="_blank" rel="noopener noreferrer"
+                    <a href="https://jpmm.indonesiamadani.com/" target="_blank" rel="noopener noreferrer"
                         style="text-decoration:none;">
                         <div class="pub-card h-100 text-center"
                             style="padding:32px 24px; transition:transform 0.3s, box-shadow 0.3s;"
@@ -212,16 +212,19 @@
                             onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='';">
                             <div
                                 style="width:96px; height:96px; border-radius:16px; overflow:hidden; margin:0 auto 20px; box-shadow:0 8px 24px rgba(0,0,0,0.12); border:1px solid var(--border);">
-                                <img src="https://jpstem.indonesiamadani.com/uploads/settings/1784561717_WhatsApp%20Image%202026-07-12%20at%2013.34.49(1).jpeg"
+                                <img src="https://jpmm.indonesiamadani.com/uploads/settings/1786623829_WhatsApp%20Image%202026-07-12%20at%2013.34.49.jpeg"
                                     alt="Indonesia Madani Logo" style="width:100%; height:100%; object-fit:cover;">
                             </div>
                             <h5 style="font-weight:800; font-size:17px; color:var(--text-main); margin-bottom:8px;">
-                                Indonesia Madani</h5>
-                            <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.6;">Portal
-                                utama Indonesia Madani — Pusat ekosistem jurnal dan publikasi ilmiah nasional.</p>
+                                JPMM</h5>
+                            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6;">
+                                Jurnal Pengabdian Dan Pemberdayaan Masyarakat Berbasis Ilmu Pengetahuan, Teknologi,
+                                Pendidikan, Kesehatan, Ekonomi, Sosial, Budaya, Dan Lingkungan.
+                            </p>
                             <div
                                 style="font-size:12px; font-weight:700; color:#c2410c; background:rgba(249,115,22,0.08); display:inline-block; padding:5px 14px; border-radius:20px;">
-                                indonesiamadani.com <i class="bi bi-box-arrow-up-right ms-1" style="font-size:10px;"></i>
+                                jpmm.indonesiamadani.com <i class="bi bi-box-arrow-up-right ms-1"
+                                    style="font-size:10px;"></i>
                             </div>
                         </div>
                     </a>
