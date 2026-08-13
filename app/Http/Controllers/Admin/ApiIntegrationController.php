@@ -73,14 +73,7 @@ class ApiIntegrationController extends Controller
                 $rawValue = $request->input("fields.{$key}");
             }
 
-            // Enkripsi jika secret dan ada nilainya
-            if ($field->is_secret && !empty($rawValue)) {
-                $storedValue = Crypt::encryptString($rawValue);
-            } else {
-                $storedValue = $rawValue;
-            }
-
-            $field->update(['value' => $storedValue]);
+            $field->update(['value' => $rawValue]);
         }
 
         // Update status provider

@@ -3,9 +3,9 @@
 namespace App\Services;
 
 use App\Models\Article;
-use App\Models\Payment;
 use App\Models\Review;
 use App\Models\Setting;
+use App\Services\InvoiceService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
 class ArticleService
 {
     public function __construct(
-        private PaymentService $paymentService
+        private InvoiceService $invoiceService
     ) {}
 
     /**
@@ -127,7 +127,7 @@ class ArticleService
             if ($decision === 'accept') {
                 $updateData['accepted_at'] = now();
                 // Generate invoice otomatis saat accepted
-                $this->paymentService->generateInvoice($article);
+                $this->invoiceService->generateInvoice($article);
                 $updateData['status'] = Article::STATUS_WAITING_PAYMENT;
             }
 

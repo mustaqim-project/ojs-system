@@ -28,7 +28,7 @@ class EnsureJournalScope
 
             // Check if user has any role scoped to this journal
             $hasAccess = $user->roles()
-                ->wherePivot('team_id', $journalId)
+                ->wherePivot('journal_id', $journalId)
                 ->exists();
 
             if (!$hasAccess) {

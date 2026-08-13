@@ -8,17 +8,17 @@
     
     <div style="font-size:72px;font-weight:900;color:var(--border);line-height:1;letter-spacing:-0.05em;margin-bottom:16px;">403</div>
     
-    <h1 style="font-size:24px;font-weight:800;color:var(--text-main);margin-bottom:12px;letter-spacing:-0.02em;">Access Denied</h1>
+    <h1 style="font-size:24px;font-weight:800;color:var(--text-main);margin-bottom:12px;letter-spacing:-0.02em;">Akses Ditolak</h1>
     <p style="font-size:15px;color:var(--text-muted);margin-bottom:32px;line-height:1.7;">
-      You do not have the necessary permissions to view this page. Please ensure you are logged in with the correct account role.
+      Anda tidak memiliki izin yang diperlukan untuk melihat halaman ini. Silakan pastikan Anda masuk dengan peran akun yang benar.
     </p>
     
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
       <button onclick="window.history.back()" class="ds-btn ds-btn-out" style="height:44px;padding:0 24px;">
-        <i class="bi bi-arrow-left"></i> Go Back
+        <i class="bi bi-arrow-left"></i> Kembali
       </button>
       <a href="{{ route('public.home') }}" class="ds-btn ds-btn-pri" style="height:44px;padding:0 24px;">
-        <i class="bi bi-house"></i> Home
+        <i class="bi bi-house"></i> Beranda
       </a>
     </div>
   </div>

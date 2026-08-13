@@ -27,38 +27,29 @@
         </div>
         @endif
 
-        @php $reviewers = $page['extra']['reviewers'] ?? []; @endphp
+        @php
+            $reviewers = $dbReviewers ?? collect();
+        @endphp
         <div class="row g-4">
             @forelse($reviewers as $i => $reviewer)
             <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="{{ ($i % 4) * 80 }}">
                 <div class="pub-card text-center" style="padding: 20px;">
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode($reviewer['name']) }}&background=e0e7ff&color=3730a3&size=80"
-                         alt="{{ $reviewer['name'] }}" class="rounded-circle mb-3" width="64" height="64">
-                    <h4 style="font-weight:600;font-size:14px;margin-bottom:4px;">{{ $reviewer['name'] }}</h4>
-                    <p style="font-size:12px;color:var(--primary);font-weight:500;margin-bottom:6px;">{{ $reviewer['affiliation'] ?? '' }}</p>
-                    @if(!empty($reviewer['area']))<p style="font-size:11px;color:var(--text-muted);margin-bottom:12px;">{{ $reviewer['area'] }}</p>@endif
+                    <img src="https://ui-avatars.com/api/?name={{ urlencode($reviewer->name) }}&background=e0e7ff&color=3730a3&size=80"
+                         alt="{{ $reviewer->name }}" class="rounded-circle mb-3" width="64" height="64">
+                    <h4 style="font-weight:600;font-size:14px;margin-bottom:4px;">{{ $reviewer->name }}</h4>
+                    <p style="font-size:12px;color:var(--primary);font-weight:500;margin-bottom:6px;">{{ $reviewer->affiliation ?? 'Lembaga Akademik' }}</p>
+                    @if(!empty($reviewer->research_interest))<p style="font-size:11px;color:var(--text-muted);margin-bottom:12px;">{{ $reviewer->research_interest }}</p>@endif
                     <div class="d-flex justify-content-center gap-2">
-                        <a href="https://orcid.org" class="badge badge-neutral text-decoration-none" target="_blank"><i class="bi bi-person-badge"></i> ORCID</a>
-                        <a href="https://scholar.google.com" class="badge badge-neutral text-decoration-none" target="_blank"><i class="bi bi-mortarboard-fill"></i> Scholar</a>
+                        <a href="{{ $reviewer->orcid ? 'https://orcid.org/' . $reviewer->orcid : 'https://orcid.org' }}" class="badge badge-neutral text-decoration-none" target="_blank"><i class="bi bi-person-badge"></i> ORCID</a>
+                        <a href="{{ $reviewer->google_scholar_url ?? 'https://scholar.google.com' }}" class="badge badge-neutral text-decoration-none" target="_blank"><i class="bi bi-mortarboard-fill"></i> Scholar</a>
                     </div>
                 </div>
             </div>
             @empty
-            {{-- Default placeholder reviewers when none in DB --}}
-            @foreach(range(1, 8) as $i)
-            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="{{ ($i % 4) * 80 }}">
-                <div class="pub-card text-center" style="padding: 20px;">
-                    <img src="https://ui-avatars.com/api/?name=Penelaah+{{ $i }}&background=e0e7ff&color=3730a3&size=80"
-                         alt="Penelaah {{ $i }}" class="rounded-circle mb-3" width="64" height="64">
-                    <h4 style="font-weight:600;font-size:14px;margin-bottom:4px;">Dr. Penelaah {{ $i }}</h4>
-                    <p style="font-size:12px;color:var(--primary);font-weight:500;margin-bottom:12px;">Universitas Sains</p>
-                    <div class="d-flex justify-content-center gap-2">
-                        <a href="https://orcid.org" class="badge badge-neutral text-decoration-none" target="_blank"><i class="bi bi-person-badge"></i> ORCID</a>
-                        <a href="https://scholar.google.com" class="badge badge-neutral text-decoration-none" target="_blank"><i class="bi bi-mortarboard-fill"></i> Scholar</a>
-                    </div>
-                </div>
+            <div class="col-12 text-center text-muted py-5">
+                <i class="bi bi-people" style="font-size:48px;"></i>
+                <p class="mt-3">Belum ada mitra bestari (reviewer) terdaftar di sistem.</p>
             </div>
-            @endforeach
             @endforelse
         </div>
 

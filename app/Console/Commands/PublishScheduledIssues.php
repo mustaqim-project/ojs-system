@@ -13,7 +13,7 @@ class PublishScheduledIssues extends Command
     public function handle(): int
     {
         $scheduledIssues = Issue::where('status', 'scheduled')
-            ->where('publication_date', '<=', now())
+            ->where('published_date', '<=', now())
             ->with('articles')
             ->get();
 

@@ -25,7 +25,7 @@ class IssueController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'journal_id'     => ['required', 'exists:journals,id'],
             'title'          => ['required', 'string', 'max:255'],
             'volume'         => ['required', 'integer', 'min:1'],
@@ -33,10 +33,10 @@ class IssueController extends Controller
             'year'           => ['required', 'integer', 'min:2000', 'max:2100'],
             'description'    => ['nullable', 'string'],
             'published_date' => ['nullable', 'date'],
-            'status'         => ['required', 'in:draft,published'],
+            'status'         => ['required', 'in:draft,published,scheduled'],
         ]);
 
-        Issue::create($request->validated());
+        Issue::create($validated);
         return redirect()->route('admin.issues.index')->with('success', 'Issue berhasil ditambahkan!');
     }
 

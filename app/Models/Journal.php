@@ -42,9 +42,9 @@ class Journal extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'model_has_roles')
-            ->withPivot('team_id')
-            ->wherePivot('team_id', $this->id);
+        return $this->belongsToMany(User::class, 'model_has_roles', 'journal_id', 'model_id')
+            ->withPivot('journal_id')
+            ->wherePivot('journal_id', $this->id);
     }
 
     public function articles()

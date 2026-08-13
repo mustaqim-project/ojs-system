@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Models\Article;
+use App\Models\Invoice;
 use App\Models\Payment;
-use App\Models\Setting;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -13,85 +13,72 @@ use Illuminate\Support\Str;
 class PaymentService
 {
     /**
-     * Generate invoice saat artikel ACCEPTED
+     * Author uploads proof of payment for an Invoice.
      */
-    public function generateInvoice(Article $article): Payment
+    public function uploadProof(Invoice $invoice, UploadedFile $file, ?string $notes = null): Payment
     {
-        // Cek apakah sudah ada invoice sebelumnya
-        if ($article->payment) {
-            return $article->payment;
-        }
+        return DB::transaction(function () use ($invoice, $file, $notes) {
+            // Delete old payment proof if it exists
+            $existingPayment = Payment::where('invoice_id', $invoice->id)->first();
+            if ($existingPayment) {
+                if ($existingPayment->proof_path) {
+                    Storage::disk('private_upload')->delete($existingPayment->proof_path);
+                }
+                $existingPayment->delete();
+            }
 
-        $invoiceCode = $this->generateInvoiceCode($article->id);
-        $amount      = (float) Setting::get('apc_amount', 500000);
-        $currency    = Setting::get('apc_currency', 'IDR');
+            $filename = 'proof-' . Str::uuid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('payments', $filename, 'private_upload');
 
-        return Payment::create([
-            'article_id'   => $article->id,
-            'author_id'    => $article->author_id,
-            'invoice_code' => $invoiceCode,
-            'amount'       => $amount,
-            'currency'     => $currency,
-            'status'       => 'pending',
-            'bank_name'    => Setting::get('bank_name'),
-            'bank_account' => Setting::get('bank_account'),
-            'bank_holder'  => Setting::get('bank_holder'),
-        ]);
+            $payment = Payment::create([
+                'invoice_id'     => $invoice->id,
+                'author_id'      => $invoice->submission->author_id,
+                'amount'         => $invoice->amount - ($invoice->discount_amount ?? 0),
+                'payment_method' => 'bank_transfer',
+                'payment_date'   => now(),
+                'proof_path'     => $path,
+                'status'         => 'waiting_verification',
+                'notes'          => $notes,
+            ]);
+
+            $invoice->update(['status' => 'waiting_verification']);
+            $invoice->submission->update(['status' => 'payment_uploaded']);
+
+            return $payment;
+        });
     }
 
     /**
-     * Author upload bukti pembayaran
+     * Admin verifies a payment.
      */
-    public function uploadProof(Payment $payment, UploadedFile $file, ?string $notes = null): Payment
+    public function verify(Payment $payment, int $adminId, ?string $notes = null): Payment
     {
-        // Hapus file lama jika ada
-        if ($payment->proof_file) {
-            Storage::disk('public')->delete($payment->proof_file);
-        }
-
-        $filename  = 'payment-proof-' . Str::uuid() . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path('uploads/payments'), $filename);
-        $proofPath = 'uploads/payments/' . $filename;
-
-        $payment->update([
-            'proof_file'  => $proofPath,
-            'proof_notes' => $notes,
-            'status'      => 'uploaded',
-            'uploaded_at' => now(),
-        ]);
-
-        // Update status artikel
-        $payment->article->update([
-            'status' => Article::STATUS_PAYMENT_UPLOADED,
-        ]);
-
-        return $payment->fresh();
-    }
-
-    /**
-     * Admin verifikasi pembayaran
-     */
-    public function verify(Payment $payment, int $adminId, ?string $adminNotes = null): Payment
-    {
-        return DB::transaction(function () use ($payment, $adminId, $adminNotes) {
+        return DB::transaction(function () use ($payment, $adminId, $notes) {
             $payment->update([
                 'status'      => 'verified',
                 'verified_by' => $adminId,
-                'admin_notes' => $adminNotes,
                 'verified_at' => now(),
+                'notes'       => $notes,
             ]);
 
-            // Update status artikel ke PAID
-            $payment->article->update([
-                'status' => Article::STATUS_PAID,
+            $invoice = $payment->invoice;
+            $invoice->update([
+                'status'      => 'paid',
+                'approved_by' => $adminId,
             ]);
+
+            $invoice->submission->update(['status' => 'paid']);
+
+            // Auto-generate receipt
+            $receiptService = new ReceiptService();
+            $receiptService->generateReceipt($invoice);
 
             return $payment->fresh();
         });
     }
 
     /**
-     * Admin tolak bukti pembayaran
+     * Admin rejects a payment.
      */
     public function reject(Payment $payment, int $adminId, string $reason): Payment
     {
@@ -99,34 +86,14 @@ class PaymentService
             $payment->update([
                 'status'      => 'rejected',
                 'verified_by' => $adminId,
-                'admin_notes' => $reason,
+                'notes'       => $reason,
             ]);
 
-            // Kembalikan status artikel ke waiting payment
-            $payment->article->update([
-                'status' => Article::STATUS_WAITING_PAYMENT,
-            ]);
+            $invoice = $payment->invoice;
+            $invoice->update(['status' => 'waiting_payment']);
+            $invoice->submission->update(['status' => 'waiting_payment']);
 
             return $payment->fresh();
         });
-    }
-
-    /**
-     * Generate kode invoice unik
-     * Format: INV-{YEAR}-{ARTICLE_ID}-{RANDOM}
-     */
-    public function generateInvoiceCode(int $articleId): string
-    {
-        $year   = date('Y');
-        $random = strtoupper(Str::random(6));
-        $code   = "INV-{$year}-{$articleId}-{$random}";
-
-        // Pastikan unik
-        while (Payment::where('invoice_code', $code)->exists()) {
-            $random = strtoupper(Str::random(6));
-            $code   = "INV-{$year}-{$articleId}-{$random}";
-        }
-
-        return $code;
     }
 }

@@ -120,7 +120,7 @@ class CrossrefService
         $title     = htmlspecialchars($article->title, ENT_XML1);
         $journal   = htmlspecialchars($article->journal->title ?? 'OJS Journal', ENT_XML1);
         $abbrev    = htmlspecialchars($article->journal->abbreviation ?? 'OJS', ENT_XML1);
-        $issn      = htmlspecialchars($article->journal->issn_e ?? $article->journal->issn_p ?? '0000-0000', ENT_XML1);
+        $issn      = htmlspecialchars($article->journal->issn_online ?? $article->journal->issn_print ?? '0000-0000', ENT_XML1);
         $authorName= htmlspecialchars($article->author->name ?? 'Author', ENT_XML1);
 
         $year      = $article->published_at ? $article->published_at->format('Y') : date('Y');

@@ -21,10 +21,45 @@ class PaymentController extends Controller
             abort(403);
         }
 
-        $payment = $article->payment;
-        if (!$payment) {
+        $invoice = $article->invoice;
+        if (!$invoice) {
             abort(404, 'Invoice tidak ditemukan.');
         }
+
+        $paymentRecord = $invoice->payments()->latest()->first();
+        $bank = $article->journal->bankAccounts()->first() ?? (object)[
+            'bank_name' => \App\Models\Setting::get('bank_name', 'Bank Transfer'),
+            'bank_account' => \App\Models\Setting::get('bank_account', '-'),
+            'bank_holder' => \App\Models\Setting::get('bank_holder', 'Journal Manager'),
+        ];
+
+        $status = 'pending';
+        if ($paymentRecord) {
+            if ($paymentRecord->status === 'waiting_verification') {
+                $status = 'uploaded';
+            } else {
+                $status = $paymentRecord->status; // 'verified' or 'rejected'
+            }
+        }
+
+        $statusLabels = [
+            'pending'  => 'Menunggu Pembayaran',
+            'uploaded' => 'Menunggu Verifikasi',
+            'verified' => 'Terverifikasi',
+            'rejected' => 'Ditolak',
+        ];
+
+        $payment = (object)[
+            'invoice_code' => $invoice->invoice_number,
+            'status'       => $status,
+            'status_label' => $statusLabels[$status] ?? 'Menunggu',
+            'amount'       => $invoice->amount - ($invoice->discount_amount ?? 0),
+            'bank_name'    => $bank->bank_name ?? 'Bank Transfer',
+            'bank_account' => $bank->bank_account ?? '-',
+            'bank_holder'  => $bank->bank_holder ?? 'Journal Manager',
+            'admin_notes'  => $paymentRecord ? $paymentRecord->notes : null,
+            'verified_at'  => $paymentRecord ? $paymentRecord->verified_at : null,
+        ];
 
         return view('author.payments.show', compact('article', 'payment'));
     }
@@ -35,26 +70,36 @@ class PaymentController extends Controller
             abort(403);
         }
 
-        $payment = $article->payment;
-        if (!$payment) {
-            abort(404);
+        $invoice = $article->invoice;
+        if (!$invoice) {
+            abort(404, 'Invoice tidak ditemukan.');
+        }
+
+        $paymentRecord = $invoice->payments()->latest()->first();
+        $status = 'pending';
+        if ($paymentRecord) {
+            if ($paymentRecord->status === 'waiting_verification') {
+                $status = 'uploaded';
+            } else {
+                $status = $paymentRecord->status;
+            }
         }
 
         // Hanya bisa upload jika status pending atau rejected
-        if (!in_array($payment->status, ['pending', 'rejected'])) {
+        if (!in_array($status, ['pending', 'rejected'])) {
             return redirect()->route('author.payments.show', $article)
                 ->with('error', 'Bukti pembayaran sudah diupload sebelumnya.');
         }
 
         $this->paymentService->uploadProof(
-            $payment,
+            $invoice,
             $request->file('proof_file'),
             $request->proof_notes
         );
 
         // Notify Admins
         $admins = \App\Models\User::where('role', 'admin')->active()->get();
-        \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\PaymentUploadedNotification($article, auth()->user()->name));
+        \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\PaymentUploadedNotification($article));
 
         return redirect()
             ->route('author.payments.show', $article)

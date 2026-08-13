@@ -3,25 +3,25 @@
 
 <div class="ds-page-hdr" data-aos="fade-up">
   <div>
-    <x-ui.breadcrumb :items="[['label'=>'Admin'],['label'=>'All Articles']]"/>
-    <h1 class="ds-page-title">Article Management</h1>
-    <p class="ds-page-subtitle">{{ $articles->total() }} manuscripts in the system</p>
+    <x-ui.breadcrumb :items="[['label'=>'Admin'],['label'=>'Semua Artikel']]"/>
+    <h1 class="ds-page-title">Manajemen Artikel</h1>
+    <p class="ds-page-subtitle">{{ $articles->total() }} manuskrip di dalam sistem</p>
   </div>
 </div>
 
 {{-- Status Filter Tabs --}}
 <div class="ds-ftabs mb-4" data-aos="fade-up" style="flex-wrap:wrap;">
-  <a href="{{ route('admin.articles.index') }}" class="ds-ftab {{ !$status ? 'active' : '' }}">All</a>
+  <a href="{{ route('admin.articles.index') }}" class="ds-ftab {{ !$status ? 'active' : '' }}">Semua</a>
   @foreach([
-    'submitted'       => 'New',
-    'under_review'    => 'Under Review',
-    'revision_required'=> 'Revision',
-    'accepted'        => 'Accepted',
-    'waiting_payment' => 'Awaiting Payment',
-    'payment_uploaded'=> 'Payment Pending',
-    'paid'            => 'Paid',
-    'published'       => 'Published',
-    'rejected'        => 'Rejected',
+    'submitted'       => 'Baru',
+    'under_review'    => 'Sedang Ditinjau',
+    'revision_required'=> 'Butuh Revisi',
+    'accepted'        => 'Diterima',
+    'waiting_payment' => 'Menunggu Pembayaran',
+    'payment_uploaded'=> 'Verifikasi Pembayaran',
+    'paid'            => 'Lunas',
+    'published'       => 'Diterbitkan',
+    'rejected'        => 'Ditolak',
   ] as $k => $l)
   <a href="{{ route('admin.articles.index',['status'=>$k]) }}" class="ds-ftab {{ $status === $k ? 'active' : '' }}">{{ $l }}</a>
   @endforeach
@@ -32,12 +32,12 @@
     <table class="ds-table">
       <thead>
         <tr>
-          <th>Title</th>
-          <th>Journal</th>
-          <th>Author</th>
+          <th>Judul</th>
+          <th>Jurnal</th>
+          <th>Penulis</th>
           <th>Status</th>
-          <th>Payment</th>
-          <th>Submitted</th>
+          <th>Pembayaran</th>
+          <th>Dikirim</th>
           <th></th>
         </tr>
       </thead>
@@ -64,14 +64,14 @@
           <td style="font-size:13px;color:var(--text-muted);">{{ $a->submitted_at?->format('d M Y') }}</td>
           <td>
             <a href="{{ route('admin.articles.show',$a) }}" class="ds-btn ds-btn-out ds-btn-xs">
-              View <i class="bi bi-arrow-right ms-1"></i>
+              Lihat <i class="bi bi-arrow-right ms-1"></i>
             </a>
           </td>
         </tr>
         @empty
         <tr>
           <td colspan="7">
-            <x-ui.empty-state icon="bi-file-earmark-text" title="No articles found" description="No manuscripts match the current filter."/>
+            <x-ui.empty-state icon="bi-file-earmark-text" title="Tidak ada artikel ditemukan" description="Tidak ada manuskrip yang cocok dengan filter saat ini."/>
           </td>
         </tr>
         @endforelse

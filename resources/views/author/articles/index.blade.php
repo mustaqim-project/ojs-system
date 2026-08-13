@@ -4,12 +4,12 @@
 
 <div class="ds-page-hdr" data-aos="fade-up">
   <div>
-    <x-ui.breadcrumb :items="[['label'=>'Author Portal'],['label'=>'Dashboard','href'=>route('author.dashboard')],['label'=>'My Submissions']]"/>
-    <h1 class="ds-page-title">My Submissions</h1>
-    <p class="ds-page-subtitle">{{ $articles->total() }} manuscripts submitted</p>
+    <x-ui.breadcrumb :items="[['label'=>'Portal Penulis'],['label'=>'Dasbor','href'=>route('author.dashboard')],['label'=>'Naskah Saya']]"/>
+    <h1 class="ds-page-title">Naskah Saya</h1>
+    <p class="ds-page-subtitle">{{ $articles->total() }} naskah dikirim</p>
   </div>
   <a href="{{ route('author.articles.create') }}" class="ds-btn ds-btn-pri">
-    <i class="bi bi-plus-lg"></i> Submit Manuscript
+    <i class="bi bi-plus-lg"></i> Kirim Manuskrip
   </a>
 </div>
 
@@ -18,8 +18,8 @@
 <div class="ds-alert ds-alert-warn" data-aos="fade-up" style="margin-bottom:10px;">
   <i class="bi bi-pencil-square"></i>
   <div style="flex:1;min-width:0;">
-    <strong>Revision Required:</strong> {{ Str::limit($a->title, 60) }}
-    <a href="{{ route('author.articles.revision',$a) }}" style="color:inherit;font-weight:700;margin-left:8px;text-decoration:underline;">Upload revision →</a>
+    <strong>Revisi Diperlukan:</strong> {{ Str::limit($a->title, 60) }}
+    <a href="{{ route('author.articles.revision',$a) }}" style="color:inherit;font-weight:700;margin-left:8px;text-decoration:underline;">Unggah revisi →</a>
   </div>
   <button class="ds-alert-close" onclick="this.parentElement.remove()">✕</button>
 </div>
@@ -28,8 +28,8 @@
 <div class="ds-alert ds-alert-info" data-aos="fade-up" style="margin-bottom:10px;">
   <i class="bi bi-credit-card-fill"></i>
   <div style="flex:1;min-width:0;">
-    <strong>Payment Required:</strong> {{ Str::limit($a->title, 55) }}
-    <a href="{{ route('author.payments.show',$a) }}" style="color:inherit;font-weight:700;margin-left:8px;text-decoration:underline;">Pay now →</a>
+    <strong>Pembayaran Diperlukan:</strong> {{ Str::limit($a->title, 55) }}
+    <a href="{{ route('author.payments.show',$a) }}" style="color:inherit;font-weight:700;margin-left:8px;text-decoration:underline;">Bayar sekarang →</a>
   </div>
   <button class="ds-alert-close" onclick="this.parentElement.remove()">✕</button>
 </div>
@@ -40,12 +40,12 @@
     <table class="ds-table">
       <thead>
         <tr>
-          <th>Title</th>
-          <th>Journal</th>
+          <th>Judul</th>
+          <th>Jurnal</th>
           <th>Status</th>
-          <th>Payment</th>
-          <th>Submitted</th>
-          <th>Actions</th>
+          <th>Pembayaran</th>
+          <th>Dikirim</th>
+          <th>Aksi</th>
         </tr>
       </thead>
       <tbody>
@@ -71,12 +71,12 @@
               <a href="{{ route('author.articles.show',$article) }}" class="ds-btn ds-btn-out ds-btn-xs">Detail</a>
               @if($article->status === 'revision_required')
                 <a href="{{ route('author.articles.revision',$article) }}" class="ds-btn ds-btn-xs" style="background:var(--warning-bg);color:var(--warning);border-color:var(--warning);">
-                  <i class="bi bi-pencil"></i> Revise
+                  <i class="bi bi-pencil"></i> Revisi
                 </a>
               @endif
               @if($article->needsPayment())
                 <a href="{{ route('author.payments.show',$article) }}" class="ds-btn ds-btn-xs" style="background:#FAF5FF;color:#6B46C1;border-color:#6B46C1;">
-                  <i class="bi bi-credit-card"></i> Pay
+                  <i class="bi bi-credit-card"></i> Bayar
                 </a>
               @endif
             </div>
@@ -85,9 +85,9 @@
         @empty
         <tr>
           <td colspan="6">
-            <x-ui.empty-state icon="bi-file-earmark-text" title="No submissions yet" description="Begin your publishing journey by submitting your first manuscript.">
+            <x-ui.empty-state icon="bi-file-earmark-text" title="Belum ada kiriman naskah" description="Mulailah perjalanan penerbitan Anda dengan mengirimkan manuskrip pertama Anda.">
               <a href="{{ route('author.articles.create') }}" class="ds-btn ds-btn-pri" style="display:inline-flex;">
-                <i class="bi bi-plus-lg"></i> Submit First Manuscript
+                <i class="bi bi-plus-lg"></i> Kirim Manuskrip Pertama
               </a>
             </x-ui.empty-state>
           </td>

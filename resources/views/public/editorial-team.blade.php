@@ -30,7 +30,30 @@
         @endif
 
         {{-- Editor in Chief --}}
-        @php $eic = $page['extra']['editor_in_chief'] ?? null; @endphp
+        @php
+            $dbEditors = $dbEditors ?? collect();
+            
+            // Try to find an editor-in-chief
+            $dbEic = $dbEditors->first(fn($u) => $u->role === 'managing-editor' || ($u->roles->pluck('name')->contains('managing-editor')));
+            if (!$dbEic && $dbEditors->isNotEmpty()) {
+                $dbEic = $dbEditors->first(); // fallback to first editor
+            }
+            
+            $eic = $dbEic ? [
+                'name' => $dbEic->name,
+                'affiliation' => $dbEic->affiliation ?? 'Lembaga Redaksi',
+                'email' => $dbEic->email,
+                'orcid' => $dbEic->orcid ?? ''
+            ] : ($page['extra']['editor_in_chief'] ?? null);
+            
+            $sectionEditors = $dbEditors->filter(fn($u) => !$dbEic || $u->id !== $dbEic->id);
+            $editors = $sectionEditors->isNotEmpty() ? $sectionEditors->map(fn($u) => [
+                'name' => $u->name,
+                'affiliation' => $u->affiliation ?? 'Universitas/Instansi',
+                'area' => $u->research_interest ?? ''
+            ])->toArray() : ($page['extra']['section_editors'] ?? []);
+        @endphp
+        
         @if($eic)
         <h3 class="mb-4" style="font-weight:700;color:var(--text-main);" data-aos="fade-up">Pemimpin Redaksi</h3>
         <div class="row mb-5">
@@ -54,7 +77,6 @@
         @endif
 
         {{-- Section Editors --}}
-        @php $editors = $page['extra']['section_editors'] ?? []; @endphp
         @if(count($editors))
         <h3 class="mb-4" style="font-weight:700;color:var(--text-main);" data-aos="fade-up">Editor Bagian</h3>
         <div class="row g-4 mb-5">

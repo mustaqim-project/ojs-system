@@ -11,7 +11,9 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, SoftDeletes, HasRoles;
+    use HasFactory, Notifiable, SoftDeletes, HasRoles {
+        hasRole as spatieHasRole;
+    }
 
     protected $fillable = [
         'name',
@@ -88,11 +90,9 @@ class User extends Authenticatable
             }
             return false;
         }
-        // Check via Spatie first, fallback to legacy role column
-        if (method_exists($this, 'hasRoleViaSpatie')) {
-            return parent::hasRole($roles) || $this->role === $roles;
-        }
-        return $this->role === $roles;
+
+        // Check Spatie role, fallback to legacy role column
+        return $this->spatieHasRole($roles) || $this->role === $roles;
     }
 
     public function dashboardRoute(): string
@@ -111,7 +111,7 @@ class User extends Authenticatable
     public function hasJournalRole(string $role, int $journalId): bool
     {
         return $this->roles()
-            ->wherePivot('team_id', $journalId)
+            ->wherePivot('journal_id', $journalId)
             ->where('name', $role)
             ->exists();
     }
@@ -119,7 +119,7 @@ class User extends Authenticatable
     public function assignedJournals()
     {
         $journalIds = $this->roles()
-            ->pluck('team_id')
+            ->pluck('journal_id')
             ->filter()
             ->unique();
 

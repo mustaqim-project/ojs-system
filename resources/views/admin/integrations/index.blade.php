@@ -3,9 +3,9 @@
 
 <div class="ds-page-hdr" data-aos="fade-up">
   <div>
-    <x-ui.breadcrumb :items="[['label'=>'Admin'],['label'=>'API Integrations']]"/>
-    <h1 class="ds-page-title">API Integrations</h1>
-    <p class="ds-page-subtitle">Manage connections to external services: ORCID, Crossref DOI, Google OAuth, and more.</p>
+    <x-ui.breadcrumb :items="[['label'=>'Admin'],['label'=>'Integrasi API']]"/>
+    <h1 class="ds-page-title">Integrasi API</h1>
+    <p class="ds-page-subtitle">Kelola koneksi ke layanan eksternal: ORCID, Crossref DOI, Google OAuth, dan lainnya.</p>
   </div>
 </div>
 
@@ -13,9 +13,9 @@
 <div class="ds-alert ds-alert-info" data-aos="fade-up" style="margin-bottom:24px;max-width:900px;">
   <i class="bi bi-shield-lock-fill"></i>
   <div style="font-size:13px;">
-    <strong>Security Notice:</strong>
-    All credentials marked <span style="background:#FEF2F2;color:#C53030;border-radius:4px;padding:1px 6px;font-size:11px;font-weight:700;font-family:monospace;">SECRET</span>
-    are stored encrypted (AES-256) in the database — never in <code>.env</code> files. Raw values are never displayed after saving.
+    <strong>Pemberitahuan Keamanan:</strong>
+    Semua kredensial yang ditandai <span style="background:#FEF2F2;color:#C53030;border-radius:4px;padding:1px 6px;font-size:11px;font-weight:700;font-family:monospace;">RAHASIA</span>
+    disimpan terenkripsi (AES-256) di database — tidak pernah di dalam berkas <code>.env</code>. Nilai asli tidak akan pernah ditampilkan kembali setelah disimpan demi keamanan.
   </div>
 </div>
 
@@ -42,9 +42,9 @@
           <span style="font-size:11px;font-weight:700;background:{{ $meta['color'] }}18;color:{{ $meta['color'] }};padding:1px 8px;border-radius:10px;display:inline-block;margin-top:3px;">{{ $meta['badge'] }}</span>
         </div>
         @if($isActive)
-          <span style="font-size:11px;font-weight:600;color:var(--success);background:var(--success-bg);padding:3px 10px;border-radius:20px;flex-shrink:0;">● Active</span>
+          <span style="font-size:11px;font-weight:600;color:var(--success);background:var(--success-bg);padding:3px 10px;border-radius:20px;flex-shrink:0;">● Aktif</span>
         @else
-          <span style="font-size:11px;font-weight:600;color:var(--text-muted);background:var(--bg-app);padding:3px 10px;border-radius:20px;flex-shrink:0;">○ Inactive</span>
+          <span style="font-size:11px;font-weight:600;color:var(--text-muted);background:var(--bg-app);padding:3px 10px;border-radius:20px;flex-shrink:0;">○ Nonaktif</span>
         @endif
       </div>
 
@@ -54,8 +54,8 @@
         @if($totalCount > 0)
         <div>
           <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-            <span style="font-size:11px;color:var(--text-muted);">Configuration</span>
-            <span style="font-size:11px;font-weight:600;color:var(--text-main);">{{ $filledCount }}/{{ $totalCount }} fields</span>
+            <span style="font-size:11px;color:var(--text-muted);">Konfigurasi</span>
+            <span style="font-size:11px;font-weight:600;color:var(--text-main);">{{ $filledCount }}/{{ $totalCount }} kolom terisi</span>
           </div>
           <div style="height:4px;background:var(--bg-app);border-radius:4px;overflow:hidden;">
             <div style="height:100%;width:{{ $totalCount > 0 ? round($filledCount/$totalCount*100) : 0 }}%;background:{{ $meta['color'] }};border-radius:4px;transition:width 0.4s;"></div>
@@ -67,10 +67,10 @@
       {{-- Footer Actions --}}
       <div style="padding:12px 16px;border-top:1px solid var(--border);background:var(--bg-app);display:flex;gap:8px;">
         <a href="{{ route('admin.integrations.show', $providerKey) }}" class="ds-btn ds-btn-pri ds-btn-sm" style="flex:1;justify-content:center;">
-          <i class="bi bi-sliders"></i> Configure
+          <i class="bi bi-sliders"></i> Konfigurasi
         </a>
         @if($meta['docs_url'])
-        <a href="{{ $meta['docs_url'] }}" target="_blank" class="ds-btn ds-btn-out ds-btn-sm" title="Documentation">
+        <a href="{{ $meta['docs_url'] }}" target="_blank" class="ds-btn ds-btn-out ds-btn-sm" title="Dokumentasi">
           <i class="bi bi-box-arrow-up-right"></i>
         </a>
         @endif
@@ -83,13 +83,13 @@
 {{-- Info Footer --}}
 <div style="margin-top:32px;padding:20px 24px;background:var(--bg-surface);border:1px solid var(--border);border-radius:10px;max-width:900px;" class="" data-aos="fade-up">
   <div style="font-size:14px;font-weight:700;color:var(--text-main);margin-bottom:10px;">
-    <i class="bi bi-info-circle me-2" style="color:var(--info);"></i>About API Integrations
+    <i class="bi bi-info-circle me-2" style="color:var(--info);"></i>Tentang Integrasi API
   </div>
   <ul style="font-size:13px;color:var(--text-muted);margin:0;padding-left:18px;line-height:2;">
-    <li>All credentials are stored encrypted (AES-256) in the database, <strong>not</strong> in <code>.env</code> files</li>
-    <li>Changes take effect immediately — no server restart required</li>
-    <li>Each provider can be enabled or disabled independently</li>
-    <li>Use the <strong>Test Connection</strong> button on the configuration page to verify credentials</li>
+    <li>Semua kredensial disimpan terenkripsi (AES-256) di dalam database, <strong>bukan</strong> di berkas <code>.env</code>.</li>
+    <li>Perubahan langsung berlaku saat itu juga — tidak memerlukan restart server web.</li>
+    <li>Masing-masing penyedia (provider) dapat diaktifkan atau dinonaktifkan secara independen.</li>
+    <li>Gunakan tombol <strong>Uji Koneksi</strong> pada halaman konfigurasi untuk memverifikasi keaktifan kredensial.</li>
   </ul>
 </div>
 

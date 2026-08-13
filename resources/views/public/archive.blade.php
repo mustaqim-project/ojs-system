@@ -14,40 +14,26 @@
     
     <div class="pub-card" data-aos="fade-up">
       <div class="row g-4">
-        
+        @forelse($volumes as $volume)
         <div class="col-md-6 col-lg-4">
           <div style="border:1px solid var(--border); border-radius:var(--radius-md); padding:20px; text-align:center; transition:all 0.3s;" class="hover-shadow">
-            <h3 style="font-weight:700; color:var(--text-main); margin-bottom:8px;">2025</h3>
-            <p style="color:var(--text-muted); font-size:14px; margin-bottom:16px;">Volume 13</p>
-            <div style="display:flex; justify-content:center; gap:8px;">
-              <a href="{{ route('public.current-issue') }}" class="btn btn-sm btn-light border">Terbitan 1</a>
-              <a href="{{ route('public.current-issue') }}" class="btn btn-sm btn-light border">Terbitan 2</a>
+            <h3 style="font-weight:700; color:var(--text-main); margin-bottom:8px;">{{ $volume->year }}</h3>
+            <p style="color:var(--text-muted); font-size:14px; margin-bottom:16px;">Volume {{ $volume->number }}</p>
+            <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap;">
+              @forelse($volume->issues as $issue)
+                <a href="{{ route('public.current-issue', ['issue' => $issue->id]) }}" class="btn btn-sm btn-light border">Terbitan {{ $issue->number }}</a>
+              @empty
+                <span class="text-muted small">Belum ada terbitan</span>
+              @endforelse
             </div>
           </div>
         </div>
-
-        <div class="col-md-6 col-lg-4">
-          <div style="border:1px solid var(--border); border-radius:var(--radius-md); padding:20px; text-align:center; transition:all 0.3s;" class="hover-shadow">
-            <h3 style="font-weight:700; color:var(--text-main); margin-bottom:8px;">2024</h3>
-            <p style="color:var(--text-muted); font-size:14px; margin-bottom:16px;">Volume 12</p>
-            <div style="display:flex; justify-content:center; gap:8px;">
-              <a href="{{ route('public.current-issue') }}" class="btn btn-sm btn-light border">Terbitan 1</a>
-              <a href="{{ route('public.current-issue') }}" class="btn btn-sm btn-light border">Terbitan 2</a>
-            </div>
-          </div>
+        @empty
+        <div class="col-12 text-center text-muted py-5">
+          <i class="bi bi-journal-x" style="font-size:48px;"></i>
+          <p class="mt-3">Belum ada volume atau terbitan yang diarsipkan.</p>
         </div>
-
-        <div class="col-md-6 col-lg-4">
-          <div style="border:1px solid var(--border); border-radius:var(--radius-md); padding:20px; text-align:center; transition:all 0.3s;" class="hover-shadow">
-            <h3 style="font-weight:700; color:var(--text-main); margin-bottom:8px;">2023</h3>
-            <p style="color:var(--text-muted); font-size:14px; margin-bottom:16px;">Volume 11</p>
-            <div style="display:flex; justify-content:center; gap:8px;">
-              <a href="{{ route('public.current-issue') }}" class="btn btn-sm btn-light border">Terbitan 1</a>
-              <a href="{{ route('public.current-issue') }}" class="btn btn-sm btn-light border">Terbitan 2</a>
-            </div>
-          </div>
-        </div>
-
+        @endforelse
       </div>
     </div>
 

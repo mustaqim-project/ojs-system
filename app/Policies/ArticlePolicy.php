@@ -22,8 +22,16 @@ class ArticlePolicy
         }
 
         // Editor can view articles in their journal
-        if ($user->hasRole(['managing-editor', 'section-editor', 'editor'])) {
-            return $article->journal_id === $user->journal_id;
+        $hasRole = \Illuminate\Support\Facades\DB::table('model_has_roles')
+            ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+            ->where('model_has_roles.model_id', $user->id)
+            ->where('model_has_roles.model_type', get_class($user))
+            ->where('model_has_roles.journal_id', $article->journal_id)
+            ->whereIn('roles.name', ['managing-editor', 'section-editor', 'editor'])
+            ->exists();
+
+        if ($hasRole) {
+            return true;
         }
 
         // Published articles are public

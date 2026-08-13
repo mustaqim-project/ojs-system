@@ -6,20 +6,20 @@
 <div class="ds-page-hdr" data-aos="fade-up">
   <div>
     <div class="ds-breadcrumb">
-      <span>Author Portal</span>
+      <span>Portal Penulis</span>
       <span class="ds-breadcrumb-sep">›</span>
-      <span style="color:var(--text-main);">Dashboard</span>
+      <span style="color:var(--text-main);">Dasbor</span>
     </div>
-    <h1 class="ds-page-title">My Submissions</h1>
-    <p class="ds-page-subtitle">Welcome back, {{ auth()->user()->name }}. Here's your publication overview.</p>
+    <h1 class="ds-page-title">Naskah Saya</h1>
+    <p class="ds-page-subtitle">Selamat datang kembali, {{ auth()->user()->name }}. Berikut adalah tinjauan publikasi Anda.</p>
   </div>
   <a href="{{ route('author.articles.create') }}" class="ds-btn ds-btn-pri">
-    <i class="bi bi-plus-lg"></i> Submit Manuscript
+    <i class="bi bi-plus-lg"></i> Kirim Manuskrip
   </a>
 </div>
 
 {{-- ORCID Connect Banner --}}
-@if(\App\Models\ApiIntegration::isEnabled('orcid'))
+@if(\App\Models\AppSetting::get('orcid_client_id') || \App\Models\ApiIntegration::isEnabled('orcid'))
 <div class="ds-card" style="padding:16px 24px;margin-bottom:24px;" data-aos="fade-up" data-aos-delay="100">
   <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
     <div style="display:flex;align-items:center;gap:14px;">
@@ -27,14 +27,14 @@
         <i class="bi bi-person-badge"></i>
       </div>
       <div>
-        <div style="font-size:14px;font-weight:600;color:var(--text-main);">ORCID iD Integration</div>
+        <div style="font-size:14px;font-weight:600;color:var(--text-main);">Integrasi ORCID iD</div>
         @if(auth()->user()->orcid)
           <div style="font-size:13px;color:var(--text-muted);margin-top:2px;">
-            Connected as: <x-orcid-badge :orcid="auth()->user()->orcid"/>
+            Terhubung sebagai: <x-orcid-badge :orcid="auth()->user()->orcid"/>
           </div>
         @else
           <div style="font-size:13px;color:var(--text-muted);margin-top:2px;">
-            Connect your ORCID iD to sync publication metadata automatically.
+            Hubungkan ORCID iD Anda untuk menyinkronkan metadata publikasi secara otomatis.
           </div>
         @endif
       </div>
@@ -44,7 +44,7 @@
         <form method="POST" action="{{ route('author.orcid.sync') }}" style="display:inline;">
           @csrf
           <button type="submit" class="ds-btn ds-btn-out ds-btn-sm">
-            <i class="bi bi-arrow-repeat"></i> Sync Profile
+            <i class="bi bi-arrow-repeat"></i> Sinkronkan Profil
           </button>
         </form>
       @else
@@ -54,7 +54,7 @@
             <path d="M512 256c0 141.4-114.6 256-256 256S0 397.4 0 256 114.6 0 256 0s256 114.6 256 256z"/>
             <path fill="#fff" d="M178.8 286.2h-21.3v-78.4h21.3v78.4zm-10.7-90.2c-7.3 0-13.2-5.9-13.2-13.2s5.9-13.2 13.2-13.2 13.2 5.9 13.2 13.2-5.9 13.2-13.2-13.2z"/>
           </svg>
-          Connect ORCID iD
+          Hubungkan ORCID iD
         </a>
       @endif
     </div>
@@ -67,10 +67,10 @@
 <div class="ds-alert ds-alert-warn" data-aos="fade-up" data-aos-delay="200">
   <i class="bi bi-exclamation-triangle-fill"></i>
   <div>
-    <strong>Revision Required:</strong> "{{ Str::limit($a->title, 70) }}"
+    <strong>Revisi Diperlukan:</strong> "{{ Str::limit($a->title, 70) }}"
     <a href="{{ route('author.articles.revision',$a) }}"
        style="color:inherit;font-weight:700;margin-left:8px;text-decoration:underline;">
-      Upload revision →
+      Unggah revisi →
     </a>
   </div>
   <button class="ds-alert-close" onclick="this.parentElement.remove()">✕</button>
@@ -81,10 +81,10 @@
 <div class="ds-alert ds-alert-info" data-aos="fade-up" data-aos-delay="200">
   <i class="bi bi-credit-card-fill"></i>
   <div>
-    <strong>Payment Required:</strong> "{{ Str::limit($a->title, 70) }}"
+    <strong>Pembayaran Diperlukan:</strong> "{{ Str::limit($a->title, 70) }}"
     <a href="{{ route('author.payments.show',$a) }}"
        style="color:inherit;font-weight:700;margin-left:8px;text-decoration:underline;">
-      View Invoice →
+      Lihat Tagihan →
     </a>
   </div>
   <button class="ds-alert-close" onclick="this.parentElement.remove()">✕</button>
@@ -94,10 +94,10 @@
 {{-- KPI Stats --}}
 @php
 $cards = [
-  ['label'=>'Total Submissions', 'val'=>$stats['total'],           'icon'=>'bi-file-earmark-text', 'color'=>'var(--info)',    'bg'=>'var(--info-bg)'],
-  ['label'=>'Published',         'val'=>$stats['published'],       'icon'=>'bi-check-circle',      'color'=>'var(--success)', 'bg'=>'var(--success-bg)'],
-  ['label'=>'Under Review',      'val'=>$stats['under_review'],    'icon'=>'bi-hourglass-split',   'color'=>'var(--warning)', 'bg'=>'var(--warning-bg)'],
-  ['label'=>'Awaiting Payment',  'val'=>$stats['waiting_payment'], 'icon'=>'bi-credit-card',       'color'=>'#6B46C1',       'bg'=>'#FAF5FF'],
+  ['label'=>'Total Naskah',       'val'=>$stats['total'],           'icon'=>'bi-file-earmark-text', 'color'=>'var(--info)',    'bg'=>'var(--info-bg)'],
+  ['label'=>'Diterbitkan',       'val'=>$stats['published'],       'icon'=>'bi-check-circle',      'color'=>'var(--success)', 'bg'=>'var(--success-bg)'],
+  ['label'=>'Sedang Ditinjau',   'val'=>$stats['under_review'],    'icon'=>'bi-hourglass-split',   'color'=>'var(--warning)', 'bg'=>'var(--warning-bg)'],
+  ['label'=>'Menunggu Pembayaran','val'=>$stats['waiting_payment'], 'icon'=>'bi-credit-card',       'color'=>'#6B46C1',       'bg'=>'#FAF5FF'],
 ];
 @endphp
 <div class="row g-4 mb-4">
@@ -126,7 +126,7 @@ $cards = [
   <div class="col-12" data-aos="fade-up" data-aos-delay="300">
     <div class="ds-card">
       <div class="ds-card-hdr">
-        <span class="ds-card-title">Publication Activity</span>
+        <span class="ds-card-title">Aktivitas Publikasi</span>
       </div>
       <div class="card-body">
         <div id="activityChart" class="chart-container chart-container-sm"></div>
@@ -138,20 +138,20 @@ $cards = [
 {{-- Submissions Table --}}
 <div class="ds-card" data-aos="fade-up" data-aos-delay="400">
   <div class="ds-card-hdr">
-    <span class="ds-card-title">My Submissions</span>
+    <span class="ds-card-title">Naskah Saya</span>
     <a href="{{ route('author.articles.create') }}" class="ds-btn ds-btn-out ds-btn-sm">
-      <i class="bi bi-plus-lg"></i> New
+      <i class="bi bi-plus-lg"></i> Baru
     </a>
   </div>
   <div class="table-responsive">
     <table class="ds-table">
       <thead>
         <tr>
-          <th>Title</th>
-          <th>Journal</th>
+          <th>Judul</th>
+          <th>Jurnal</th>
           <th>Status</th>
-          <th>Submitted</th>
-          <th>Actions</th>
+          <th>Dikirim</th>
+          <th>Aksi</th>
         </tr>
       </thead>
       <tbody>
@@ -176,12 +176,12 @@ $cards = [
               <a href="{{ route('author.articles.show',$article) }}" class="ds-btn ds-btn-ghost ds-btn-xs">Detail</a>
               @if($article->status === 'revision_required')
                 <a href="{{ route('author.articles.revision',$article) }}" class="ds-btn ds-btn-xs" style="background:var(--warning-bg);color:var(--warning);border-color:var(--warning);">
-                  <i class="bi bi-pencil"></i> Revise
+                  <i class="bi bi-pencil"></i> Revisi
                 </a>
               @endif
               @if($article->needsPayment())
                 <a href="{{ route('author.payments.show',$article) }}" class="ds-btn ds-btn-xs" style="background:#FAF5FF;color:#6B46C1;border-color:#6B46C1;">
-                  <i class="bi bi-credit-card"></i> Pay
+                  <i class="bi bi-credit-card"></i> Bayar
                 </a>
               @endif
             </div>
@@ -192,10 +192,10 @@ $cards = [
           <td colspan="5">
             <div class="ds-empty">
               <div class="ds-empty-icon"><i class="bi bi-file-earmark-text"></i></div>
-              <div class="ds-empty-title">No submissions yet</div>
-              <div class="ds-empty-desc">Submit your first manuscript to get started.</div>
+              <div class="ds-empty-title">Belum ada kiriman naskah</div>
+              <div class="ds-empty-desc">Kirimkan manuskrip pertama Anda untuk memulai.</div>
               <a href="{{ route('author.articles.create') }}" class="ds-btn ds-btn-pri" style="display:inline-flex;">
-                <i class="bi bi-plus-lg"></i> Submit Manuscript
+                <i class="bi bi-plus-lg"></i> Kirim Manuskrip
               </a>
             </div>
           </td>
@@ -205,6 +205,8 @@ $cards = [
     </table>
   </div>
 </div>
+
+@endsection
 
 @push('scripts')
 <script>
@@ -224,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ApexCharts - Author Activity Timeline
     const activityOptions = {
         series: [{
-            name: 'Submissions',
+            name: 'Manuskrip',
             data: [1, 0, 2, 1, 3, 2, 1] // Mock data
         }],
         chart: {
@@ -247,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
         dataLabels: { enabled: false },
         stroke: { curve: 'smooth', width: 3 },
         xaxis: {
-            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'], // Mock categories
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul'], // Mock categories
             axisBorder: { show: false },
             axisTicks: { show: false },
             labels: { style: { colors: '#64748b' } }

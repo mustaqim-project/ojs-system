@@ -154,11 +154,7 @@ class ApiIntegration extends Model
             ->first();
 
         if ($record) {
-            $rawValue = ($record->is_secret && !empty($value))
-                ? Crypt::encryptString((string) $value)
-                : $value;
-
-            $record->update(['value' => $rawValue]);
+            $record->update(['value' => $value]);
         }
 
         // Invalidate cache untuk provider ini

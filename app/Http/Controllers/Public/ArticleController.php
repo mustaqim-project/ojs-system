@@ -32,6 +32,8 @@ class ArticleController extends Controller
             ->with(['journal', 'author', 'issue'])
             ->firstOrFail();
 
+        $article->increment('views_count');
+
         // Artikel terkait (jurnal yang sama)
         $related = Article::published()
             ->where('journal_id', $article->journal_id)
@@ -48,6 +50,8 @@ class ArticleController extends Controller
         $article = Article::where('slug', $slug)
             ->where('status', 'published')
             ->firstOrFail();
+
+        $article->increment('downloads_count');
             
         // For demonstration, returning a mock PDF stream
         $content = "Mock PDF Content for Article: " . $article->title . "\n\nIn a production environment, this would serve the actual PDF file.";

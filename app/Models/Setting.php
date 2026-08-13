@@ -11,6 +11,9 @@ class Setting extends Model
         'key',
         'value',
         'type',
+        'group',
+        'label',
+        'description',
     ];
 
     public function journal()

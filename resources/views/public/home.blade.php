@@ -110,19 +110,19 @@
                         Artikel Diterbitkan</p>
                 </div>
                 <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="200">
-                    <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="150">+0</h2>
+                    <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="{{ $totalAuthors }}">+0</h2>
                     <p class="stat-label-text"
                         style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">
                         Penulis Aktif</p>
                 </div>
                 <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="300">
-                    <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="45">0</h2>
+                    <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="{{ $totalReviewers }}">0</h2>
                     <p class="stat-label-text"
                         style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">
                         Mitra Bestari Global</p>
                 </div>
                 <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="400">
-                    <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="28">0</h2>
+                    <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="{{ $avgFirstDecisionDays }}">0</h2>
                     <p class="stat-label-text"
                         style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">
                         Waktu hingga Keputusan Pertama</p>
@@ -130,6 +130,7 @@
             </div>
         </div>
     </section>
+
 
     {{-- ── CURRENT ISSUE & LATEST ARTICLES ── --}}
     <section class="section" style="background:var(--bg-app);">
@@ -178,9 +179,9 @@
                                 <div
                                     style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:12px;">
                                     <div style="display:flex; gap:16px; font-size:12px; color:var(--text-muted);">
-                                        <span title="Dilihat"><i class="bi bi-eye me-1"></i> {{ rand(100, 1500) }}</span>
+                                        <span title="Dilihat"><i class="bi bi-eye me-1"></i> {{ $article->views_count }}</span>
                                         <span title="Diunduh"><i class="bi bi-download me-1"></i>
-                                            {{ rand(50, 500) }}</span>
+                                            {{ $article->downloads_count }}</span>
                                     </div>
                                     <a href="{{ route('public.articles.show', $article->slug ?? '') }}"
                                         style="font-size:13px; font-weight:700; color:var(--primary); text-decoration:none;">Baca
@@ -270,7 +271,7 @@
                                 <div
                                     style="font-size:13px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">
                                     Tingkat Penerimaan</div>
-                                <div style="font-size:28px; font-weight:800; color:var(--primary);">34%</div>
+                                <div style="font-size:28px; font-weight:800; color:var(--primary);">{{ $acceptanceRate }}%</div>
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -279,7 +280,7 @@
                                 <div
                                     style="font-size:13px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">
                                     Waktu hingga Keputusan Pertama (Hari)</div>
-                                <div style="font-size:28px; font-weight:800; color:var(--primary);">28</div>
+                                <div style="font-size:28px; font-weight:800; color:var(--primary);">{{ $avgFirstDecisionDays }}</div>
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -288,7 +289,7 @@
                                 <div
                                     style="font-size:13px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">
                                     Waktu hingga Publikasi (Hari)</div>
-                                <div style="font-size:28px; font-weight:800; color:var(--primary);">75</div>
+                                <div style="font-size:28px; font-weight:800; color:var(--primary);">{{ $avgPublicationDays }}</div>
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -297,7 +298,7 @@
                                 <div
                                     style="font-size:13px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">
                                     Unduhan (Tahunan)</div>
-                                <div style="font-size:28px; font-weight:800; color:var(--primary);">45K+</div>
+                                <div style="font-size:28px; font-weight:800; color:var(--primary);">{{ $totalDownloads }}</div>
                             </div>
                         </div>
                     </div>

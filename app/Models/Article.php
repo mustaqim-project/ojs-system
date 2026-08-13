@@ -9,6 +9,16 @@ class Article extends Model
 {
     use SoftDeletes;
 
+    public const STATUS_SUBMITTED = 'submitted';
+    public const STATUS_UNDER_REVIEW = 'under_review';
+    public const STATUS_ACCEPTED = 'accepted';
+    public const STATUS_REJECTED = 'rejected';
+    public const STATUS_REVISION_REQUIRED = 'revision_required';
+    public const STATUS_WAITING_PAYMENT = 'waiting_payment';
+    public const STATUS_PUBLISHED = 'published';
+    public const STATUS_PAYMENT_UPLOADED = 'payment_uploaded';
+    public const STATUS_PAID = 'paid';
+
     protected $fillable = [
         'journal_id',
         'author_id',
@@ -29,12 +39,22 @@ class Article extends Model
         'license',
         'submitted_at',
         'published_at',
+        'accepted_at',
+        'issue_id',
+        'slug',
+        'manuscript_file',
+        'revision_file',
+        'cover_letter',
+        'views_count',
+        'downloads_count',
     ];
 
     protected $casts = [
         'submitted_at' => 'datetime',
         'published_at' => 'datetime',
         'keywords'     => 'array',
+        'views_count'  => 'integer',
+        'downloads_count' => 'integer',
     ];
 
     public function journal()
@@ -94,7 +114,15 @@ class Article extends Model
 
     public function invoice()
     {
-        return $this->hasOne(Invoice::class);
+        return $this->hasOne(Invoice::class, 'submission_id');
+    }
+
+    public function canBePublished(): bool
+    {
+        if (!$this->invoice) {
+            return true;
+        }
+        return in_array($this->invoice->status, ['paid', 'waived']);
     }
 
     public function scopePublished($query)

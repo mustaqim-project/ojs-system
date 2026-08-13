@@ -8,17 +8,17 @@
     
     <div style="font-size:72px;font-weight:900;color:var(--border);line-height:1;letter-spacing:-0.05em;margin-bottom:16px;">404</div>
     
-    <h1 style="font-size:24px;font-weight:800;color:var(--text-main);margin-bottom:12px;letter-spacing:-0.02em;">Page Not Found</h1>
+    <h1 style="font-size:24px;font-weight:800;color:var(--text-main);margin-bottom:12px;letter-spacing:-0.02em;">Halaman Tidak Ditemukan</h1>
     <p style="font-size:15px;color:var(--text-muted);margin-bottom:32px;line-height:1.7;">
-      The academic resource you are looking for does not exist, has been removed, or is temporarily unavailable.
+      Sumber daya akademik yang Anda cari tidak ada, telah dihapus, atau sedang tidak tersedia untuk sementara waktu.
     </p>
     
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
       <a href="{{ route('public.search') }}" class="ds-btn ds-btn-out" style="height:44px;padding:0 24px;">
-        <i class="bi bi-search"></i> Search
+        <i class="bi bi-search"></i> Cari
       </a>
       <a href="{{ route('public.home') }}" class="ds-btn ds-btn-pri" style="height:44px;padding:0 24px;">
-        <i class="bi bi-house"></i> Home
+        <i class="bi bi-house"></i> Beranda
       </a>
     </div>
   </div>

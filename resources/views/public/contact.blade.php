@@ -29,19 +29,25 @@
                     <p class="text-muted mb-5">Kantor redaksi kami buka Senin–Jumat, 09.00 hingga 17.00 (GMT+7). Kami berusaha merespons dalam waktu 48 jam.</p>
                 @endif
 
-                @if(!empty($page['extra']['address']))
+                @php
+                    $contactAddress = $global_settings['contact_address'] ?? $page['extra']['address'] ?? '';
+                    $contactEmail = $global_settings['site_email'] ?? $page['extra']['email'] ?? '';
+                    $contactPhone = $global_settings['contact_phone'] ?? $page['extra']['phone'] ?? '';
+                @endphp
+
+                @if(!empty($contactAddress))
                 <div class="d-flex mb-4">
                     <div style="width:48px;height:48px;background:rgba(37,99,235,0.1);color:var(--primary);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;margin-right:16px;">
                         <i class="bi bi-geo-alt-fill"></i>
                     </div>
                     <div>
                         <h5 style="font-weight:600;font-size:16px;margin-bottom:4px;">Alamat</h5>
-                        <p style="color:var(--text-muted);font-size:14px;margin:0;">{{ $page['extra']['address'] }}</p>
+                        <p style="color:var(--text-muted);font-size:14px;margin:0;">{{ $contactAddress }}</p>
                     </div>
                 </div>
                 @endif
 
-                @if(!empty($page['extra']['email']))
+                @if(!empty($contactEmail))
                 <div class="d-flex mb-4">
                     <div style="width:48px;height:48px;background:rgba(37,99,235,0.1);color:var(--primary);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;margin-right:16px;">
                         <i class="bi bi-envelope-fill"></i>
@@ -49,20 +55,20 @@
                     <div>
                         <h5 style="font-weight:600;font-size:16px;margin-bottom:4px;">Email</h5>
                         <p style="color:var(--text-muted);font-size:14px;margin:0;">
-                            <a href="mailto:{{ $page['extra']['email'] }}" class="text-decoration-none">{{ $page['extra']['email'] }}</a>
+                            <a href="mailto:{{ $contactEmail }}" class="text-decoration-none">{{ $contactEmail }}</a>
                         </p>
                     </div>
                 </div>
                 @endif
 
-                @if(!empty($page['extra']['phone']))
+                @if(!empty($contactPhone))
                 <div class="d-flex mb-4">
                     <div style="width:48px;height:48px;background:rgba(37,99,235,0.1);color:var(--primary);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;margin-right:16px;">
                         <i class="bi bi-telephone-fill"></i>
                     </div>
                     <div>
                         <h5 style="font-weight:600;font-size:16px;margin-bottom:4px;">Telepon</h5>
-                        <p style="color:var(--text-muted);font-size:14px;margin:0;">{{ $page['extra']['phone'] }}</p>
+                        <p style="color:var(--text-muted);font-size:14px;margin:0;">{{ $contactPhone }}</p>
                     </div>
                 </div>
                 @endif

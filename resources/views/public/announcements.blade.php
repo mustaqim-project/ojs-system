@@ -25,8 +25,15 @@
     </div>
     @endif
 
-    {{-- Dynamic announcement items from extra --}}
-    @php $items = $page['extra']['items'] ?? []; @endphp
+    {{-- Dynamic announcement items from database --}}
+    @php
+      $dbAnnouncements = $dbAnnouncements ?? collect();
+      $items = $dbAnnouncements->isNotEmpty() ? $dbAnnouncements->map(fn($a) => [
+          'title' => $a->title,
+          'date' => $a->publish_at ? $a->publish_at->toDateString() : $a->created_at->toDateString(),
+          'content' => strip_tags($a->body)
+      ])->toArray() : ($page['extra']['items'] ?? []);
+    @endphp
     @if(count($items))
       @foreach($items as $i => $item)
       <div class="pub-card mb-4" data-aos="fade-up" data-aos-delay="{{ $i * 80 }}">

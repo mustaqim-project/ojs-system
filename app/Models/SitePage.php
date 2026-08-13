@@ -34,9 +34,21 @@ class SitePage extends Model
      */
     public static function findBySlug(string $slug): ?self
     {
-        return Cache::remember("site_page_{$slug}", 3600, function () use ($slug) {
-            return static::where('slug', $slug)->where('is_active', true)->first();
-        });
+        $page = Cache::get("site_page_{$slug}");
+
+        if ($page instanceof \__PHP_Incomplete_Class || ($page !== null && !$page instanceof self)) {
+            Cache::forget("site_page_{$slug}");
+            $page = null;
+        }
+
+        if ($page === null) {
+            $page = static::where('slug', $slug)->where('is_active', true)->first();
+            if ($page) {
+                Cache::put("site_page_{$slug}", $page, 3600);
+            }
+        }
+
+        return $page;
     }
 
     /**

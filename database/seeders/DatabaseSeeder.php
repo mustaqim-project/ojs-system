@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RolePermissionSeeder::class,
+            InstitutionSeeder::class,
             UserSeeder::class,
             JournalSeeder::class,
             IssueSeeder::class,
@@ -45,13 +46,12 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Super Admin',
                 'email' => 'admin@example.com',
                 'password' => bcrypt('password'),
+                'role' => 'admin',
                 'is_active' => true,
             ]
         );
 
-        $superAdminRole = \Spatie\Permission\Models\Role::where('name', 'super-admin')
-            ->where('journal_id', $journal->id)
-            ->first();
+        $superAdminRole = \Spatie\Permission\Models\Role::where('name', 'super-admin')->first();
         if ($superAdminRole) {
             $admin->assignRole($superAdminRole);
         }

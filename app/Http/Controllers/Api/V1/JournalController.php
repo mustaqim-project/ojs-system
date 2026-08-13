@@ -10,7 +10,7 @@ class JournalController extends Controller
     public function index(Request $request)
     {
         $journals = Journal::query()
-            ->when($request->search, fn($q, $search) => $q->where('name', 'like', "%{$search}%"))
+            ->when($request->search, fn($q, $search) => $q->where('title', 'like', "%{$search}%"))
             ->paginate(20);
 
         return response()->json($journals);

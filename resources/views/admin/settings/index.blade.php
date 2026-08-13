@@ -3,19 +3,19 @@
 
 <div class="ds-page-hdr" data-aos="fade-up">
   <div>
-    <x-ui.breadcrumb :items="[['label'=>'Admin'],['label'=>'Settings']]"/>
-    <h1 class="ds-page-title">System Settings</h1>
-    <p class="ds-page-subtitle">Global configuration for the OJS platform</p>
+    <x-ui.breadcrumb :items="[['label'=>'Admin'],['label'=>'Pengaturan']]"/>
+    <h1 class="ds-page-title">Pengaturan Sistem</h1>
+    <p class="ds-page-subtitle">Konfigurasi global untuk platform OJS</p>
   </div>
 </div>
 
   @php
   $groupMeta = [
-    'general' => ['icon'=>'bi-gear-fill',         'label'=>'General Settings',         'color'=>'var(--info)'],
-    'payment' => ['icon'=>'bi-credit-card-fill',   'label'=>'Payment / APC Settings',   'color'=>'var(--success)'],
-    'review'  => ['icon'=>'bi-clipboard-check-fill','label'=>'Review Configuration',    'color'=>'#6B46C1'],
-    'email'   => ['icon'=>'bi-envelope-fill',      'label'=>'Email Settings',           'color'=>'var(--warning)'],
-    'legal'   => ['icon'=>'bi-file-earmark-text-fill','label'=>'Legal Settings',        'color'=>'var(--danger)'],
+    'general' => ['icon'=>'bi-gear-fill',         'label'=>'Pengaturan Umum',         'color'=>'var(--info)'],
+    'payment' => ['icon'=>'bi-credit-card-fill',   'label'=>'Pengaturan Pembayaran / APC',   'color'=>'var(--success)'],
+    'review'  => ['icon'=>'bi-clipboard-check-fill','label'=>'Konfigurasi Peninjauan',    'color'=>'#6B46C1'],
+    'email'   => ['icon'=>'bi-envelope-fill',      'label'=>'Pengaturan Email',           'color'=>'var(--warning)'],
+    'legal'   => ['icon'=>'bi-file-earmark-text-fill','label'=>'Pengaturan Legal',        'color'=>'var(--danger)'],
   ];
   @endphp
 
@@ -67,7 +67,7 @@
                     <input type="checkbox" id="s_{{ $setting->key }}" name="settings[{{ $groupKey }}_{{ $idx }}][value]" value="1"
                            {{ $setting->value ? 'checked' : '' }}
                            style="width:17px;height:17px;accent-color:var(--primary);cursor:pointer;"/>
-                    <label for="s_{{ $setting->key }}" style="font-size:13px;color:var(--text-muted);cursor:pointer;margin:0;">Enabled</label>
+                    <label for="s_{{ $setting->key }}" style="font-size:13px;color:var(--text-muted);cursor:pointer;margin:0;">Aktif</label>
                   </div>
                 </div>
               @elseif($setting->type === 'number')
@@ -103,7 +103,7 @@
         </div>
         <div style="padding: 16px 24px; border-top: 1px solid var(--border); background: var(--bg-surface); border-bottom-left-radius: inherit; border-bottom-right-radius: inherit; display: flex; justify-content: flex-end;">
           <button type="submit" class="ds-btn ds-btn-pri" style="height:38px;font-size:14px;padding:0 24px;">
-            <i class="bi bi-floppy-fill me-2"></i> Save {{ $gl['label'] }}
+            <i class="bi bi-floppy-fill me-2"></i> Simpan {{ $gl['label'] }}
           </button>
         </div>
       </form>

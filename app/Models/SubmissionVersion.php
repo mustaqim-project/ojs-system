@@ -18,7 +18,7 @@ class SubmissionVersion extends Model
         'created_by',
     ];
 
-    public $timestamps = false;
+    public $timestamps = true;
     const CREATED_AT = 'created_at';
     const UPDATED_AT = null;
 

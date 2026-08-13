@@ -3,7 +3,7 @@
 
 <div class="ds-page-hdr" data-aos="fade-up">
   <div>
-    <x-ui.breadcrumb :items="[['label'=>'Admin'],['label'=>'API Integrations','href'=>route('admin.integrations.index')],['label'=>$providerMeta['label']]]"/>
+    <x-ui.breadcrumb :items="[['label'=>'Admin'],['label'=>'Integrasi API','href'=>route('admin.integrations.index')],['label'=>$providerMeta['label']]]"/>
     <div style="display:flex;align-items:center;gap:14px;margin-top:10px;">
       <div style="width:44px;height:44px;border-radius:10px;background:{{ $providerMeta['color'] ?? 'var(--primary)' }}18;color:{{ $providerMeta['color'] ?? 'var(--primary)' }};display:flex;align-items:center;justify-content:center;font-size:22px;">
         <i class="{{ $providerMeta['icon'] ?? 'bi-plug' }}"></i>
@@ -17,11 +17,11 @@
   <div style="display:flex;gap:10px;">
     <button id="btnTest" class="ds-btn ds-btn-out" onclick="testConnection()">
       <i class="bi bi-wifi" id="testIcon"></i>
-      <span id="testLabel">Test Connection</span>
+      <span id="testLabel">Uji Koneksi</span>
     </button>
     @if($providerMeta['docs_url'] ?? false)
     <a href="{{ $providerMeta['docs_url'] }}" target="_blank" class="ds-btn ds-btn-ghost">
-      <i class="bi bi-box-arrow-up-right"></i> Docs
+      <i class="bi bi-box-arrow-up-right"></i> Dokumentasi
     </a>
     @endif
   </div>
@@ -36,11 +36,11 @@
 
     {{-- Status --}}
     <div class="ds-card" data-aos="fade-up" data-aos-delay="100" style="margin-bottom:20px;">
-      <div class="ds-card-hdr"><span class="ds-card-title">Integration Status</span></div>
+      <div class="ds-card-hdr"><span class="ds-card-title">Status Integrasi</span></div>
       <div style="padding:16px 20px;">
         @php $currentStatus = $fields->first()?->status ?? 'inactive'; @endphp
         <div style="display:flex;gap:12px;flex-wrap:wrap;">
-          @foreach(['active'=>['Active','var(--success)','bi-check-circle-fill'],'inactive'=>['Inactive','var(--text-muted)','bi-slash-circle'],'testing'=>['Testing','var(--warning)','bi-bug']] as $s=>[$slabel,$scol,$sicon])
+          @foreach(['active'=>['Aktif','var(--success)','bi-check-circle-fill'],'inactive'=>['Nonaktif','var(--text-muted)','bi-slash-circle'],'testing'=>['Pengujian','var(--warning)','bi-bug']] as $s=>[$slabel,$scol,$sicon])
           <label id="status-label-{{ $s }}" onclick="selectStatus('{{ $s }}')"
                  style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:12px 16px;border-radius:8px;border:2px solid {{ $currentStatus===$s ? $scol : 'var(--border)' }};flex:1;min-width:120px;transition:all 0.15s;background:{{ $currentStatus===$s ? 'var(--bg-app)' : 'var(--bg-surface)' }};">
             <input type="radio" name="status" value="{{ $s }}" {{ $currentStatus===$s ? 'checked' : '' }} id="status-{{ $s }}" style="display:none;">
@@ -55,7 +55,7 @@
     {{-- Fields --}}
     <div class="ds-card" data-aos="fade-up" data-aos-delay="200" style="margin-bottom:20px;">
       <div class="ds-card-hdr">
-        <span class="ds-card-title">Configure {{ $providerMeta['label'] }}</span>
+        <span class="ds-card-title">Konfigurasi {{ $providerMeta['label'] }}</span>
       </div>
       <div style="padding:24px;">
         @foreach($fields as $field)
@@ -65,14 +65,14 @@
               {{ $field->label }}@if($field->is_required)<span style="color:var(--danger);margin-left:2px;">*</span>@endif
             </label>
             @if($field->is_secret)
-              <span style="font-size:10px;background:#FEF2F2;color:#C53030;padding:1px 8px;border-radius:10px;font-weight:700;border:1px solid #FECACA;font-family:monospace;">SECRET</span>
+              <span style="font-size:10px;background:#FEF2F2;color:#C53030;padding:1px 8px;border-radius:10px;font-weight:700;border:1px solid #FECACA;font-family:monospace;">RAHASIA</span>
             @endif
           </div>
 
           @if($field->field_type === 'boolean')
             <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--bg-app);border:1px solid var(--border);border-radius:var(--radius-sm);">
               <input type="hidden" name="fields[{{ $field->key }}]" value="0"/>
-              <x-ui.checkbox name="fields[{{ $field->key }}]" value="1" :checked="$field->value == '1'" label="{{ $field->value == '1' ? 'Enabled' : 'Disabled' }}"/>
+              <x-ui.checkbox name="fields[{{ $field->key }}]" value="1" :checked="$field->value == '1'" label="{{ $field->value == '1' ? 'Aktif' : 'Nonaktif' }}"/>
             </div>
           @elseif($field->field_type === 'select')
             <x-ui.select name="fields[{{ $field->key }}]">
@@ -84,12 +84,12 @@
             <x-ui.textarea name="fields[{{ $field->key }}]" rows="4">{{ $field->is_secret ? '' : $field->value }}</x-ui.textarea>
           @elseif($field->is_secret)
             <x-ui.input type="password" name="fields[{{ $field->key }}]"
-                        :placeholder="!empty($field->getRawOriginal('value')) ? '••••••••  (saved — leave blank to keep)' : 'Enter '.$field->label"
+                        :placeholder="!empty($field->getRawOriginal('value')) ? '••••••••  (tersimpan — biarkan kosong jika tidak diubah)' : 'Masukkan '.$field->label"
                         autocomplete="new-password"/>
             @if(!empty($field->getRawOriginal('value')))
             <div style="display:flex;align-items:center;gap:6px;margin-top:6px;">
               <x-ui.checkbox name="clear[{{ $field->key }}]" value="1"/>
-              <label style="font-size:12px;color:var(--danger);cursor:pointer;">Remove this credential</label>
+              <label style="font-size:12px;color:var(--danger);cursor:pointer;">Hapus kredensial ini</label>
             </div>
             @endif
           @else
@@ -113,12 +113,14 @@
 
     <div style="display:flex;gap:12px;" class="" data-aos="fade-up" data-aos-delay="300">
       <button type="submit" class="ds-btn ds-btn-pri" style="height:42px;padding:0 24px;font-size:14px;">
-        <i class="bi bi-floppy"></i> Save Configuration
+        <i class="bi bi-floppy"></i> Simpan Konfigurasi
       </button>
-      <a href="{{ route('admin.integrations.index') }}" class="ds-btn ds-btn-out" style="height:42px;padding:0 20px;">Cancel</a>
+      <a href="{{ route('admin.integrations.index') }}" class="ds-btn ds-btn-out" style="height:42px;padding:0 20px;">Batal</a>
     </div>
   </form>
 </div>
+
+@endsection
 
 @push('scripts')
 <script>
@@ -143,7 +145,7 @@ async function testConnection() {
   btn.disabled = true;
   icon.className = 'bi bi-arrow-repeat';
   icon.style.animation = 'spin 0.7s linear infinite';
-  label.textContent = 'Testing...';
+  label.textContent = 'Menguji...';
 
   try {
     const res = await fetch('{{ route('admin.integrations.test', $provider) }}', {
@@ -160,7 +162,7 @@ async function testConnection() {
     result.innerHTML = `<i class="bi bi-${data.success ? 'check-circle-fill' : 'x-circle-fill'}"></i> ${data.message}`;
     icon.className = 'bi bi-' + (data.success ? 'check-circle-fill' : 'x-circle-fill');
     icon.style.animation = '';
-    label.textContent = data.success ? 'Connected!' : 'Failed';
+    label.textContent = data.success ? 'Terhubung!' : 'Gagal';
   } catch(e) {
     result.style.display = 'flex';
     result.className = 'ds-alert fu ds-alert-danger';
@@ -172,7 +174,7 @@ async function testConnection() {
     setTimeout(() => {
       icon.className = 'bi bi-wifi';
       icon.style.animation = '';
-      label.textContent = 'Test Connection';
+      label.textContent = 'Uji Koneksi';
     }, 5000);
   }
 }
@@ -181,5 +183,3 @@ async function testConnection() {
 @keyframes spin { from{transform:rotate(0deg);}to{transform:rotate(360deg);} }
 </style>
 @endpush
-
-@endsection

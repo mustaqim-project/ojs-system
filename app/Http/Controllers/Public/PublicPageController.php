@@ -60,6 +60,44 @@ class PublicPageController extends Controller
 
         $page = SitePage::getPage($slug);
 
-        return view($viewName, compact('page'));
+        $extraData = [];
+        if ($slug === 'archive') {
+            $extraData['volumes'] = \App\Models\Volume::with(['issues' => function($q) {
+                $q->published()->orderBy('number');
+            }])->orderBy('year', 'desc')->orderBy('number', 'desc')->get();
+        } elseif ($slug === 'current-issue') {
+            $issueId = $request->get('issue');
+            if ($issueId) {
+                $currentIssue = \App\Models\Issue::published()
+                    ->with(['volume', 'articles' => function($q) {
+                        $q->published()->with('author');
+                    }])
+                    ->find($issueId);
+            } else {
+                $currentIssue = \App\Models\Issue::published()
+                    ->with(['volume', 'articles' => function($q) {
+                        $q->published()->with('author');
+                    }])
+                    ->latest('published_date')
+                    ->first();
+            }
+            $extraData['currentIssue'] = $currentIssue;
+        } elseif ($slug === 'announcements') {
+            $extraData['dbAnnouncements'] = \App\Models\Announcement::published()->latest()->get();
+        } elseif ($slug === 'reviewer-board') {
+            $extraData['dbReviewers'] = \App\Models\User::where('role', 'reviewer')
+                ->orWhereHas('roles', function($q) { $q->where('name', 'reviewer'); })
+                ->orderBy('name')
+                ->get();
+        } elseif ($slug === 'editorial-team') {
+            $extraData['dbEditors'] = \App\Models\User::whereIn('role', ['editor', 'managing-editor', 'section-editor'])
+                ->orWhereHas('roles', function($q) {
+                    $q->whereIn('name', ['editor', 'managing-editor', 'section-editor']);
+                })
+                ->orderBy('name')
+                ->get();
+        }
+
+        return view($viewName, array_merge(compact('page'), $extraData));
     }
 }

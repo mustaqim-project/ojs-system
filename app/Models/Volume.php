@@ -10,6 +10,8 @@ class Volume extends Model
         'journal_id',
         'number',
         'year',
+        'cover_image',
+        'description',
     ];
 
     protected $casts = [
