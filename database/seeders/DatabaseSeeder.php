@@ -53,6 +53,8 @@ class DatabaseSeeder extends Seeder
 
         $superAdminRole = \Spatie\Permission\Models\Role::where('name', 'super-admin')->first();
         if ($superAdminRole) {
+            // Set team context (journal_id) before assigning role — required when Spatie teams=true
+            app(\Spatie\Permission\PermissionRegistrar::class)->setPermissionsTeamId($journal->id);
             $admin->assignRole($superAdminRole);
         }
 
