@@ -6,7 +6,7 @@
   <div class="container" style="max-width:1000px; text-align:center;">
     <div class="section-tag" data-aos="fade-up">Tentang Jurnal</div>
     <h1 class="hero-title" data-aos="fade-up" data-aos-delay="100" style="font-size:36px; margin-bottom:16px;">{{ $page['title'] ?? 'Kebijakan Jurnal' }}</h1>
-    <p class="section-desc" data-aos="fade-up" data-aos-delay="200" style="margin:0 auto;">{{ $page['meta_description'] ?? 'Panduan komprehensif tentang kebijakan akses terbuka, hak cipta, pengarsipan, dan crossmark.' }}</p>
+    <p class="section-desc" data-aos="fade-up" data-aos-delay="200" style="margin:0 auto;">{{ $page['meta_description'] ?? 'Panduan komprehensif tentang kebijakan akses terbuka, hak cipta, pengarsipan, dan Crossmark.' }}</p>
   </div>
 </section>
 
@@ -66,7 +66,7 @@
             <i class="bi bi-shield-exclamation text-primary" style="font-size:24px;"></i>
             <h4 style="font-weight:700; margin:0;">Kebijakan Plagiarisme</h4>
           </div>
-          <p style="color:var(--text-muted); line-height:1.7;">Dewan redaksi sangat menentang segala bentuk plagiarisme. Semua kiriman disaring menggunakan Turnitin / iThenticate sebelum ditinjau. Naskah dengan indeks kesamaan melebihi 20% akan ditolak tanpa syarat.</p>
+          <p style="color:var(--text-muted); line-height:1.7;">Dewan redaksi sangat menentang segala bentuk plagiarisme. Semua kiriman disaring menggunakan Turnitin / iThenticate sebelum ditelaah. Naskah dengan indeks kesamaan melebihi 20% akan ditolak tanpa syarat.</p>
         </div>
 
       </div>

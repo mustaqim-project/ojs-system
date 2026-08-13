@@ -181,7 +181,7 @@
                     </div>
                     <p
                         style="font-size: 15px; color: #94A3B8; line-height: 1.8; max-width: 420px; margin-bottom: 0; font-weight: 400;">
-                        {{ \App\Models\Setting::get('site_description', 'An internationally recognized open-access scholarly publishing platform.') }}
+                        {{ \App\Models\Setting::get('site_description', 'Platform penerbitan ilmiah akses terbuka yang diakui secara internasional.') }}
                     </p>
                 </div>
 

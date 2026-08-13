@@ -49,7 +49,7 @@
                     <h4 style="font-weight: 700; font-size: 18px; margin-bottom: 16px;">Tugas Penulis</h4>
                     <ul style="color: var(--text-muted); font-size: 14px; line-height: 1.7; padding-left: 20px;">
                         <li class="mb-2"><strong>Orisinalitas:</strong> Pastikan semua karya sepenuhnya asli. Plagiarisme dalam bentuk apa pun tidak dapat diterima.</li>
-                        <li class="mb-2"><strong>Akses Data:</strong> Bersiaplah untuk menyediakan data mentah untuk tinjauan editorial berdasarkan permintaan.</li>
+                        <li class="mb-2"><strong>Akses Data:</strong> Bersiaplah untuk menyediakan data mentah untuk penelaahan editorial berdasarkan permintaan.</li>
                         <li class="mb-2"><strong>Pengiriman Ganda:</strong> Jangan mengirimkan naskah yang sama ke lebih dari satu jurnal secara bersamaan.</li>
                         <li class="mb-2"><strong>Kepenulisan:</strong> Batasi kepenulisan kepada mereka yang telah memberikan kontribusi signifikan.</li>
                     </ul>
@@ -79,7 +79,7 @@
                     </div>
                     <h4 style="font-weight: 700; font-size: 18px; margin-bottom: 16px;">Tugas Penelaah</h4>
                     <ul style="color: var(--text-muted); font-size: 14px; line-height: 1.7; padding-left: 20px;">
-                        <li class="mb-2"><strong>Kontribusi:</strong> Tinjauan sejawat membantu editor dalam membuat keputusan editorial dan dapat membantu penulis dalam menyempurnakan makalah.</li>
+                        <li class="mb-2"><strong>Kontribusi:</strong> Penelaahan sejawat membantu editor dalam membuat keputusan editorial dan dapat membantu penulis dalam menyempurnakan makalah.</li>
                         <li class="mb-2"><strong>Kecepatan:</strong> Beri tahu editor segera jika tidak memenuhi syarat atau tidak dapat meninjau dengan segera.</li>
                         <li class="mb-2"><strong>Objektivitas:</strong> Tinjauan harus dilakukan secara objektif. Kritik pribadi terhadap penulis tidak pantas.</li>
                     </ul>

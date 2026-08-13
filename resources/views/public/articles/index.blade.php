@@ -106,7 +106,7 @@
           <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
             <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
               <span class="badge bg-primary-subtle text-primary" style="padding:6px 12px; border-radius:20px; font-weight:700; font-size:11px; letter-spacing:0.5px; text-transform:uppercase;">
-                Research Article
+                Artikel Penelitian
               </span>
               <a href="{{ route('public.journals.show', $article->journal->slug) }}" class="text-decoration-none" style="font-size:13px; font-weight:600; color:var(--text-main);">
                 <i class="bi bi-journal-bookmark text-muted me-1"></i> {{ $article->journal->abbreviation ?? $article->journal->title }}
@@ -120,7 +120,7 @@
             
             @if($article->published_at)
               <span style="font-size:13px; color:var(--text-muted); font-weight:600; background:var(--bg-surface); padding:4px 10px; border-radius:6px; border:1px solid var(--border);">
-                {{ $article->published_at->format('d M Y') }}
+                {{ $article->published_at->locale('id')->translatedFormat('d M Y') }}
               </span>
             @endif
           </div>
@@ -132,7 +132,7 @@
           <div class="d-flex flex-wrap gap-3 mb-3" style="font-size:14px; color:var(--text-main); font-weight:600;">
             <span><i class="bi bi-person-circle text-muted me-1"></i> {{ $article->author->name }}</span>
             <span class="text-muted">|</span>
-            <span style="color:var(--text-muted);"><i class="bi bi-building me-1"></i> {{ $article->author->affiliation ?? 'Academic Institution' }}</span>
+            <span style="color:var(--text-muted);"><i class="bi bi-building me-1"></i> {{ $article->author->affiliation ?? 'Institusi Akademik' }}</span>
             <span class="text-muted">|</span>
             <a href="https://orcid.org" target="_blank" style="color:#A6CE39; text-decoration:none;"><i class="bi bi-patch-check-fill"></i> ORCID</a>
           </div>
@@ -153,9 +153,9 @@
             </div>
             
             <div class="d-flex gap-4" style="font-size:13px; font-weight:600; color:var(--text-muted);">
-              <span title="Citations" class="d-flex align-items-center gap-1"><i class="bi bi-quote" style="font-size:16px;"></i> {{ rand(0, 50) }} Citations</span>
-              <span title="Views" class="d-flex align-items-center gap-1"><i class="bi bi-eye" style="font-size:16px;"></i> {{ rand(100, 2000) }}</span>
-              <span title="Downloads" class="d-flex align-items-center gap-1"><i class="bi bi-download" style="font-size:16px;"></i> {{ rand(50, 1000) }}</span>
+              <span title="Sitasi" class="d-flex align-items-center gap-1"><i class="bi bi-quote" style="font-size:16px;"></i> {{ rand(0, 50) }} Sitasi</span>
+              <span title="Dilihat" class="d-flex align-items-center gap-1"><i class="bi bi-eye" style="font-size:16px;"></i> {{ rand(100, 2000) }}</span>
+              <span title="Unduhan" class="d-flex align-items-center gap-1"><i class="bi bi-download" style="font-size:16px;"></i> {{ rand(50, 1000) }}</span>
             </div>
           </div>
           

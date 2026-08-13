@@ -72,7 +72,7 @@
                     <div style="width: 64px; height: 64px; background: rgba(37,99,235,0.1); color: var(--primary); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 24px;">
                         <i class="bi bi-cloud-arrow-up"></i>
                     </div>
-                    <h4 class="mb-3" style="font-weight: 700; font-size: 18px;">Siap Mengirimkan?</h4>
+                    <h4 class="mb-3" style="font-weight: 700; font-size: 18px;">Siap Mengajukan Naskah?</h4>
                     <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px;">Unduh template naskah resmi kami untuk memastikan format Anda benar sebelum dikirimkan.</p>
                     
                     <a href="{{ !empty($page['extra']['template_url']) ? $page['extra']['template_url'] : '#' }}"
@@ -81,7 +81,7 @@
                         <i class="bi bi-file-word me-2"></i> Unduh Template (.docx)
                     </a>
                     <a href="{{ route('login') }}" class="btn btn-primary w-100" style="height: 44px;">
-                        Buat Kiriman <i class="bi bi-arrow-right ms-2"></i>
+                        Ajukan Naskah <i class="bi bi-arrow-right ms-2"></i>
                     </a>
                     </div>
                 </div>

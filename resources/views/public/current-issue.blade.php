@@ -21,7 +21,7 @@
       <div class="alert alert-info d-flex align-items-center" role="alert" style="background:var(--primary-light); border-color:var(--primary-light); color:var(--primary); border-radius:var(--radius-md);">
         <i class="bi bi-info-circle-fill me-3" style="font-size:24px;"></i>
         <div>
-          Bagian ini akan memuat secara dinamis artikel-artikel yang ditugaskan pada terbitan terbaru. Silakan periksa kembali nanti atau jelajahi <a href="{{ route('public.articles.index') }}" style="color:var(--primary); font-weight:700;">semua artikel</a>.
+          Bagian ini akan memuat secara dinamis artikel-artikel yang diterbitkan dalam terbitan terbaru. Silakan periksa kembali nanti atau jelajahi <a href="{{ route('public.articles.index') }}" style="color:var(--primary); font-weight:700;">semua artikel</a>.
         </div>
       </div>
 

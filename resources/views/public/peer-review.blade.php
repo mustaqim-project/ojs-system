@@ -8,8 +8,8 @@
         <div class="row align-items-center mb-5">
             <div class="col-lg-8" data-aos="fade-up">
                 <div class="section-tag">Proses</div>
-                <h1 class="hero-title">Proses Tinjauan <span class="accent">Sejawat</span></h1>
-                <p class="hero-desc">{{ $page['meta_description'] ?? 'Kami menggunakan sistem Tinjauan Sejawat Double-Blind yang ketat untuk memastikan evaluasi objektif setiap naskah.' }}</p>
+                <h1 class="hero-title">Proses Penelaahan <span class="accent">Sejawat</span></h1>
+                <p class="hero-desc">{{ $page['meta_description'] ?? 'Kami menggunakan sistem penelaahan sejawat ganda-buta (double-blind) yang ketat untuk memastikan evaluasi objektif setiap naskah.' }}</p>
             </div>
         </div>
     </div>
@@ -31,9 +31,9 @@
                     <div style="font-size: 48px; color: var(--primary); margin-bottom: 16px;">
                         <i class="bi bi-eye-slash"></i>
                     </div>
-                    <h3 style="font-weight: 700; margin-bottom: 16px;">Apa itu Tinjauan Double-Blind?</h3>
+                    <h3 style="font-weight: 700; margin-bottom: 16px;">Apa itu Penelaahan Ganda-Buta (Double-Blind)?</h3>
                     <p style="color: var(--text-muted); font-size: 15px; line-height: 1.8; margin: 0;">
-                        Dalam proses tinjauan sejawat double-blind, baik penelaah maupun penulis tetap anonim satu sama lain di seluruh proses. Metode ini mencegah bias penelaah berdasarkan negara asal penulis, afiliasi institusional, atau catatan publikasi sebelumnya.
+                        Dalam proses penelaahan sejawat ganda-buta (double-blind), baik penelaah maupun penulis tetap anonim satu sama lain di seluruh proses. Metode ini mencegah bias penelaah berdasarkan negara asal penulis, afiliasi institusional, atau catatan publikasi sebelumnya.
                     </p>
                 </div>
             </div>
@@ -67,8 +67,8 @@
                 <div class="d-flex mb-4">
                     <div style="width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex-shrink: 0; margin-right: 24px; z-index: 2;">3</div>
                     <div class="pub-card flex-grow-1" style="margin-top: -10px;">
-                        <h5 style="font-weight: 700; margin-bottom: 8px;">Tinjauan Sejawat (Double-Blind)</h5>
-                        <p style="color: var(--text-muted); font-size: 14px; margin: 0;">Naskah dikirim ke setidaknya dua penelaah ahli independen. Fase ini biasanya memakan waktu 3-4 minggu.</p>
+                        <h5 style="font-weight: 700; margin-bottom: 8px;">Penelaahan Sejawat Ganda-Buta (Double-Blind)</h5>
+                        <p style="color: var(--text-muted); font-size: 14px; margin: 0;">Naskah dikirim ke setidaknya dua penelaah ahli independen (mitra bestari). Fase ini biasanya memakan waktu 3-4 minggu.</p>
                     </div>
                 </div>
 
@@ -85,8 +85,8 @@
                 <div class="d-flex mb-4">
                     <div style="width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex-shrink: 0; margin-right: 24px; z-index: 2;">5</div>
                     <div class="pub-card flex-grow-1" style="margin-top: -10px;">
-                        <h5 style="font-weight: 700; margin-bottom: 8px;">Penyuntingan Salinan & Publikasi</h5>
-                        <p style="color: var(--text-muted); font-size: 14px; margin: 0;">Setelah diterima, naskah menjalani pemformatan tata letak, pemeriksaan ejaan, dan akhirnya diterbitkan secara online dengan DOI yang terdaftar.</p>
+                        <h5 style="font-weight: 700; margin-bottom: 8px;">Penyuntingan Naskah & Publikasi</h5>
+                        <p style="color: var(--text-muted); font-size: 14px; margin: 0;">Setelah diterima, naskah menjalani pemformatan tata letak, penyuntingan naskah (copyediting), pemeriksaan ejaan, dan akhirnya diterbitkan secara online dengan DOI yang terdaftar.</p>
                     </div>
                 </div>
 

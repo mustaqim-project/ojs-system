@@ -92,9 +92,9 @@
                                 <label class="form-label" style="font-weight:600;font-size:14px;">Subjek</label>
                                 <select class="form-control">
                                     <option>Pertanyaan Umum</option>
-                                    <option>Masalah Pengiriman</option>
-                                    <option>Proses Tinjauan</option>
-                                    <option>Pertanyaan Pengindeksan</option>
+                                    <option>Pertanyaan Pengajuan Naskah</option>
+                                    <option>Proses Penelaahan</option>
+                                    <option>Pertanyaan Indeksasi</option>
                                 </select>
                             </div>
                             <div class="col-12">

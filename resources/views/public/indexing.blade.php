@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $page['title'] ?? 'Pengindeksan & Pengabstrakan')
+@section('title', $page['title'] ?? 'Indeksasi & Abstraksi')
 @section('meta_description', $page['meta_description'] ?? '')
 
 @section('content')
@@ -8,8 +8,8 @@
     <div class="container">
         <div class="row align-items-center mb-5">
             <div class="col-lg-8" data-aos="fade-up">
-                <div class="section-tag">Pengakuan</div>
-                <h1 class="hero-title">{!! $page['title'] ?? 'Pengindeksan &amp; <span class="accent">Pengabstrakan</span>' !!}</h1>
+                <div class="section-tag">Indeksasi</div>
+                <h1 class="hero-title">{!! $page['title'] ?? 'Indeksasi &amp; <span class="accent">Abstraksi</span>' !!}</h1>
                 <p class="hero-desc">{{ $page['meta_description'] ?? 'Jurnal kami diindeks dalam basis data global terkemuka.' }}</p>
             </div>
         </div>

@@ -8,7 +8,7 @@
     <div class="container">
         <div class="row align-items-center mb-5">
             <div class="col-lg-8" data-aos="fade-up">
-                <div class="section-tag">Orang</div>
+                <div class="section-tag">Redaksi</div>
                 <h1 class="hero-title">{!! $page['title'] ?? 'Tim <span class="accent">Redaksi</span>' !!}</h1>
                 <p class="hero-desc">{{ $page['meta_description'] ?? 'Dewan redaksi kami yang beragam dan diakui secara internasional.' }}</p>
             </div>

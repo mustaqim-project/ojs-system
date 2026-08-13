@@ -63,7 +63,7 @@
           @endif
           @if($article->published_at)
             <span style="font-size:12px;color:var(--text-muted);font-weight:500;">
-              <i class="bi bi-calendar3 me-1"></i>{{ $article->published_at->format('M d, Y') }}
+              <i class="bi bi-calendar3 me-1"></i>{{ $article->published_at->locale('id')->translatedFormat('d M Y') }}
             </span>
           @endif
         </div>
@@ -126,12 +126,12 @@
       </div>
       <h2 style="font-size:24px;font-weight:800;color:var(--text-main);margin-bottom:12px;">Temukan Penelitian Akademik</h2>
       <p style="font-size:15px;color:var(--text-muted);margin-bottom:40px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.7;">
-        Gunakan bilah pencarian di atas untuk mencari di basis data artikel tinjauan sejawat kami yang ekstensif berdasarkan judul, abstrak, atau nama penulis.
+        Gunakan bilah pencarian di atas untuk mencari di basis data artikel penelaahan sejawat kami yang ekstensif berdasarkan judul, abstrak, atau nama penulis.
       </p>
       
       {{-- Popular Keywords --}}
       <div style="margin-bottom:40px;">
-        <div style="font-size:12px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px;">Topik Tren</div>
+        <div style="font-size:12px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px;">Topik Terpopuler</div>
         <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
           @foreach(['Machine Learning','Artificial Intelligence','IoT','Cybersecurity','Data Science','Cloud Computing'] as $kw)
           <a href="{{ route('public.search', ['q' => $kw]) }}"

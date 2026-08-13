@@ -142,10 +142,10 @@
             <div id="collapseHistory" class="accordion-collapse collapse" data-bs-parent="#accordionInfo">
               <div class="accordion-body" style="font-size:14px; color:var(--text-muted);">
                 <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;">
-                  <li><strong>Diterima:</strong> {{ $article->created_at ? $article->created_at->subDays(45)->format('M d, Y') : 'N/A' }}</li>
-                  <li><strong>Direvisi:</strong> {{ $article->created_at ? $article->created_at->subDays(20)->format('M d, Y') : 'N/A' }}</li>
-                  <li><strong>Disetujui:</strong> {{ $article->created_at ? $article->created_at->subDays(10)->format('M d, Y') : 'N/A' }}</li>
-                  <li><strong>Diterbitkan:</strong> {{ $article->published_at ? $article->published_at->format('M d, Y') : 'N/A' }}</li>
+                  <li><strong>Diterima:</strong> {{ $article->created_at ? $article->created_at->subDays(45)->locale('id')->translatedFormat('d F Y') : '—' }}</li>
+                  <li><strong>Direvisi:</strong> {{ $article->created_at ? $article->created_at->subDays(20)->locale('id')->translatedFormat('d F Y') : '—' }}</li>
+                  <li><strong>Disetujui:</strong> {{ $article->created_at ? $article->created_at->subDays(10)->locale('id')->translatedFormat('d F Y') : '—' }}</li>
+                  <li><strong>Diterbitkan:</strong> {{ $article->published_at ? $article->published_at->locale('id')->translatedFormat('d F Y') : '—' }}</li>
                 </ul>
               </div>
             </div>
@@ -210,7 +210,7 @@
           <div>
             <h6 style="font-weight:700; margin-bottom:4px;">Lisensi</h6>
             <p style="font-size:12px; color:var(--text-muted); margin:0;">
-              Artikel ini dilisensikan di bawah <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" style="color:var(--primary); text-decoration:none;">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+              Artikel ini dilisensikan di bawah <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" style="color:var(--primary); text-decoration:none;">Lisensi Creative Commons Attribution-ShareAlike 4.0 Internasional</a>.
             </p>
           </div>
         </div>

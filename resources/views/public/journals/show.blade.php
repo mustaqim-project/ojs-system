@@ -83,7 +83,7 @@
       <div style="display:flex;align-items:center;gap:16px;">
         @if($issue->published_date)
           <span style="font-size:13px;color:var(--text-muted);font-weight:500;">
-            <i class="bi bi-calendar3 me-1"></i>{{ $issue->published_date->format('M d, Y') }}
+            <i class="bi bi-calendar3 me-1"></i>{{ $issue->published_date->locale('id')->translatedFormat('d M Y') }}
           </span>
         @endif
         <span style="font-size:12px;background:var(--success-bg);color:var(--success);padding:4px 12px;border-radius:20px;font-weight:700;">
