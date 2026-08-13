@@ -50,12 +50,14 @@ class Article extends Model
     ];
 
     protected $casts = [
-        'submitted_at' => 'datetime',
-        'published_at' => 'datetime',
-        'keywords'     => 'array',
-        'views_count'  => 'integer',
+        'submitted_at'    => 'datetime',
+        'published_at'    => 'datetime',
+        'keywords'        => 'array',
+        'views_count'     => 'integer',
         'downloads_count' => 'integer',
     ];
+
+    // ========== RELATIONSHIPS ==========
 
     public function journal()
     {
@@ -122,13 +124,18 @@ class Article extends Model
         return $this->hasOneThrough(Payment::class, Invoice::class, 'submission_id', 'invoice_id');
     }
 
+    // ========== BUSINESS LOGIC ==========
+
     public function canBePublished(): bool
     {
         if (!$this->invoice) {
             return true;
         }
+
         return in_array($this->invoice->status, ['paid', 'waived']);
     }
+
+    // ========== LOCAL SCOPES ==========
 
     public function scopePublished($query)
     {
@@ -139,6 +146,17 @@ class Article extends Model
     {
         return $query->where('status', 'draft');
     }
+
+    /**
+     * Scope to filter articles by a specific author ID.
+     * Fixes the BadMethodCallException for Article::forAuthor().
+     */
+    public function scopeForAuthor($query, $authorId)
+    {
+        return $query->where('author_id', $authorId);
+    }
+
+    // ========== ACCESSORS / MUTATORS ==========
 
     public function getKeywordsArrayAttribute()
     {

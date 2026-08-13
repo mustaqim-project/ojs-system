@@ -19,11 +19,11 @@ class PublicPageController extends Controller
         'public.ethics'          => 'ethics',
         'public.peer-review'     => 'peer-review',
         'public.focus-and-scope' => 'focus-and-scope',
-        'public.journal-policies'=> 'journal-policies',
+        'public.journal-policies' => 'journal-policies',
         'public.indexing'        => 'indexing',
         'public.contact'         => 'contact',
         'public.privacy-policy'  => 'privacy-policy',
-        'public.terms-conditions'=> 'terms-conditions',
+        'public.terms-conditions' => 'terms-conditions',
         'public.announcements'   => 'announcements',
         'public.call-for-papers' => 'call-for-papers',
         'public.current-issue'   => 'current-issue',
@@ -37,7 +37,7 @@ class PublicPageController extends Controller
         'about'            => 'public.about',
         'editorial-team'   => 'public.editorial-team',
         'reviewer-board'   => 'public.reviewer-board',
-        'author-guidelines'=> 'public.author-guidelines',
+        'author-guidelines' => 'public.author-guidelines',
         'ethics'           => 'public.ethics',
         'peer-review'      => 'public.peer-review',
         'focus-and-scope'  => 'public.focus-and-scope',
@@ -62,20 +62,20 @@ class PublicPageController extends Controller
 
         $extraData = [];
         if ($slug === 'archive') {
-            $extraData['volumes'] = \App\Models\Volume::with(['issues' => function($q) {
+            $extraData['volumes'] = \App\Models\Volume::with(['issues' => function ($q) {
                 $q->published()->orderBy('number');
             }])->orderBy('year', 'desc')->orderBy('number', 'desc')->get();
         } elseif ($slug === 'current-issue') {
             $issueId = $request->get('issue');
             if ($issueId) {
                 $currentIssue = \App\Models\Issue::published()
-                    ->with(['volume', 'articles' => function($q) {
+                    ->with(['volume', 'articles' => function ($q) {
                         $q->published()->with('author');
                     }])
                     ->find($issueId);
             } else {
                 $currentIssue = \App\Models\Issue::published()
-                    ->with(['volume', 'articles' => function($q) {
+                    ->with(['volume', 'articles' => function ($q) {
                         $q->published()->with('author');
                     }])
                     ->latest('published_date')
@@ -86,13 +86,27 @@ class PublicPageController extends Controller
             $extraData['dbAnnouncements'] = \App\Models\Announcement::published()->latest()->get();
         } elseif ($slug === 'reviewer-board') {
             $extraData['dbReviewers'] = \App\Models\User::where('role', 'reviewer')
-                ->orWhereHas('roles', function($q) { $q->where('name', 'reviewer'); })
+                ->orWhereHas('roles', function ($q) {
+                    $q->where('name', 'reviewer');
+                })
                 ->orderBy('name')
                 ->get();
         } elseif ($slug === 'editorial-team') {
-            $extraData['dbEditors'] = \App\Models\User::whereIn('role', ['editor', 'managing-editor', 'section-editor'])
-                ->orWhereHas('roles', function($q) {
-                    $q->whereIn('name', ['editor', 'managing-editor', 'section-editor']);
+            $extraData['dbEditors'] = \App\Models\User::query()
+                ->where('is_active', true)
+                ->where(function ($q) {
+                    $q->whereIn('role', [
+                        'editor',
+                        'managing-editor',
+                        'section-editor',
+                    ])
+                        ->orWhereHas('roles', function ($q) {
+                            $q->whereIn('name', [
+                                'editor',
+                                'managing-editor',
+                                'section-editor',
+                            ]);
+                        });
                 })
                 ->orderBy('name')
                 ->get();
