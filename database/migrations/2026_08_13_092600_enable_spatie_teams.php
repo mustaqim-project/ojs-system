@@ -11,65 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // 1. Modify roles table (only if journal_id doesn't exist yet)
+        // Add nullable journal_id to roles (for future multi-journal use)
         if (!Schema::hasColumn('roles', 'journal_id')) {
             Schema::table('roles', function (Blueprint $table) {
                 $table->unsignedBigInteger('journal_id')->nullable()->after('id');
-                
-                // Drop unique constraint
-                $table->dropUnique('roles_name_guard_name_unique');
-                
-                // Add new unique constraint
-                $table->unique(['journal_id', 'name', 'guard_name'], 'roles_journal_id_name_guard_name_unique');
-                
-                // Foreign key relation
-                $table->foreign('journal_id')->references('id')->on('journals')->cascadeOnDelete();
+                $table->foreign('journal_id')->references('id')->on('journals')->nullOnDelete();
             });
         }
 
-        // 2. Modify model_has_roles table
+        // Add nullable journal_id to model_has_roles (informational, not enforced FK when teams=false)
         if (!Schema::hasColumn('model_has_roles', 'journal_id')) {
             Schema::table('model_has_roles', function (Blueprint $table) {
-                // Drop foreign key first
-                $table->dropForeign('model_has_roles_role_id_foreign');
-                
-                // Drop old primary key
-                $table->dropPrimary('model_has_roles_role_model_type_primary');
-                
-                // Add journal_id column (nullable = global role, not journal-scoped)
-                $table->unsignedBigInteger('journal_id')->nullable()->after('role_id');
-                
-                // Add new primary key (without journal_id since it can be null)
-                $table->primary(['role_id', 'model_id', 'model_type'], 'model_has_roles_role_model_type_primary');
-                
-                // Restore foreign key on role_id
-                $table->foreign('role_id')->references('id')->on('roles')->cascadeOnDelete();
-                
-                // Foreign key relation on journal_id (nullable)
-                $table->foreign('journal_id')->references('id')->on('journals')->cascadeOnDelete();
+                $table->unsignedBigInteger('journal_id')->nullable()->after('role_id')->index();
             });
         }
 
-        // 3. Modify model_has_permissions table
+        // Add nullable journal_id to model_has_permissions
         if (!Schema::hasColumn('model_has_permissions', 'journal_id')) {
             Schema::table('model_has_permissions', function (Blueprint $table) {
-                // Drop foreign key first
-                $table->dropForeign('model_has_permissions_permission_id_foreign');
-                
-                // Drop old primary key
-                $table->dropPrimary('model_has_permissions_permission_model_type_primary');
-                
-                // Add journal_id column (nullable = global permission, not journal-scoped)
-                $table->unsignedBigInteger('journal_id')->nullable()->after('permission_id');
-                
-                // Add new primary key (without journal_id since it can be null)
-                $table->primary(['permission_id', 'model_id', 'model_type'], 'model_has_permissions_permission_model_type_primary');
-                
-                // Restore foreign key on permission_id
-                $table->foreign('permission_id')->references('id')->on('permissions')->cascadeOnDelete();
-                
-                // Foreign key relation on journal_id (nullable)
-                $table->foreign('journal_id')->references('id')->on('journals')->cascadeOnDelete();
+                $table->unsignedBigInteger('journal_id')->nullable()->after('permission_id')->index();
             });
         }
     }
