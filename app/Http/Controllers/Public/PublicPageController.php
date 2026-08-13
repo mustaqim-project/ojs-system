@@ -92,9 +92,21 @@ class PublicPageController extends Controller
                 ->orderBy('name')
                 ->get();
         } elseif ($slug === 'editorial-team') {
-            $extraData['dbEditors'] = \App\Models\User::where('role', 'editor')
-                ->orWhereHas('roles', function ($q) {
-                    $q->where('name', 'editor');
+            $extraData['dbEditors'] = \App\Models\User::query()
+                ->where('is_active', true)
+                ->where(function ($q) {
+                    $q->whereIn('role', [
+                        'editor',
+                        'managing-editor',
+                        'section-editor',
+                    ])
+                        ->orWhereHas('roles', function ($q) {
+                            $q->whereIn('name', [
+                                'editor',
+                                'managing-editor',
+                                'section-editor',
+                            ]);
+                        });
                 })
                 ->orderBy('name')
                 ->get();
