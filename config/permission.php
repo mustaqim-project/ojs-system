@@ -22,7 +22,7 @@ return [
         'team_guest_key' => null,
     ],
 
-    'teams' => true,
+    'teams' => false,
     'team_foreign_key' => 'journal_id',
 
     'register_permission_check_method' => true,
