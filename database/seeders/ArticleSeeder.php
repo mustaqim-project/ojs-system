@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Article;
+use App\Models\Invoice;
 use App\Models\Issue;
 use App\Models\Journal;
 use App\Models\Payment;
@@ -47,23 +48,35 @@ class ArticleSeeder extends Seeder
             ]
         );
 
+        // Invoice untuk artikel published
+        $invoice1 = Invoice::updateOrCreate(
+            ['invoice_number' => 'INV-2024-' . $art1->id . '-ABC1'],
+            [
+                'journal_id'     => $journal->id,
+                'submission_id'  => $art1->id,
+                'invoice_number' => 'INV-2024-' . $art1->id . '-ABC1',
+                'amount'         => 500000,
+                'currency'       => 'IDR',
+                'due_date'       => now()->addDays(14),
+                'status'         => 'paid',
+                'approved_by'    => User::where('role', 'admin')->first()->id,
+            ]
+        );
+
         // Payment untuk artikel published
         Payment::updateOrCreate(
-            ['invoice_code' => 'INV-2024-' . $art1->id . '-ABC1'],
+            ['invoice_id' => $invoice1->id],
             [
-                'article_id'   => $art1->id,
-                'author_id'    => $author->id,
-                'verified_by'  => User::where('role', 'admin')->first()->id,
-                'invoice_code' => 'INV-2024-' . $art1->id . '-ABC1',
-                'amount'       => 500000,
-                'currency'     => 'IDR',
-                'status'       => 'verified',
-                'proof_file'   => 'payments/sample-proof.jpg',
-                'bank_name'    => 'Bank BCA',
-                'bank_account' => '1234567890',
-                'bank_holder'  => 'Yayasan Jurnal Ilmiah Indonesia',
-                'verified_at'  => now()->subMonth(),
-                'uploaded_at'  => now()->subMonth()->subDays(2),
+                'invoice_id'    => $invoice1->id,
+                'author_id'     => $author->id,
+                'amount'        => 500000,
+                'payment_method' => 'bank_transfer',
+                'payment_date'  => now()->subMonth(),
+                'proof_path'    => 'payments/sample-proof.jpg',
+                'status'        => 'verified',
+                'notes'         => 'Pembayaran APC untuk artikel ML Spam Detection',
+                'verified_by'   => User::where('role', 'admin')->first()->id,
+                'verified_at'   => now()->subMonth(),
             ]
         );
 
@@ -118,18 +131,16 @@ class ArticleSeeder extends Seeder
         );
 
         // Invoice untuk artikel waiting payment
-        Payment::updateOrCreate(
-            ['article_id' => $art3->id],
+        $invoice3 = Invoice::updateOrCreate(
+            ['invoice_number' => 'INV-2024-' . $art3->id . '-XYZ9'],
             [
-                'article_id'   => $art3->id,
-                'author_id'    => $author->id,
-                'invoice_code' => 'INV-2024-' . $art3->id . '-XYZ9',
-                'amount'       => 500000,
-                'currency'     => 'IDR',
-                'status'       => 'pending',
-                'bank_name'    => Setting::get('bank_name', 'Bank BCA'),
-                'bank_account' => Setting::get('bank_account', '1234567890'),
-                'bank_holder'  => Setting::get('bank_holder', 'Yayasan Jurnal Ilmiah Indonesia'),
+                'journal_id'     => $journal->id,
+                'submission_id'  => $art3->id,
+                'invoice_number' => 'INV-2024-' . $art3->id . '-XYZ9',
+                'amount'         => 500000,
+                'currency'       => 'IDR',
+                'due_date'       => now()->addDays(14),
+                'status'         => 'waiting_payment',
             ]
         );
 

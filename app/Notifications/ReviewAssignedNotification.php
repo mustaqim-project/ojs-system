@@ -2,61 +2,64 @@
 
 namespace App\Notifications;
 
+use App\Models\Article;
+use App\Models\ReviewAssignment;
+use App\Notifications\Channels\FonnteChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ReviewAssignedNotification extends Notification
+class ReviewAssignedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public $article;
+    public function __construct(
+        public Article         $article,
+        public ReviewAssignment $assignment
+    ) {}
 
-    /**
-     * Create a new notification instance.
-     */
-    public function __construct($article)
-    {
-        $this->article = $article;
-    }
-
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @return array<int, string>
-     */
     public function via(object $notifiable): array
     {
-        return ['mail', 'database'];
+        $channels = ['mail', 'database'];
+
+        if ($notifiable->phone) {
+            $channels[] = FonnteChannel::class;
+        }
+
+        return $channels;
     }
 
-    /**
-     * Get the mail representation of the notification.
-     */
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('New Review Assignment')
-            ->greeting('Hello ' . $notifiable->name . ',')
-            ->line('You have been assigned to review the article titled "' . $this->article->title . '".')
-            ->action('View Review Task', route('reviewer.reviews.index'))
-            ->line('Thank you for contributing your expertise!');
+            ->subject("[{$this->article->tracking_code}] Review Assignment")
+            ->greeting("Hello {$notifiable->name},")
+            ->line("You have been assigned as a reviewer for the article:")
+            ->line("**{$this->article->title}**")
+            ->line("Journal: {$this->article->journal->name}")
+            ->line("Due Date: {$this->assignment->due_date->format('d M Y')}")
+            ->action('Review Article', url('/reviewer/reviews/' . $this->assignment->id))
+            ->line('Thank you for your contribution!');
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
+    public function toWhatsApp(object $notifiable): string
+    {
+        return "Dear {$notifiable->name},\n\n"
+            . "You have been assigned as a reviewer for:\n"
+            . "{$this->article->title}\n"
+            . "Journal: {$this->article->journal->name}\n"
+            . "Due: {$this->assignment->due_date->format('d M Y')}\n\n"
+            . "Please login to review: " . url('/reviewer/dashboard');
+    }
+
+    public function toDatabase(object $notifiable): array
     {
         return [
-            'type' => 'review_assigned',
-            'message' => 'New review assignment: ' . $this->article->title,
-            'url' => route('reviewer.reviews.index'),
-            'icon' => 'bi-clipboard-plus',
-            'color' => 'warning'
+            'article_id' => $this->article->id,
+            'assignment_id' => $this->assignment->id,
+            'message' => "You have been assigned to review: {$this->article->title}",
+            'url' => url('/reviewer/reviews/' . $this->assignment->id),
         ];
     }
 }

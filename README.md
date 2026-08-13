@@ -1,58 +1,356 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# OJS System - Open Journal System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem manajemen jurnal akademik berbasis Laravel dengan fitur lengkap untuk editorial workflow, peer review, dan manajemen keuangan.
 
-## About Laravel
+## 🚀 Fitur Utama
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Core Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- ✅ **Multi-Journal Support** - Kelola banyak jurnal dalam satu sistem
+- ✅ **Role-Based Access Control** - 16 roles dengan 55 permissions (Spatie Permission)
+- ✅ **Submission Workflow** - 19-state machine untuk tracking artikel
+- ✅ **Peer Review System** - Multi-round review dengan blind mode
+- ✅ **Finance Management** - Invoice, payment verification, receipt generation
+- ✅ **CMS & Content Management** - Pages, announcements, volumes, issues
+- ✅ **Audit Trail** - Immutable logging untuk semua aktivitas
+- ✅ **REST API** - Full API untuk integrasi dengan sistem lain
+- ✅ **WhatsApp Notifications** - Via Fonnte API
+- ✅ **DOI Integration** - DataCite/Crossref ready
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Technology Stack
 
-## Learning Laravel
+- **Backend**: Laravel 10+
+- **Database**: MySQL/PostgreSQL
+- **Authentication**: Laravel Sanctum (API) + Spatie Permission
+- **PDF Generation**: DomPDF
+- **Notifications**: Mail + Database + WhatsApp (Fonnte)
+- **Queue**: Database/Redis (untuk notifications)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 📦 Installation
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### 1. Clone Repository
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/mustaqim-project/ojs-system.git
+cd ojs-system
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 2. Install Dependencies
 
-## Contributing
+```bash
+composer install
+npm install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 3. Environment Setup
 
-## Code of Conduct
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 4. Database Setup
 
-## Security Vulnerabilities
+```bash
+# Create database
+mysql -u root -p -e "CREATE DATABASE ojs_system;"
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# Run migrations
+php artisan migrate
 
-## License
+# Seed roles & permissions
+php artisan db:seed --class=RolePermissionSeeder
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Seed initial data
+php artisan db:seed --class=DatabaseSeeder
+```
+
+### 5. Storage Setup
+
+```bash
+php artisan storage:link
+```
+
+### 6. Start Development Server
+
+```bash
+php artisan serve
+```
+
+Default login:
+
+- Email: `admin@example.com`
+- Password: `password`
+
+## 🗄️ Database Schema
+
+### Core Tables
+
+- `users` - Users dengan extended profile
+- `journals` - Multi-journal support
+- `articles` - Submissions dengan versioning
+- `settings` - Key-value settings per journal
+
+### Review Tables
+
+- `review_rounds` - Multi-round review tracking
+- `review_assignments` - Reviewer assignments
+- `review_responses` - Review results & rubric scores
+- `editorial_decisions` - Editorial decisions history
+
+### Finance Tables
+
+- `invoices` - Invoice management
+- `payments` - Payment proofs & verification
+- `receipts` - PDF receipts
+- `refunds` - Refund workflow
+
+### Production Tables
+
+- `production_tasks` - Copyediting, layout, proofreading
+- `submission_versions` - Versioning history
+- `submission_files` - File management dengan virus scan
+
+### Publication Tables
+
+- `volumes` - Journal volumes
+- `issues` - Journal issues
+- `issue_article` - Many-to-many relationship
+- `article_galleys` - PDF/HTML/XML galleys
+- `article_dois` - DOI registration tracking
+
+### CMS Tables
+
+- `cms_pages` - CMS pages dengan SEO
+- `cms_page_versions` - Content versioning
+- `announcements` - Scheduled announcements
+
+### Security Tables
+
+- `audit_trails` - Immutable audit log
+- `login_history` - Login tracking
+
+## 🔐 Roles & Permissions
+
+### System Roles
+
+- **super-admin** - Full system access
+- **system-admin** - System administration
+
+### Journal Roles
+
+- **journal-manager** - Full journal management
+- **managing-editor** - Editorial oversight
+- **section-editor** - Section-level editing
+- **reviewer** - Peer review
+- **copy-editor** - Copy editing
+- **layout-editor** - Layout editing
+- **proofreader** - Proofreading
+- **publisher** - Publication management
+- **finance** - Payment & invoice management
+- **marketing** - CMS & announcements
+- **author** - Submission management
+- **reader** - Public access
+
+## 📡 API Endpoints
+
+### Authentication
+
+- `POST /api/v1/auth/login` - Login
+- `POST /api/v1/auth/register` - Register
+- `POST /api/v1/auth/logout` - Logout
+- `GET /api/v1/auth/me` - Get current user
+
+### Submissions
+
+- `GET /api/v1/articles` - List articles
+- `GET /api/v1/articles/{id}` - Get article detail
+- `POST /api/v1/submissions` - Create submission
+- `PUT /api/v1/submissions/{id}` - Update submission
+- `POST /api/v1/submissions/{id}/submit` - Submit for review
+- `POST /api/v1/submissions/{id}/withdraw` - Withdraw submission
+
+### Reviews
+
+- `GET /api/v1/review-assignments` - My review assignments
+- `POST /api/v1/review-assignments/{id}/respond` - Accept/decline review
+- `POST /api/v1/review-assignments/{id}/review` - Submit review
+
+### Finance
+
+- `GET /api/v1/invoices` - List invoices
+- `POST /api/v1/invoices/{id}/payments` - Upload payment proof
+- `GET /api/v1/invoices/{id}/receipt` - Generate receipt
+
+### Reports
+
+- `GET /api/v1/reports/journals/{id}/stats` - Journal statistics
+- `GET /api/v1/reports/journals/{id}/submissions` - Submission trends
+- `GET /api/v1/reports/journals/{id}/reviews` - Review statistics
+
+## 🔔 Notifications
+
+### Channels
+
+- **Mail** - Email notifications
+- **Database** - In-app notifications
+- **WhatsApp** - Via Fonnte API (optional)
+
+### Notification Types
+
+- Article Submitted
+- Review Assigned
+- Review Reminder (3 days before due)
+- Review Escalation (2 days overdue)
+- Payment Uploaded
+- Payment Verified
+- Review Completed
+
+## ⏰ Scheduled Tasks
+
+```bash
+# Review reminders - daily at 8 AM
+php artisan reviews:send-reminders
+
+# Review escalations - daily at 9 AM
+php artisan reviews:send-escalations
+
+# Publish scheduled issues - hourly
+php artisan issues:publish-scheduled
+```
+
+Add to crontab (Linux/Mac):
+
+```bash
+* * * * * cd /path-to-project && php artisan schedule:run >> /dev/null 2>&1
+```
+
+Or use Laravel Horizon for queue management.
+
+## 📁 Project Structure
+
+```
+app/
+├── Console/
+│   ├── Commands/          # Artisan commands
+│   └── Kernel.php         # Scheduled tasks
+├── Events/                # Application events
+├── Http/
+│   ├── Controllers/
+│   │   ├── Api/V1/        # API controllers
+│   │   └── Admin/         # Admin controllers
+│   ├── Middleware/         # HTTP middleware
+│   └── Requests/          # Form requests
+├── Listeners/             # Event listeners
+├── Models/                # Eloquent models
+├── Notifications/         # Notification classes
+│   └── Channels/          # Custom notification channels
+├── Policies/              # Authorization policies
+├── Providers/             # Service providers
+├── Services/              # Business logic
+└── Traits/                # Reusable traits
+
+database/
+├── migrations/            # Database migrations
+└── seeders/               # Database seeders
+
+resources/
+├── views/
+│   └── pdfs/              # PDF templates
+└── ...
+
+routes/
+├── api.php                # API routes
+├── author.php             # Author routes
+├── reviewer.php           # Reviewer routes
+└── web.php                # Web routes
+```
+
+## 🔧 Configuration
+
+### Key Settings (via `settings` table)
+
+- `apc_amount` - Default article processing charge
+- `apc_currency` - Currency (IDR, USD, EUR)
+- `review_due_days` - Default review deadline
+- `invoice_due_days` - Payment due period
+- `fonnte_api_key` - WhatsApp API key
+
+### Environment Variables
+
+```env
+APP_NAME=OJS System
+APP_ENV=production
+APP_DEBUG=false
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=ojs_system
+DB_USERNAME=root
+DB_PASSWORD=
+
+FONNTE_API_KEY=your_fonnte_api_key
+
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS=hello@example.com
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+## 🚢 Deployment
+
+### Production Checklist
+
+- [ ] Set `APP_DEBUG=false`
+- [ ] Set `APP_ENV=production`
+- [ ] Configure database connection
+- [ ] Run migrations: `php artisan migrate --force`
+- [ ] Seed permissions: `php artisan db:seed --class=RolePermissionSeeder`
+- [ ] Create storage symlink: `php artisan storage:link`
+- [ ] Configure queue worker (Supervisor)
+- [ ] Setup cron job for scheduled tasks
+- [ ] Configure backup strategy
+- [ ] Enable HTTPS
+- [ ] Setup monitoring (Laravel Telescope/Horizon)
+
+### Server Requirements
+
+- PHP 8.1+
+- MySQL 8.0+ / PostgreSQL 12+
+- Composer 2+
+- Node.js 16+ (for asset compilation)
+- Redis (optional, for queue & cache)
+
+## 📝 License
+
+This project is licensed under the MIT License.
+
+## 👥 Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
+
+## 📞 Support
+
+For support, email support@ojs-system.com or create an issue in the repository.
+
+## 🙏 Credits
+
+- [Laravel](https://laravel.com/)
+- [Spatie Permission](https://spatie.be/docs/laravel-permission)
+- [DomPDF](https://github.com/barryvdh/laravel-dompdf)
+- [Fonnte](https://fonnte.com/)
+
+---
+
+**Status**: ✅ Phase 0-2 Complete (Foundation, Core MVP, Peer Review & Finance)
+**Version**: 1.0.0
+**Last Updated**: 2024

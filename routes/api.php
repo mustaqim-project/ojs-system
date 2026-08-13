@@ -1,15 +1,55 @@
 <?php
 
-use App\Http\Controllers\Api\JournalApiController;
-use App\Http\Controllers\Api\ArticleApiController;
-use App\Http\Middleware\OjsApiMiddleware;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\JournalController;
+use App\Http\Controllers\Api\V1\SubmissionController;
+use App\Http\Controllers\Api\V1\ReviewController;
+use App\Http\Controllers\Api\V1\FinanceController;
+use App\Http\Controllers\Api\V1\NotificationController;
+use App\Http\Controllers\Api\V1\ReportController;
 
-// Route::middleware([OjsApiMiddleware::class])->prefix('api/v1')->group(function () {
-//     Route::get('/journals', [JournalApiController::class, 'index'])->name('api.v1.journals.index');
-//     Route::get('/journals/{id}', [JournalApiController::class, 'show'])->name('api.v1.journals.show');
-//     
-//     // Submissions kompatibel dengan schema OJS
-//     Route::get('/submissions', [ArticleApiController::class, 'index'])->name('api.v1.submissions.index');
-//     Route::get('/submissions/{id}', [ArticleApiController::class, 'show'])->name('api.v1.submissions.show');
-// });
+Route::prefix('v1')->group(function () {
+    // Public endpoints
+    Route::get('/journals', [JournalController::class, 'index']);
+    Route::get('/journals/{journal}', [JournalController::class, 'show']);
+    Route::get('/articles', [SubmissionController::class, 'index']);
+    Route::get('/articles/{article}', [SubmissionController::class, 'show']);
+
+    // Auth endpoints (public)
+    Route::post('/auth/login', [AuthController::class, 'login']);
+    Route::post('/auth/register', [AuthController::class, 'register']);
+
+    // Authenticated endpoints
+    Route::middleware('auth:sanctum')->group(function () {
+        // Auth
+        Route::post('/auth/logout', [AuthController::class, 'logout']);
+        Route::get('/auth/me', [AuthController::class, 'me']);
+
+        // Submissions
+        Route::post('/submissions', [SubmissionController::class, 'store']);
+        Route::put('/submissions/{article}', [SubmissionController::class, 'update']);
+        Route::post('/submissions/{article}/submit', [SubmissionController::class, 'submit']);
+        Route::post('/submissions/{article}/withdraw', [SubmissionController::class, 'withdraw']);
+
+        // Reviews
+        Route::get('/review-assignments', [ReviewController::class, 'index']);
+        Route::post('/review-assignments/{assignment}/respond', [ReviewController::class, 'respond']);
+        Route::post('/review-assignments/{assignment}/review', [ReviewController::class, 'submitReview']);
+
+        // Finance
+        Route::get('/invoices', [FinanceController::class, 'invoices']);
+        Route::post('/invoices/{invoice}/payments', [FinanceController::class, 'uploadPayment']);
+        Route::get('/invoices/{invoice}/receipt', [FinanceController::class, 'receipt']);
+
+        // Notifications
+        Route::get('/notifications', [NotificationController::class, 'index']);
+        Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+
+        // Reports
+        Route::get('/reports/journals/{journal}/stats', [ReportController::class, 'journalStats']);
+        Route::get('/reports/journals/{journal}/submissions', [ReportController::class, 'submissionTrend']);
+        Route::get('/reports/journals/{journal}/reviews', [ReportController::class, 'reviewStats']);
+    });
+});

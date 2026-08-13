@@ -13,7 +13,10 @@ class HomeController extends Controller
 {
     public function index(): View
     {
-        $journals         = Journal::active()->withCount('publishedArticles')->take(6)->get();
+        $journals         = Journal::active()->with('articles')->take(6)->get()->map(function ($journal) {
+            $journal->published_articles_count = $journal->articles()->where('status', 'published')->count();
+            return $journal;
+        });
         $latestArticles   = Article::published()
             ->with(['journal', 'author'])
             ->latest('published_at')

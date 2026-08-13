@@ -2,48 +2,32 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Payment extends Model
 {
-    use HasFactory, SoftDeletes;
-
     protected $fillable = [
-        'article_id',
+        'invoice_id',
         'author_id',
-        'verified_by',
-        'invoice_code',
         'amount',
-        'currency',
+        'payment_method',
+        'payment_date',
+        'proof_path',
         'status',
-        'proof_file',
-        'proof_notes',
-        'admin_notes',
+        'notes',
+        'verified_by',
         'verified_at',
-        'uploaded_at',
-        'bank_name',
-        'bank_account',
-        'bank_holder',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'amount'      => 'decimal:2',
-            'verified_at' => 'datetime',
-            'uploaded_at' => 'datetime',
-        ];
-    }
+    protected $casts = [
+        'payment_date' => 'datetime',
+        'verified_at'  => 'datetime',
+        'amount'       => 'decimal:2',
+    ];
 
-    // ===========================
-    // RELATIONSHIPS
-    // ===========================
-
-    public function article()
+    public function invoice()
     {
-        return $this->belongsTo(Article::class);
+        return $this->belongsTo(Invoice::class);
     }
 
     public function author()
@@ -56,57 +40,13 @@ class Payment extends Model
         return $this->belongsTo(User::class, 'verified_by');
     }
 
-    // ===========================
-    // HELPER METHODS
-    // ===========================
-
     public function isVerified(): bool
     {
         return $this->status === 'verified';
     }
 
-    public function isPending(): bool
+    public function isRejected(): bool
     {
-        return $this->status === 'pending';
-    }
-
-    public function isUploaded(): bool
-    {
-        return $this->status === 'uploaded';
-    }
-
-    public function getFormattedAmountAttribute(): string
-    {
-        return number_format($this->amount, 0, ',', '.') . ' ' . $this->currency;
-    }
-
-    public function getStatusLabelAttribute(): string
-    {
-        return match ($this->status) {
-            'pending'  => 'Menunggu Pembayaran',
-            'uploaded' => 'Bukti Diunggah',
-            'verified' => 'Terverifikasi',
-            'rejected' => 'Ditolak',
-            default    => ucfirst($this->status),
-        };
-    }
-
-    public function getStatusColorAttribute(): string
-    {
-        return match ($this->status) {
-            'pending'  => 'yellow',
-            'uploaded' => 'blue',
-            'verified' => 'green',
-            'rejected' => 'red',
-            default    => 'gray',
-        };
-    }
-
-    public function getProofFileUrlAttribute(): ?string
-    {
-        if ($this->proof_file) {
-            return asset('storage/' . $this->proof_file);
-        }
-        return null;
+        return $this->status === 'rejected';
     }
 }

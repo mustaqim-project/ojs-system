@@ -9,7 +9,7 @@
         <div class="hero-tag mb-3" data-aos="fade-up" data-aos-delay="100">
           <i class="bi bi-patch-check-fill text-primary"></i> Penerbit Akademik Terkemuka
         </div>
-        <h1 class="hero-title" data-aos="fade-up" data-aos-delay="200" style="font-size:3.5rem; line-height:1.2; font-weight:800; letter-spacing:-0.03em;">
+        <h1 class="hero-title" data-aos="fade-up" data-aos-delay="200">
           {!! $global_settings['hero_title'] ?? 'Majukan Pengetahuan.<br>Terbitkan dengan <span class="accent">Unggul.</span>' !!}
         </h1>
         <p class="hero-desc" data-aos="fade-up" data-aos-delay="300" style="font-size:1.1rem; color:var(--text-muted); max-width:600px; margin:24px 0;">
@@ -26,8 +26,8 @@
         </div>
 
         <div class="mt-5" data-aos="fade-up" data-aos-delay="500">
-          <form action="{{ route('public.search') }}" method="GET" class="d-flex" style="max-width:500px; position:relative;">
-            <i class="bi bi-search" style="position:absolute; left:16px; top:50%; transform:translateY(-50%); color:var(--text-muted);"></i>
+          <form action="{{ route('public.search') }}" method="GET" class="hero-search-form d-flex" style="position:relative;">
+            <i class="bi bi-search" style="position:absolute; left:16px; top:50%; transform:translateY(-50%); color:var(--text-muted); pointer-events:none; z-index:1;"></i>
             <input type="text" name="q" class="form-control form-control-lg shadow-sm" placeholder="Cari artikel, penulis, atau kata kunci..." style="padding-left:44px; border-radius:8px; font-size:15px; border-color:var(--border);">
             <button type="submit" class="btn btn-primary" style="position:absolute; right:6px; top:6px; bottom:6px; border-radius:6px; font-weight:600;">Cari</button>
           </form>
@@ -76,26 +76,26 @@
 
 {{-- ── STATISTICS (COUNTUP) ── --}}
 <section class="section" style="background:var(--bg-surface); border-bottom:1px solid var(--border);">
-  <div class="container" style="max-width:1200px;">
-    <div class="row g-4 text-center">
-      <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="100">
-        <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="{{ $totalPublished }}">0</h2>
-        <p style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">Artikel Diterbitkan</p>
-      </div>
-      <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="200">
-        <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="150">+0</h2>
-        <p style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">Penulis Aktif</p>
-      </div>
-      <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="300">
-        <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="45">0</h2>
-        <p style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">Peninjau Global</p>
-      </div>
-      <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="400">
-        <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="28">0</h2>
-        <p style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">Hari ke Keputusan Pertama</p>
+    <div class="container" style="max-width:1200px;">
+      <div class="row g-4 text-center">
+        <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="100">
+          <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="{{ $totalPublished }}">0</h2>
+          <p class="stat-label-text" style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">Artikel Diterbitkan</p>
+        </div>
+        <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="200">
+          <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="150">+0</h2>
+          <p class="stat-label-text" style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">Penulis Aktif</p>
+        </div>
+        <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="300">
+          <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="45">0</h2>
+          <p class="stat-label-text" style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">Peninjau Global</p>
+        </div>
+        <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="400">
+          <h2 class="display-5" style="font-weight:800; color:var(--primary);" data-countup="28">0</h2>
+          <p class="stat-label-text" style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">Hari ke Keputusan Pertama</p>
+        </div>
       </div>
     </div>
-  </div>
 </section>
 
 {{-- ── CURRENT ISSUE & LATEST ARTICLES ── --}}

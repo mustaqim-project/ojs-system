@@ -2,71 +2,44 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Issue extends Model
 {
-    use HasFactory, SoftDeletes;
-
     protected $fillable = [
         'journal_id',
-        'title',
-        'volume',
+        'volume_id',
         'number',
-        'year',
+        'title',
         'description',
-        'published_date',
+        'cover_image',
+        'publication_date',
         'status',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'published_date' => 'date',
-        ];
-    }
-
-    // ===========================
-    // RELATIONSHIPS
-    // ===========================
+    protected $casts = [
+        'publication_date' => 'date',
+    ];
 
     public function journal()
     {
         return $this->belongsTo(Journal::class);
     }
 
+    public function volume()
+    {
+        return $this->belongsTo(Volume::class);
+    }
+
     public function articles()
     {
-        return $this->hasMany(Article::class);
+        return $this->belongsToMany(Article::class, 'issue_article')
+            ->withPivot('order')
+            ->orderBy('order');
     }
-
-    public function publishedArticles()
-    {
-        return $this->hasMany(Article::class)->where('status', 'published');
-    }
-
-    // ===========================
-    // SCOPES
-    // ===========================
 
     public function scopePublished($query)
     {
         return $query->where('status', 'published');
-    }
-
-    // ===========================
-    // ACCESSORS
-    // ===========================
-
-    public function getDisplayTitleAttribute(): string
-    {
-        return "Vol. {$this->volume} No. {$this->number} ({$this->year})";
-    }
-
-    public function isPublished(): bool
-    {
-        return $this->status === 'published';
     }
 }

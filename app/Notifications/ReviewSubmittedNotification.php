@@ -2,63 +2,39 @@
 
 namespace App\Notifications;
 
+use App\Models\Article;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ReviewSubmittedNotification extends Notification
+class ReviewSubmittedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public $article;
-    public $reviewerName;
+    public function __construct(public Article $article) {}
 
-    /**
-     * Create a new notification instance.
-     */
-    public function __construct($article, $reviewerName)
-    {
-        $this->article = $article;
-        $this->reviewerName = $reviewerName;
-    }
-
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @return array<int, string>
-     */
     public function via(object $notifiable): array
     {
         return ['mail', 'database'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     */
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Review Submitted for Article: ' . $this->article->title)
-            ->greeting('Hello ' . $notifiable->name . ',')
-            ->line('Reviewer ' . $this->reviewerName . ' has submitted their review for the article titled "' . $this->article->title . '".')
-            ->action('View Reviews', route('editor.articles.index'))
-            ->line('Please review their feedback to make an editorial decision.');
+            ->subject("[{$this->article->tracking_code}] Review Completed")
+            ->greeting("Hello {$notifiable->name},")
+            ->line("A review has been completed for: **{$this->article->title}**")
+            ->action('View Review', url('/editor/articles/' . $this->article->id))
+            ->line('You can now make an editorial decision.');
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
+    public function toDatabase(object $notifiable): array
     {
         return [
-            'type' => 'review_submitted',
-            'message' => 'Review submitted by ' . $this->reviewerName . ' for: ' . $this->article->title,
-            'url' => route('editor.articles.index'),
-            'icon' => 'bi-clipboard-check',
-            'color' => 'success'
+            'article_id' => $this->article->id,
+            'message' => "Review completed for '{$this->article->title}'",
+            'url' => url('/editor/articles/' . $this->article->id),
         ];
     }
 }

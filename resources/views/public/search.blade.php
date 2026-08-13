@@ -2,13 +2,13 @@
 @section('content')
 
 {{-- Search Header --}}
-<div style="background:var(--bg-surface);border-bottom:1px solid var(--border);padding:60px 0 40px;">
+<div class="page-hdr-section" style="background:var(--bg-surface);border-bottom:1px solid var(--border);padding:60px 0 40px;">
   <div class="container" style="max-width:900px;">
-    <h1 style="font-size:32px;font-weight:800;color:var(--text-main);letter-spacing:-0.03em;margin-bottom:24px;text-align:center;">
+    <h1 style="font-size:clamp(24px,5vw,32px);font-weight:800;color:var(--text-main);letter-spacing:-0.03em;margin-bottom:24px;text-align:center;">
       Cari Artikel
     </h1>
     <form action="{{ route('public.search') }}" method="GET" style="max-width:700px;margin:0 auto;">
-      <div style="display:flex;gap:12px;background:var(--bg-surface);padding:8px;border-radius:16px;border:1px solid var(--border);box-shadow:0 10px 30px -10px rgba(0,0,0,0.08);">
+      <div class="search-box-wrap" style="display:flex;gap:12px;background:var(--bg-surface);padding:8px;border-radius:16px;border:1px solid var(--border);box-shadow:0 10px 30px -10px rgba(0,0,0,0.08);">
         <div style="flex:1;position:relative;">
           <i class="bi bi-search" style="position:absolute;left:20px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:18px;"></i>
           <input type="text" name="q" value="{{ $query }}"

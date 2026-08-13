@@ -14,7 +14,8 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->string('key')->unique();
+            $table->foreignId('journal_id')->nullable()->constrained()->nullOnDelete();
+            $table->string('key');
             $table->text('value')->nullable();
             $table->string('group')->default('general'); // Pengelompokan setting
             $table->string('label')->nullable(); // Label untuk UI
@@ -24,6 +25,7 @@ return new class extends Migration
 
             $table->index('key');
             $table->index('group');
+            $table->unique(['journal_id', 'key']);
         });
     }
 

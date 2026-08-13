@@ -2,60 +2,49 @@
 
 namespace App\Notifications;
 
+use App\Models\Article;
+use App\Notifications\Channels\FonnteChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ArticleSubmittedNotification extends Notification
+class ArticleSubmittedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
-    public $article;
 
-    /**
-     * Create a new notification instance.
-     */
-    public function __construct($article)
-    {
-        $this->article = $article;
-    }
+    public function __construct(public Article $article) {}
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @return array<int, string>
-     */
     public function via(object $notifiable): array
     {
-        return ['mail', 'database'];
+        $channels = ['mail', 'database'];
+        if ($notifiable->phone) $channels[] = FonnteChannel::class;
+        return $channels;
     }
 
-    /**
-     * Get the mail representation of the notification.
-     */
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('New Article Submitted')
-            ->greeting('Hello ' . $notifiable->name . ',')
-            ->line('A new article titled "' . $this->article->title . '" has been submitted by ' . $this->article->author->name . '.')
-            ->action('View Article', route('editor.articles.index'))
-            ->line('Thank you for using our application!');
+            ->subject("[{$this->article->tracking_code}] New Article Submitted")
+            ->greeting("Hello {$notifiable->name},")
+            ->line("A new article has been submitted: **{$this->article->title}**")
+            ->line("Author: {$this->article->author->name}")
+            ->line("Journal: {$this->article->journal->name}")
+            ->action('Review Submission', url('/editor/articles/' . $this->article->id))
+            ->line('Please review it as soon as possible.');
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
+    public function toWhatsApp(object $notifiable): string
+    {
+        return "New article submitted: '{$this->article->title}' by {$this->article->author->name}. Please review: " . url('/editor/dashboard');
+    }
+
+    public function toDatabase(object $notifiable): array
     {
         return [
-            'type' => 'article_submitted',
-            'message' => 'New article submitted: ' . $this->article->title,
-            'url' => route('editor.articles.index'),
-            'icon' => 'bi-file-earmark-plus',
-            'color' => 'primary'
+            'article_id' => $this->article->id,
+            'message' => "New submission: {$this->article->title}",
+            'url' => url('/editor/articles/' . $this->article->id),
         ];
     }
 }

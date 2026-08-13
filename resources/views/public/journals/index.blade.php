@@ -5,10 +5,10 @@
 <div style="background:var(--bg-surface);border-bottom:1px solid var(--border);padding:48px 0 32px;">
   <div class="container" style="max-width:1200px;">
     <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;font-weight:500;">
-      <a href="{{ route('public.home') }}" style="color:var(--text-muted);text-decoration:none;">Home</a> <span style="margin:0 6px;">›</span> <span style="color:var(--text-main);">Journals</span>
+      <a href="{{ route('public.home') }}" style="color:var(--text-muted);text-decoration:none;">Beranda</a> <span style="margin:0 6px;">›</span> <span style="color:var(--text-main);">Jurnal</span>
     </div>
-    <h1 style="font-size:32px;font-weight:800;color:var(--text-main);letter-spacing:-0.03em;margin-bottom:8px;">Academic Journals</h1>
-    <p style="font-size:15px;color:var(--text-muted);margin:0;">Browse through {{ $journals->total() }} active scientific journals managed on our platform.</p>
+    <h1 style="font-size:32px;font-weight:800;color:var(--text-main);letter-spacing:-0.03em;margin-bottom:8px;">Jurnal Akademik</h1>
+    <p style="font-size:15px;color:var(--text-muted);margin:0;">Telusuri {{ $journals->total() }} jurnal ilmiah aktif yang dikelola di platform kami.</p>
   </div>
 </div>
 
@@ -47,17 +47,17 @@
             @if($journal->issn_online)
               <span style="font-family:monospace;font-size:12px;">ISSN: {{ $journal->issn_online }}</span>
             @endif
-            <span style="text-transform:capitalize;font-weight:500;"><i class="bi bi-arrow-repeat me-1"></i>{{ $journal->frequency }} Issue</span>
+            <span style="text-transform:capitalize;font-weight:500;"><i class="bi bi-arrow-repeat me-1"></i>{{ $journal->frequency }} Edisi</span>
           </div>
           <div style="background:var(--bg-app);color:var(--primary);padding:6px 12px;border-radius:20px;font-weight:700;font-size:12px;border:1px solid rgba(37,99,235,0.1);">
-            {{ $journal->published_articles_count }} Articles
+            {{ $journal->published_articles_count }} Artikel
           </div>
         </div>
       </a>
     </div>
     @empty
     <div class="col-12" style="padding:40px 0;">
-      <x-ui.empty-state icon="bi-journals" title="No journals found" description="We are currently setting up our journal collections. Please check back soon."/>
+      <x-ui.empty-state icon="bi-journals" title="Tidak ada jurnal ditemukan" description="Kami sedang menyiapkan koleksi jurnal kami. Silakan periksa kembali nanti."/>
     </div>
     @endforelse
   </div>

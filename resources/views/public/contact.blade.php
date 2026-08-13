@@ -76,7 +76,7 @@
 
             {{-- Contact Form --}}
             <div class="col-lg-7" data-aos="fade-up" data-aos-delay="200">
-                <div class="pub-card" style="padding: 40px;">
+                <div class="pub-card contact-form-card" style="padding: 40px;">
                     <h4 class="mb-4" style="font-weight: 700;">Kirimkan Pesan</h4>
                     <form>
                         <div class="row g-3">

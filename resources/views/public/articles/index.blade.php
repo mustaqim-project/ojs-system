@@ -2,13 +2,13 @@
 @section('content')
 
 {{-- Header --}}
-<div style="background:linear-gradient(135deg, var(--bg-surface) 0%, #fff 100%); border-bottom:1px solid var(--border); padding:60px 0 40px;">
+<div class="page-hdr-section" style="background:linear-gradient(135deg, var(--bg-surface) 0%, #fff 100%); border-bottom:1px solid var(--border); padding:60px 0 40px;">
   <div class="container" style="max-width:1400px;">
     <div style="font-size:13px; color:var(--text-muted); margin-bottom:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">
-      <a href="{{ route('public.home') }}" style="color:var(--text-muted); text-decoration:none;">Home</a> <span style="margin:0 8px;">/</span> <span style="color:var(--primary);">Articles</span>
+      <a href="{{ route('public.home') }}" style="color:var(--text-muted); text-decoration:none;">Beranda</a> <span style="margin:0 8px;">/</span> <span style="color:var(--primary);">Artikel</span>
     </div>
-    <h1 style="font-size:42px; font-weight:800; color:var(--text-main); letter-spacing:-0.03em; margin-bottom:12px;">Browse Articles</h1>
-    <p style="font-size:16px; color:var(--text-muted); margin:0; max-width:600px;">Explore {{ $articles->total() }} peer-reviewed research papers across various academic disciplines.</p>
+    <h1 style="font-size:clamp(24px,5vw,42px); font-weight:800; color:var(--text-main); letter-spacing:-0.03em; margin-bottom:12px;">Jelajahi Artikel</h1>
+    <p style="font-size:16px; color:var(--text-muted); margin:0; max-width:600px;">Jelajahi {{ $articles->total() }} makalah penelitian ilmiah dari berbagai disiplin akademik.</p>
   </div>
 </div>
 
@@ -18,58 +18,67 @@
     {{-- Advanced Sidebar Filter --}}
     <div class="col-12 col-lg-3" data-aos="fade-right">
       <div style="position:sticky; top:100px;">
-        <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px;">
-          
-          <h3 style="font-size:16px; font-weight:800; color:var(--text-main); margin-bottom:20px; display:flex; align-items:center; gap:8px; border-bottom:1px solid var(--border); padding-bottom:12px;">
-            <i class="bi bi-funnel-fill text-primary"></i> Advanced Filter
-          </h3>
-          
-          <form action="{{ route('public.articles.index') }}" method="GET">
+        {{-- Mobile toggle button (hidden on desktop) --}}
+        <button class="filter-toggle-btn" id="filterToggleBtn" onclick="toggleFilter()" type="button">
+          <i class="bi bi-funnel-fill text-primary"></i>
+          <span>Filter Artikel</span>
+          <i class="bi bi-chevron-down chevron ms-auto"></i>
+        </button>
+
+        <div class="filter-sidebar-body" id="filterSidebarBody">
+          <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px;">
             
-            {{-- Search --}}
-            <div class="mb-4">
-              <label style="font-size:13px; font-weight:700; color:var(--text-muted); margin-bottom:8px; display:block;">Search</label>
-              <div style="position:relative;">
-                <i class="bi bi-search" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-muted);"></i>
-                <input type="text" name="q" value="{{ request('q') }}" placeholder="Keywords, DOI, Author..." class="form-control shadow-sm" style="padding-left:36px; border-radius:8px;">
+            <h3 style="font-size:16px; font-weight:800; color:var(--text-main); margin-bottom:20px; display:flex; align-items:center; gap:8px; border-bottom:1px solid var(--border); padding-bottom:12px;">
+              <i class="bi bi-funnel-fill text-primary"></i> Filter Lanjutan
+            </h3>
+            
+            <form action="{{ route('public.articles.index') }}" method="GET">
+              
+              {{-- Search --}}
+              <div class="mb-4">
+                <label style="font-size:13px; font-weight:700; color:var(--text-muted); margin-bottom:8px; display:block;">Pencarian</label>
+                <div style="position:relative;">
+                  <i class="bi bi-search" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-muted);"></i>
+                  <input type="text" name="q" value="{{ request('q') }}" placeholder="Kata Kunci, DOI, Penulis..." class="form-control shadow-sm" style="padding-left:36px; border-radius:8px;">
+                </div>
               </div>
-            </div>
 
-            {{-- Category --}}
-            <div class="mb-4">
-              <label style="font-size:13px; font-weight:700; color:var(--text-muted); margin-bottom:8px; display:block;">Category</label>
-              <select name="category" class="form-select shadow-sm" style="border-radius:8px;">
-                <option value="">All Categories</option>
-                <option value="research">Original Research</option>
-                <option value="review">Review Article</option>
-                <option value="case">Case Study</option>
-              </select>
-            </div>
-
-            {{-- Year --}}
-            <div class="mb-4">
-              <label style="font-size:13px; font-weight:700; color:var(--text-muted); margin-bottom:8px; display:block;">Publication Year</label>
-              <div class="d-flex gap-2">
-                <input type="number" name="year_from" placeholder="From" class="form-control shadow-sm" style="border-radius:8px;">
-                <input type="number" name="year_to" placeholder="To" class="form-control shadow-sm" style="border-radius:8px;">
+              {{-- Category --}}
+              <div class="mb-4">
+                <label style="font-size:13px; font-weight:700; color:var(--text-muted); margin-bottom:8px; display:block;">Kategori</label>
+                <select name="category" class="form-select shadow-sm" style="border-radius:8px;">
+                  <option value="">Semua Kategori</option>
+                  <option value="research">Penelitian Asli</option>
+                  <option value="review">Artikel Ulasan</option>
+                  <option value="case">Studi Kasus</option>
+                </select>
               </div>
-            </div>
 
-            {{-- Sort --}}
-            <div class="mb-4">
-              <label style="font-size:13px; font-weight:700; color:var(--text-muted); margin-bottom:8px; display:block;">Sort By</label>
-              <select name="sort" class="form-select shadow-sm" style="border-radius:8px;">
-                <option value="latest">Latest Published</option>
-                <option value="views">Most Viewed</option>
-                <option value="citations">Most Cited</option>
-              </select>
-            </div>
+              {{-- Year --}}
+              <div class="mb-4">
+                <label style="font-size:13px; font-weight:700; color:var(--text-muted); margin-bottom:8px; display:block;">Tahun Publikasi</label>
+                <div class="d-flex gap-2">
+                  <input type="number" name="year_from" placeholder="Dari" class="form-control shadow-sm" style="border-radius:8px;">
+                  <input type="number" name="year_to" placeholder="Sampai" class="form-control shadow-sm" style="border-radius:8px;">
+                </div>
+              </div>
 
-            <button type="submit" class="btn btn-primary w-100 shadow-sm" style="font-weight:600; border-radius:8px;">Apply Filters</button>
-            <a href="{{ route('public.articles.index') }}" class="btn btn-light w-100 mt-2" style="font-weight:600; border-radius:8px; border:1px solid var(--border);">Reset</a>
+              {{-- Sort --}}
+              <div class="mb-4">
+                <label style="font-size:13px; font-weight:700; color:var(--text-muted); margin-bottom:8px; display:block;">Urutkan Berdasarkan</label>
+                <select name="sort" class="form-select shadow-sm" style="border-radius:8px;">
+                  <option value="latest">Terbaru Diterbitkan</option>
+                  <option value="views">Paling Banyak Dilihat</option>
+                  <option value="citations">Paling Banyak Disitasi</option>
+                </select>
+              </div>
 
-          </form>
+              <button type="submit" class="btn btn-primary w-100 shadow-sm" style="font-weight:600; border-radius:8px;">Terapkan Filter</button>
+              <a href="{{ route('public.articles.index') }}" class="btn btn-light w-100 mt-2" style="font-weight:600; border-radius:8px; border:1px solid var(--border);">Atur Ulang</a>
 
+            </form>
+
+          </div>
         </div>
       </div>
     </div>
@@ -78,14 +87,14 @@
     <div class="col-12 col-lg-9">
       
       <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
-        <h4 style="font-weight:700; font-size:18px; margin:0;">{{ $articles->total() }} Results Found</h4>
+        <h4 style="font-weight:700; font-size:18px; margin:0;">{{ $articles->total() }} Hasil Ditemukan</h4>
         <div class="dropdown">
           <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" style="font-weight:600; border-radius:6px; border:1px solid var(--border);">
-            Sort: Latest
+            Urutan: Terbaru
           </button>
           <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="border-radius:8px; font-size:14px;">
-            <li><a class="dropdown-item active" href="?sort=latest">Latest</a></li>
-            <li><a class="dropdown-item" href="?sort=views">Most Viewed</a></li>
+            <li><a class="dropdown-item active" href="?sort=latest">Terbaru</a></li>
+            <li><a class="dropdown-item" href="?sort=views">Paling Banyak Dilihat</a></li>
           </ul>
         </div>
       </div>
@@ -129,7 +138,7 @@
           </div>
 
           <div class="mb-3" style="font-size:12px; color:var(--text-muted); font-family:monospace;">
-            <strong>DOI:</strong> <a href="https://doi.org/10.5555/ojs.v1i1.{{ $article->id }}" target="_blank" style="color:var(--primary); text-decoration:none;">10.5555/ojs.v1i1.{{ $article->id }}</a>
+            <strong>DOI:</strong> <a href="https://doi.org/10.5555/ojs.v1i1.{{ $article->id }}" target="_blank" class="doi-text" style="color:var(--primary); text-decoration:none;">10.5555/ojs.v1i1.{{ $article->id }}</a>
           </div>
           
           <p style="font-size:15px; color:var(--text-muted); margin-bottom:20px; line-height:1.7; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">
@@ -154,8 +163,8 @@
         @empty
         <div class="pub-card text-center py-5">
           <i class="bi bi-journal-x text-muted" style="font-size:48px; margin-bottom:16px; display:block;"></i>
-          <h4 style="font-weight:700;">No articles found</h4>
-          <p class="text-muted">Try adjusting your search filters.</p>
+          <h4 style="font-weight:700;">Tidak ada artikel ditemukan</h4>
+          <p class="text-muted">Coba sesuaikan filter pencarian Anda.</p>
         </div>
         @endforelse
       </div>
@@ -166,3 +175,14 @@
   </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+  function toggleFilter() {
+    const body = document.getElementById('filterSidebarBody');
+    const btn  = document.getElementById('filterToggleBtn');
+    const isOpen = body.classList.toggle('open');
+    btn.classList.toggle('open', isOpen);
+  }
+</script>
+@endpush

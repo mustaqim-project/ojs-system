@@ -2,78 +2,40 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Str;
 
 class Article extends Model
 {
-    use HasFactory, SoftDeletes;
-
-    // Status constants untuk kemudahan
-    const STATUS_SUBMITTED           = 'submitted';
-    const STATUS_UNDER_REVIEW        = 'under_review';
-    const STATUS_REVISION_REQUIRED   = 'revision_required';
-    const STATUS_ACCEPTED            = 'accepted';
-    const STATUS_REJECTED            = 'rejected';
-    const STATUS_WAITING_PAYMENT     = 'waiting_payment';
-    const STATUS_PAYMENT_UPLOADED    = 'payment_uploaded';
-    const STATUS_PAYMENT_VERIFICATION = 'payment_verification';
-    const STATUS_PAID                = 'paid';
-    const STATUS_PUBLISHED           = 'published';
+    use SoftDeletes;
 
     protected $fillable = [
         'journal_id',
-        'issue_id',
         'author_id',
         'assigned_editor_id',
         'title',
-        'slug',
         'abstract',
-        'keywords',
-        'language',
-        'manuscript_file',
-        'revision_file',
-        'cover_letter',
         'status',
-        'pages_start',
-        'pages_end',
-        'doi',
-        'editor_note',
+        'current_stage',
+        'tracking_code',
+        'language',
+        'section',
+        'keywords',
         'author_note',
+        'funding_statement',
+        'conflict_of_interest',
+        'ethics_statement',
+        'acknowledgement',
+        'license',
         'submitted_at',
-        'accepted_at',
         'published_at',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'submitted_at' => 'datetime',
-            'accepted_at'  => 'datetime',
-            'published_at' => 'datetime',
-        ];
-    }
-
-    // Auto-generate slug
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($article) {
-            if (empty($article->slug)) {
-                $article->slug = Str::slug($article->title) . '-' . Str::random(6);
-            }
-            if (empty($article->submitted_at)) {
-                $article->submitted_at = now();
-            }
-        });
-    }
-
-    // ===========================
-    // RELATIONSHIPS
-    // ===========================
+    protected $casts = [
+        'submitted_at' => 'datetime',
+        'published_at' => 'datetime',
+        'keywords'     => 'array',
+    ];
 
     public function journal()
     {
@@ -95,112 +57,58 @@ class Article extends Model
         return $this->belongsTo(User::class, 'assigned_editor_id');
     }
 
-    public function reviews()
+    public function versions()
     {
-        return $this->hasMany(Review::class);
+        return $this->hasMany(SubmissionVersion::class);
     }
 
-    public function payment()
+    public function files()
     {
-        return $this->hasOne(Payment::class);
+        return $this->hasManyThrough(SubmissionFile::class, SubmissionVersion::class);
     }
 
-    // ===========================
-    // STATUS HELPER METHODS
-    // ===========================
-
-    public function isPublished(): bool
+    public function reviewRounds()
     {
-        return $this->status === self::STATUS_PUBLISHED;
+        return $this->hasMany(ReviewRound::class);
     }
 
-    public function canBePublished(): bool
+    public function editorialDecisions()
     {
-        // KRITIS: Artikel hanya bisa dipublish jika sudah bayar & terverifikasi
-        return $this->status === self::STATUS_PAID &&
-            $this->payment &&
-            $this->payment->status === 'verified';
+        return $this->hasMany(EditorialDecision::class);
     }
 
-    public function isPaid(): bool
+    public function productionTasks()
     {
-        return $this->status === self::STATUS_PAID;
+        return $this->hasMany(ProductionTask::class);
     }
 
-    public function needsPayment(): bool
+    public function galleys()
     {
-        return in_array($this->status, [
-            self::STATUS_WAITING_PAYMENT,
-            self::STATUS_PAYMENT_UPLOADED,
-            self::STATUS_PAYMENT_VERIFICATION,
-        ]);
+        return $this->hasMany(ArticleGalley::class);
     }
 
-    /**
-     * Label status untuk ditampilkan di UI
-     */
-    public function getStatusLabelAttribute(): string
+    public function doi()
     {
-        return match ($this->status) {
-            self::STATUS_SUBMITTED             => 'Submitted',
-            self::STATUS_UNDER_REVIEW          => 'Under Review',
-            self::STATUS_REVISION_REQUIRED     => 'Revision Required',
-            self::STATUS_ACCEPTED              => 'Accepted',
-            self::STATUS_REJECTED              => 'Rejected',
-            self::STATUS_WAITING_PAYMENT       => 'Waiting Payment',
-            self::STATUS_PAYMENT_UPLOADED      => 'Payment Uploaded',
-            self::STATUS_PAYMENT_VERIFICATION  => 'Payment Verification',
-            self::STATUS_PAID                  => 'Paid',
-            self::STATUS_PUBLISHED             => 'Published',
-            default                            => ucfirst($this->status),
-        };
+        return $this->hasOne(ArticleDoi::class);
     }
 
-    /**
-     * Warna badge status
-     */
-    public function getStatusColorAttribute(): string
+    public function invoice()
     {
-        return match ($this->status) {
-            self::STATUS_SUBMITTED             => 'blue',
-            self::STATUS_UNDER_REVIEW          => 'yellow',
-            self::STATUS_REVISION_REQUIRED     => 'orange',
-            self::STATUS_ACCEPTED              => 'green',
-            self::STATUS_REJECTED              => 'red',
-            self::STATUS_WAITING_PAYMENT       => 'purple',
-            self::STATUS_PAYMENT_UPLOADED      => 'indigo',
-            self::STATUS_PAYMENT_VERIFICATION  => 'cyan',
-            self::STATUS_PAID                  => 'teal',
-            self::STATUS_PUBLISHED             => 'emerald',
-            default                            => 'gray',
-        };
+        return $this->hasOne(Invoice::class);
     }
-
-    /**
-     * Array keywords dari string
-     */
-    public function getKeywordsArrayAttribute(): array
-    {
-        if (!$this->keywords) return [];
-        return array_map('trim', explode(',', $this->keywords));
-    }
-
-    // ===========================
-    // SCOPES
-    // ===========================
 
     public function scopePublished($query)
     {
-        return $query->where('status', self::STATUS_PUBLISHED);
+        return $query->where('status', 'published');
     }
 
-    public function scopeByStatus($query, string $status)
+    public function scopeDraft($query)
     {
-        return $query->where('status', $status);
+        return $query->where('status', 'draft');
     }
 
-    public function scopeForAuthor($query, int $authorId)
+    public function getKeywordsArrayAttribute()
     {
-        return $query->where('author_id', $authorId);
+        return is_array($this->keywords) ? $this->keywords : [];
     }
 }
