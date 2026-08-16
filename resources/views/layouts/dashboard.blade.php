@@ -224,7 +224,7 @@
 
     <script>
         tinymce.init({
-                    selector: 'textarea',
+                    selector: 'textarea.tinymce-editor, textarea#bodyEditor, textarea.rich-text',
 
                     plugins: [
                         'anchor',

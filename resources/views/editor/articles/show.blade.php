@@ -37,7 +37,7 @@
           'Author'  => $article->author->name.($article->author->affiliation ? ' <span style="color:var(--text-muted);font-size:12px;">· '.$article->author->affiliation.'</span>' : ''),
           'Submitted'=> $article->submitted_at?->format('d M Y H:i'),
         ];
-        if($article->author_note) $rows["Author's Note"] = '<em style="color:var(--text-muted);">'.$article->author_note.'</em>';
+        if($article->author_note) $rows["Author's Note"] = '<div style="color:var(--text-muted);font-style:italic;">'.$article->author_note.'</div>';
         @endphp
         @foreach($rows as $k => $v)
         <div style="display:grid;grid-template-columns:130px 1fr;gap:8px;padding:12px 24px;border-bottom:1px solid #F1F5F9;font-size:14px;">
@@ -48,7 +48,7 @@
         {{-- Abstract --}}
         <div style="padding:16px 24px;border-bottom:1px solid #F1F5F9;">
           <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:8px;">Abstract</div>
-          <p style="font-size:14px;color:var(--text-main);line-height:1.75;margin:0;">{{ $article->abstract }}</p>
+          <div style="font-size:14px;color:var(--text-main);line-height:1.75;margin:0;">{!! $article->abstract !!}</div>
         </div>
         {{-- Keywords --}}
         <div style="padding:16px 24px;">
@@ -97,13 +97,13 @@
           @if($review->comments_to_author)
             <div style="background:var(--bg-app);border-radius:8px;padding:12px;font-size:13px;color:var(--text-main);line-height:1.65;margin-bottom:6px;">
               <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);margin-bottom:6px;">Comments to Author</div>
-              {{ $review->comments_to_author }}
+              {!! $review->comments_to_author !!}
             </div>
           @endif
           @if($review->comments_to_editor)
             <div style="background:#FEFCE8;border-radius:8px;padding:12px;font-size:13px;color:#713F12;line-height:1.65;">
               <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;">Confidential to Editor</div>
-              {{ $review->comments_to_editor }}
+              {!! $review->comments_to_editor !!}
             </div>
           @endif
         @else

@@ -46,7 +46,7 @@
           <span style="font-size:11px;font-weight:700;color:var(--success);background:var(--success-bg);padding:3px 10px;border-radius:20px;">{{ strtoupper($review->article->language) }}</span>
         </div>
         <h3 style="font-size:18px;font-weight:700;color:var(--text-main);letter-spacing:-0.02em;margin-bottom:12px;line-height:1.4;">{{ $review->article->title }}</h3>
-        <p style="font-size:14px;color:var(--text-main);line-height:1.75;margin-bottom:16px;">{{ $review->article->abstract }}</p>
+        <div style="font-size:14px;color:var(--text-main);line-height:1.75;margin-bottom:16px;">{!! $review->article->abstract !!}</div>
         
         @if($review->article->keywords)
         <div style="display:flex;flex-wrap:wrap;gap:6px;">
@@ -203,19 +203,20 @@
     @endif
 
     {{-- Completed View --}}
+    {{-- Review Completed Info --}}
     @if($review->status === 'completed')
-    <div class="ds-card" data-aos="fade-up" data-aos-delay="200">
-      <div class="ds-card-hdr">
-        <span class="ds-card-title"><i class="bi bi-check-circle-fill me-2" style="color:var(--success);"></i>Review Completed</span>
-        @if($review->recommendation)
-          <x-status-badge :status="$review->recommendation" :label="$review->recommendation_label"/>
-        @endif
-      </div>
+    <div class="ds-card" data-aos="fade-up" data-aos-delay="200" style="margin-top:20px;">
+      <div class="ds-card-hdr"><span class="ds-card-title">Review Submitted</span></div>
       <div style="padding:24px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <span style="font-size:13px;color:var(--text-muted);">Recommendation:</span>
+          <x-status-badge :status="$review->recommendation" :label="$review->recommendation_label"/>
+        </div>
+
         @if($review->average_score)
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);">
-          <span style="font-size:13px;font-weight:600;color:var(--text-muted);">Overall Score:</span>
-          <div style="display:flex;gap:4px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;">
+          <span style="font-size:13px;color:var(--text-muted);">Overall Score:</span>
+          <div style="display:flex;gap:3px;">
             @for($s=1;$s<=5;$s++)
               <i class="bi bi-star-fill" style="font-size:16px;color:{{ $s <= $review->average_score ? '#F59E0B' : '#E2E8F0' }};"></i>
             @endfor
@@ -227,7 +228,7 @@
         @if($review->comments_to_author)
         <div style="margin-bottom:20px;">
           <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:10px;">Comments to Author:</div>
-          <div style="background:var(--bg-app);border-radius:10px;padding:20px;font-size:14px;color:var(--text-main);line-height:1.7;">{{ $review->comments_to_author }}</div>
+          <div style="background:var(--bg-app);border-radius:10px;padding:20px;font-size:14px;color:var(--text-main);line-height:1.7;">{!! $review->comments_to_author !!}</div>
         </div>
         @endif
 

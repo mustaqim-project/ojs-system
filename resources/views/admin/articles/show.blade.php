@@ -104,7 +104,7 @@
         {{-- Abstract --}}
         <div style="padding:16px 24px;border-bottom:1px solid #F1F5F9;">
           <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:8px;">Abstrak</div>
-          <p style="font-size:14px;color:var(--text-main);line-height:1.75;margin:0;">{{ $article->abstract }}</p>
+          <div style="font-size:14px;color:var(--text-main);line-height:1.75;margin:0;">{!! $article->abstract !!}</div>
         </div>
 
         {{-- Keywords --}}
@@ -148,13 +148,13 @@
         @if($review->comments_to_author)
           <div style="background:var(--bg-app);border-radius:8px;padding:12px;font-size:13px;color:var(--text-main);line-height:1.65;margin-bottom:6px;">
             <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);margin-bottom:6px;">Komentar untuk Penulis</div>
-            {{ $review->comments_to_author }}
+            {!! $review->comments_to_author !!}
           </div>
         @endif
         @if($review->comments_to_editor)
           <div style="background:#FEFCE8;border-radius:8px;padding:12px;font-size:13px;color:#713F12;line-height:1.65;">
             <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;">Rahasia untuk Editor</div>
-            {{ $review->comments_to_editor }}
+            {!! $review->comments_to_editor !!}
           </div>
         @endif
       </div>

@@ -18,7 +18,7 @@
     <i class="bi bi-chat-left-text-fill" style="margin-top:2px;"></i>
     <div>
       <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Catatan dari Editor</div>
-      <div style="font-size:13px;line-height:1.7;">{{ $article->editor_note }}</div>
+      <div style="font-size:13px;line-height:1.7;">{!! $article->editor_note !!}</div>
     </div>
   </div>
   @endif

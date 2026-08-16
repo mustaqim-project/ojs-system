@@ -52,7 +52,7 @@
           
           @if($journal->description)
             <p style="font-size:14px;color:var(--text-muted);margin-bottom:20px;line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;flex:1;">
-              {{ $journal->description }}
+              {{ strip_tags($journal->description) }}
             </p>
           @else
             <div style="flex:1;"></div>

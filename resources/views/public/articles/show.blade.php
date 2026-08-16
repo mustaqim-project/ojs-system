@@ -58,9 +58,9 @@
         <h4 style="font-weight:800; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
           <i class="bi bi-text-left text-primary"></i> Abstrak
         </h4>
-        <p style="font-size:16px; color:var(--text-muted); line-height:1.8; margin-bottom:24px;">
-          {{ strip_tags($article->abstract) }}
-        </p>
+        <div style="font-size:16px; color:var(--text-muted); line-height:1.8; margin-bottom:24px;">
+          {!! $article->abstract !!}
+        </div>
 
         @if($article->keywords)
         <div style="border-top:1px dashed var(--border); padding-top:20px;">

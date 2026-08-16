@@ -77,7 +77,7 @@
         </h3>
 
         <p style="font-size:14px;color:var(--text-muted);margin-bottom:16px;line-height:1.7;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">
-          {!! preg_replace('/('.preg_quote($query,'/').')/iu', '<mark style="background:var(--warning-bg);color:#B45309;padding:2px 4px;border-radius:4px;">$1</mark>', e(Str::limit($article->abstract, 300))) !!}
+          {!! preg_replace('/('.preg_quote($query,'/').')/iu', '<mark style="background:var(--warning-bg);color:#B45309;padding:2px 4px;border-radius:4px;">$1</mark>', e(Str::limit(strip_tags($article->abstract), 300))) !!}
         </p>
 
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;border-top:1px solid var(--border);padding-top:16px;">

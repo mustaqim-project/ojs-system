@@ -59,7 +59,7 @@
         {{-- Abstract --}}
         <div style="padding:16px 24px;border-bottom:1px solid #F1F5F9;">
           <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:8px;">Abstrak</div>
-          <p style="font-size:14px;color:var(--text-main);line-height:1.75;margin:0;">{{ $article->abstract }}</p>
+          <div style="font-size:14px;color:var(--text-main);line-height:1.75;margin:0;">{!! $article->abstract !!}</div>
         </div>
         {{-- Keywords --}}
         <div style="padding:16px 24px;">
@@ -77,7 +77,7 @@
     @if($article->editor_note)
     <div class="ds-alert ds-alert-warn" data-aos="fade-up" data-aos-delay="200" style="margin-top:16px;">
       <i class="bi bi-chat-left-text-fill"></i>
-      <div><strong>Catatan Editor:</strong><br/> {{ $article->editor_note }}</div>
+      <div><strong>Catatan Editor:</strong><br/> {!! $article->editor_note !!}</div>
     </div>
     @endif
 
@@ -95,7 +95,7 @@
             @endif
           </div>
           @if($review->comments_to_author)
-            <p style="font-size:14px;color:var(--text-main);line-height:1.7;margin:0;">{{ $review->comments_to_author }}</p>
+            <div style="font-size:14px;color:var(--text-main);line-height:1.7;margin:0;">{!! $review->comments_to_author !!}</div>
           @endif
           @if($review->average_score)
             <div style="font-size:12px;color:var(--text-muted);margin-top:10px;">Skor Rata-rata: <strong style="color:var(--text-main);">{{ $review->average_score }}/5</strong></div>
