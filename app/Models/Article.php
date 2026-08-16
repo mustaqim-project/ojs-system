@@ -124,6 +124,11 @@ class Article extends Model
         return $this->hasOneThrough(Payment::class, Invoice::class, 'submission_id', 'invoice_id');
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
     // ========== BUSINESS LOGIC ==========
 
     public function canBePublished(): bool
@@ -133,6 +138,19 @@ class Article extends Model
         }
 
         return in_array($this->invoice->status, ['paid', 'waived']);
+    }
+
+    public function needsPayment(): bool
+    {
+        if ($this->status === self::STATUS_WAITING_PAYMENT) {
+            return true;
+        }
+
+        if ($this->invoice && in_array($this->invoice->status, ['unpaid', 'pending', 'waiting_payment'])) {
+            return true;
+        }
+
+        return false;
     }
 
     // ========== LOCAL SCOPES ==========
@@ -161,5 +179,23 @@ class Article extends Model
     public function getKeywordsArrayAttribute()
     {
         return is_array($this->keywords) ? $this->keywords : [];
+    }
+
+    public function getStatusLabelAttribute(): string
+    {
+        $labels = [
+            self::STATUS_SUBMITTED            => 'Terkirim',
+            self::STATUS_UNDER_REVIEW         => 'Sedang Ditinjau',
+            self::STATUS_REVISION_REQUIRED    => 'Perlu Revisi',
+            self::STATUS_ACCEPTED             => 'Diterima',
+            self::STATUS_REJECTED             => 'Ditolak',
+            self::STATUS_WAITING_PAYMENT      => 'Menunggu Pembayaran',
+            self::STATUS_PAYMENT_UPLOADED     => 'Bukti Pembayaran Diunggah',
+            'payment_verification'            => 'Verifikasi Pembayaran',
+            self::STATUS_PAID                 => 'Lunas',
+            self::STATUS_PUBLISHED            => 'Diterbitkan',
+        ];
+
+        return $labels[$this->status] ?? ucwords(str_replace('_', ' ', (string) $this->status));
     }
 }

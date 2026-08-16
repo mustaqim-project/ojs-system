@@ -29,7 +29,7 @@ class ArticleSubmittedNotification extends Notification implements ShouldQueue
             ->greeting("Hello {$notifiable->name},")
             ->line("A new article has been submitted: **{$this->article->title}**")
             ->line("Author: {$this->article->author->name}")
-            ->line("Journal: {$this->article->journal->name}")
+            ->line("Journal: " . ($this->article->journal->title ?? $this->article->journal->name ?? '—'))
             ->action('Review Submission', url('/editor/articles/' . $this->article->id))
             ->line('Please review it as soon as possible.');
     }

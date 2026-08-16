@@ -45,13 +45,13 @@
         </x-ui.form-field>
         <div class="row g-3">
           <div class="col-md-8">
-            <x-ui.form-field label="Kata Kunci" required :error="$errors->first('keywords')" hint="Pisahkan dengan koma. Maksimal 6 kata kunci.">
-              <x-ui.input type="text" name="keywords" :value="old('keywords')" placeholder="pembelajaran mesin, NLP, pembelajaran mendalam" :error="$errors->has('keywords')"/>
+            <x-ui.form-field label="Kata Kunci" required :error="$errors->first('keywords')" hint="Pisahkan dengan koma (minimal 2 kata kunci).">
+              <x-ui.input type="text" name="keywords" :value="is_array(old('keywords')) ? implode(', ', old('keywords')) : old('keywords')" placeholder="pembelajaran mesin, NLP, sistem pakar" required :error="$errors->has('keywords')"/>
             </x-ui.form-field>
           </div>
           <div class="col-md-4">
-            <x-ui.form-field label="Bahasa" required>
-              <x-ui.select name="language" required>
+            <x-ui.form-field label="Bahasa" required :error="$errors->first('language')">
+              <x-ui.select name="language" required :error="$errors->has('language')">
                 <option value="id" {{ old('language','id') === 'id' ? 'selected' : '' }}>Bahasa Indonesia</option>
                 <option value="en" {{ old('language') === 'en' ? 'selected' : '' }}>English</option>
               </x-ui.select>
@@ -71,13 +71,6 @@
           <input type="file" name="manuscript_file" accept=".pdf,.doc,.docx" required
                  class="{{ $errors->has('manuscript_file') ? 'is-invalid' : '' }}"
                  style="display:block;width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-app);font-size:13px;color:var(--text-main);cursor:pointer;"/>
-        </x-ui.form-field>
-        <x-ui.form-field label="Surat Pengantar (Cover Letter)" hint="Opsional. Surat pengantar untuk editor.">
-          <input type="file" name="cover_letter" accept=".pdf,.doc,.docx"
-                 style="display:block;width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-app);font-size:13px;color:var(--text-main);cursor:pointer;"/>
-        </x-ui.form-field>
-        <x-ui.form-field label="Catatan untuk Editor" hint="Opsional. Informasi tambahan untuk tim editorial.">
-          <x-ui.textarea name="author_note" rows="3" placeholder="Konteks tambahan untuk tim editorial...">{{ old('author_note') }}</x-ui.textarea>
         </x-ui.form-field>
       </div>
     </div>

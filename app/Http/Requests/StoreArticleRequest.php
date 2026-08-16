@@ -11,37 +11,52 @@ class StoreArticleRequest extends FormRequest
         return true; // Authorization handled by controller/policy
     }
 
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('keywords') && is_string($this->keywords)) {
+            $keywords = array_values(array_filter(array_map('trim', explode(',', $this->keywords))));
+            $this->merge([
+                'keywords' => $keywords,
+            ]);
+        }
+    }
+
     public function rules(): array
     {
         return [
             'journal_id'       => ['required', 'exists:journals,id'],
             'title'            => ['required', 'string', 'max:500'],
-            'abstract'         => ['required', 'string', 'min:150', 'max:5000'],
-            'keywords'         => ['required', 'array', 'min:3', 'max:10'],
+            'abstract'         => ['required', 'string', 'min:100', 'max:5000'],
+            'keywords'         => ['required', 'array', 'min:2', 'max:10'],
             'keywords.*'       => ['string', 'max:50'],
             'language'         => ['required', 'in:en,id'],
-            'section'          => ['nullable', 'string', 'max:100'],
             'manuscript_file'  => ['required', 'file', 'mimes:doc,docx,pdf', 'max:10240'],
             'cover_letter'     => ['nullable', 'file', 'mimes:doc,docx,pdf', 'max:5120'],
             'author_note'      => ['nullable', 'string', 'max:2000'],
-            'funding_statement' => ['nullable', 'string', 'max:1000'],
-            'conflict_of_interest' => ['required', 'string', 'max:1000'],
-            'ethics_statement' => ['nullable', 'string', 'max:1000'],
-            'acknowledgement'  => ['nullable', 'string', 'max:1000'],
-            'license'          => ['required', 'in:cc-by,cc-by-nc,cc-by-nc-nd,cc-by-sa,all-rights-reserved'],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'abstract.min' => 'Abstract must be at least 150 characters.',
-            'keywords.min' => 'Please provide at least 3 keywords.',
-            'keywords.max' => 'Please provide no more than 10 keywords.',
-            'manuscript_file.required' => 'Manuscript file is required.',
-            'manuscript_file.mimes' => 'Manuscript must be a PDF, DOC, or DOCX file.',
-            'manuscript_file.max' => 'Manuscript file must not exceed 10MB.',
-            'conflict_of_interest.required' => 'Conflict of interest statement is required.',
+            'journal_id.required'      => 'Pilih jurnal tujuan naskah.',
+            'journal_id.exists'        => 'Jurnal yang dipilih tidak valid.',
+            'title.required'           => 'Judul artikel wajib diisi.',
+            'title.max'                => 'Judul artikel maksimal 500 karakter.',
+            'abstract.required'        => 'Abstrak naskah wajib diisi.',
+            'abstract.min'             => 'Abstrak minimal 100 karakter.',
+            'abstract.max'             => 'Abstrak maksimal 5000 karakter.',
+            'keywords.required'        => 'Kata kunci wajib diisi.',
+            'keywords.array'           => 'Format kata kunci tidak valid.',
+            'keywords.min'             => 'Sertakan minimal 2 kata kunci (pisahkan dengan koma).',
+            'keywords.max'             => 'Maksimal 10 kata kunci.',
+            'language.required'        => 'Pilih bahasa naskah.',
+            'manuscript_file.required' => 'Berkas naskah utama (manuskrip) wajib diunggah.',
+            'manuscript_file.mimes'    => 'Berkas manuskrip harus berformat PDF, DOC, atau DOCX.',
+            'manuscript_file.max'      => 'Ukuran berkas manuskrip maksimal 10MB.',
+            'cover_letter.mimes'       => 'Berkas Cover Letter harus berformat PDF, DOC, atau DOCX.',
+            'cover_letter.max'         => 'Ukuran berkas Cover Letter maksimal 5MB.',
         ];
     }
 }
+

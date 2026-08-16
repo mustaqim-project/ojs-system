@@ -35,16 +35,27 @@ class ArticleService
                 $coverLetterPath = $this->uploadFile($data['cover_letter'], 'cover-letters');
             }
 
+            // Generate unique slug
+            $baseSlug = Str::slug($data['title']) ?: 'article-' . Str::random(8);
+            $slug = $baseSlug;
+            $counter = 1;
+            while (Article::where('slug', $slug)->exists()) {
+                $slug = "{$baseSlug}-" . ($counter++);
+            }
+
             $article = Article::create([
                 'journal_id'      => $data['journal_id'],
                 'author_id'       => $authorId,
                 'title'           => $data['title'],
+                'slug'            => $slug,
+                'tracking_code'   => 'ART-' . date('Y') . '-' . strtoupper(Str::random(6)),
                 'abstract'        => $data['abstract'],
                 'keywords'        => $data['keywords'],
                 'language'        => $data['language'] ?? 'id',
                 'manuscript_file' => $manuscriptPath,
                 'cover_letter'    => $coverLetterPath,
                 'author_note'     => $data['author_note'] ?? null,
+                'license'         => 'cc-by',
                 'status'          => Article::STATUS_SUBMITTED,
                 'submitted_at'    => now(),
             ]);
