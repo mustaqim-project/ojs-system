@@ -29,7 +29,8 @@ class AppServiceProvider extends ServiceProvider
                 return null;
             }
 
-            if ($user->hasRole(['super-admin', 'system-admin', 'admin']) || ($user->role ?? null) === 'admin') {
+            if ($user->hasRole(['super-admin', 'system-admin', 'admin'])
+                || in_array(strtolower((string) ($user->role ?? '')), ['admin', 'super-admin', 'system-admin'])) {
                 return true;
             }
 

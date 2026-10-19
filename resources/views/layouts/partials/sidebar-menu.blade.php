@@ -1,20 +1,101 @@
 @php
     // Sidebar permission-driven: item diambil dari tabel `navigations`
     // (location = 'sidebar'), difilter per-permission via Gate/can().
+    $user = auth()->user();
     $sidebarMenus = \App\Models\Navigation::where('location', 'sidebar')
         ->where('is_active', true)
         ->whereNull('parent_id')
         ->orderBy('order')
         ->with(['children' => fn ($q) => $q->where('is_active', true)->orderBy('order')])
         ->get();
+
+    $renderedCount = 0;
 @endphp
 
-@php
-    $user = auth()->user();
-@endphp
+@if ($sidebarMenus->isNotEmpty())
+    @foreach ($sidebarMenus as $menu)
+        @php
+            $visibleChildren = $menu->children->filter(function ($child) use ($user) {
+                // 1. Admin selalu diizinkan melihat seluruh menu administrasi
+                if ($user->isAdmin()) {
+                    $target = $child->route_name ?? $child->url ?? '';
+                    // Saring menu khusus role editorial non-admin agar rapi
+                    if (str_starts_with($target, 'editor.') || str_starts_with($target, 'reviewer.') || str_starts_with($target, 'author.')) {
+                        return false;
+                    }
+                    return true;
+                }
 
-@if ($sidebarMenus->isEmpty())
-    {{-- Fallback otomatis jika tabel navigations di database belum di-seed --}}
+                // 2. Permission check untuk non-admin
+                if ($child->permission && ! $user->can($child->permission)) {
+                    $target = $child->route_name ?? $child->url ?? '';
+                    $isAllowed = (str_starts_with($target, 'author.') && $user->isAuthor())
+                        || (str_starts_with($target, 'reviewer.') && $user->isReviewer())
+                        || (str_starts_with($target, 'editor.') && ($user->isEditor() || $user->isAdmin()));
+                    if (! $isAllowed) {
+                        return false;
+                    }
+                }
+
+                // 3. Portal / Role context check
+                $target = $child->route_name ?? $child->url ?? '';
+                if (str_starts_with($target, 'admin.') || str_contains($target, 'route::admin.')) {
+                    if (! $user->isAdmin()) return false;
+                } elseif (str_starts_with($target, 'editor.') || str_contains($target, 'route::editor.')) {
+                    if (! $user->isEditor() && ! $user->isAdmin()) return false;
+                } elseif (str_starts_with($target, 'reviewer.') || str_contains($target, 'route::reviewer.')) {
+                    if (! $user->isReviewer()) return false;
+                } elseif (str_starts_with($target, 'author.') || str_contains($target, 'route::author.')) {
+                    if (! $user->isAuthor()) return false;
+                }
+
+                return true;
+            });
+        @endphp
+
+        @if ($menu->children->count() > 0)
+            {{-- Kategori + item child --}}
+            @if ($visibleChildren->count() > 0)
+                <li class="sidebar-category">{{ $menu->title }}</li>
+                @foreach ($visibleChildren as $child)
+                    @php
+                        $renderedCount++;
+                        $isPayments = $child->route_name === 'admin.payments';
+                        $pendingCount = $isPayments ? \App\Models\Payment::whereIn('status', ['uploaded', 'waiting_verification'])->count() : 0;
+                    @endphp
+                    <li>
+                        <a href="{{ nav_url($child) }}"
+                            class="sidebar-link {{ nav_is_active($child) ? 'active' : '' }}">
+                            <i class="bi {{ $child->icon ?: 'bi-arrow-right' }}"></i> {{ $child->title }}
+                            @if ($pendingCount)
+                                <span class="badge rounded-pill"
+                                    style="background-color: #ef4444; font-size: 10px; margin-left: auto;">{{ $pendingCount }}</span>
+                            @endif
+                        </a>
+                    </li>
+                @endforeach
+            @endif
+        @else
+            {{-- Item tunggal (bukan kategori) --}}
+            @php
+                $canView = $user->isAdmin() || ! $menu->permission || $user->can($menu->permission);
+            @endphp
+            @if ($canView)
+                @php $renderedCount++; @endphp
+                <li class="sidebar-category">{{ $menu->title }}</li>
+                <li>
+                    <a href="{{ nav_url($menu) }}"
+                        class="sidebar-link {{ nav_is_active($menu) ? 'active' : '' }}">
+                        <i class="bi {{ $menu->icon ?: 'bi-arrow-right' }}"></i> {{ $menu->title }}
+                    </a>
+                </li>
+            @endif
+        @endif
+    @endforeach
+@endif
+
+@if ($renderedCount === 0)
+    {{-- Fallback otomatis jika database kosong, unseeded, atau permission Spatie belum sinkron --}}
     @if ($user->isAdmin())
         <li class="sidebar-category">Administrasi</li>
         <li><a href="{{ route('admin.dashboard') }}" class="sidebar-link {{ request()->routeIs('admin.dashboard*') ? 'active' : '' }}"><i class="bi bi-grid-1x2"></i> Dasbor</a></li>
@@ -59,69 +140,4 @@
         <li><a href="{{ route('author.articles.index') }}" class="sidebar-link {{ request()->routeIs('author.articles*') ? 'active' : '' }}"><i class="bi bi-file-earmark-text"></i> Kiriman Saya</a></li>
         <li><a href="{{ route('author.articles.create') }}" class="sidebar-link {{ request()->routeIs('author.articles.create*') ? 'active' : '' }}"><i class="bi bi-plus-circle"></i> Kirim Naskah</a></li>
     @endif
-@else
-@foreach ($sidebarMenus as $menu)
-    @php
-        $visibleChildren = $menu->children->filter(function ($child) use ($user) {
-            // 1. Permission check (admin selalu diizinkan; fallback bila cache permission Spatie kosong)
-            if ($child->permission && ! $user->isAdmin() && ! $user->can($child->permission)) {
-                $target = $child->route_name ?? $child->url ?? '';
-                $isAllowed = (str_starts_with($target, 'author.') && $user->isAuthor())
-                    || (str_starts_with($target, 'reviewer.') && $user->isReviewer())
-                    || (str_starts_with($target, 'editor.') && ($user->isEditor() || $user->isAdmin()));
-                if (! $isAllowed) {
-                    return false;
-                }
-            }
-
-            // 2. Portal / Role context check to prevent route bleeding and 403 errors
-            $target = $child->route_name ?? $child->url ?? '';
-            if (str_starts_with($target, 'admin.') || str_contains($target, 'route::admin.')) {
-                if (! $user->isAdmin()) return false;
-            } elseif (str_starts_with($target, 'editor.') || str_contains($target, 'route::editor.')) {
-                if (! $user->isEditor() && ! $user->isAdmin()) return false;
-            } elseif (str_starts_with($target, 'reviewer.') || str_contains($target, 'route::reviewer.')) {
-                if (! $user->isReviewer()) return false;
-            } elseif (str_starts_with($target, 'author.') || str_contains($target, 'route::author.')) {
-                if (! $user->isAuthor()) return false;
-            }
-
-            return true;
-        });
-    @endphp
-
-    @if ($menu->children->count() > 0)
-        {{-- Kategori + item child --}}
-        @if ($visibleChildren->count() > 0)
-            <li class="sidebar-category">{{ $menu->title }}</li>
-            @foreach ($visibleChildren as $child)
-                @php
-                    $isPayments = $child->route_name === 'admin.payments';
-                    $pendingCount = $isPayments ? \App\Models\Payment::whereIn('status', ['uploaded', 'waiting_verification'])->count() : 0;
-                @endphp
-                <li>
-                    <a href="{{ nav_url($child) }}"
-                        class="sidebar-link {{ nav_is_active($child) ? 'active' : '' }}">
-                        <i class="bi {{ $child->icon ?: 'bi-arrow-right' }}"></i> {{ $child->title }}
-                        @if ($pendingCount)
-                            <span class="badge rounded-pill"
-                                style="background-color: #ef4444; font-size: 10px; margin-left: auto;">{{ $pendingCount }}</span>
-                        @endif
-                    </a>
-                </li>
-            @endforeach
-        @endif
-    @else
-        {{-- Item tunggal (bukan kategori) --}}
-        @if (! $menu->permission || auth()->user()->can($menu->permission))
-            <li class="sidebar-category">{{ $menu->title }}</li>
-            <li>
-                <a href="{{ nav_url($menu) }}"
-                    class="sidebar-link {{ nav_is_active($menu) ? 'active' : '' }}">
-                    <i class="bi {{ $menu->icon ?: 'bi-arrow-right' }}"></i> {{ $menu->title }}
-                </a>
-            </li>
-        @endif
-    @endif
-@endforeach
 @endif
