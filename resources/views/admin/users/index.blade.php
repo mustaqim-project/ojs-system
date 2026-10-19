@@ -81,7 +81,19 @@
               </div>
             </div>
           </td>
-          <td><x-status-badge :status="$user->role" :label="ucfirst($user->role)"/></td>
+          <td>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;">
+              @php
+                $assignedRoles = $user->roles->pluck('name')->toArray();
+                if (empty($assignedRoles) && $user->role) {
+                    $assignedRoles = [$user->role];
+                }
+              @endphp
+              @foreach($assignedRoles as $r)
+                <x-status-badge :status="$r" :label="ucfirst(str_replace('-', ' ', $r))"/>
+              @endforeach
+            </div>
+          </td>
           <td style="font-size:13px;color:var(--text-muted);">{{ Str::limit($user->affiliation ?? '—', 30) }}</td>
           <td><x-orcid-badge :orcid="$user->orcid"/></td>
           <td>

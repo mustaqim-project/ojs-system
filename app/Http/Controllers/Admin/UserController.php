@@ -15,7 +15,7 @@ class UserController extends Controller
     public function index(Request $request): View
     {
         $role  = $request->get('role', '');
-        $query = User::withTrashed()->latest();
+        $query = User::withTrashed()->with('roles')->latest();
 
         if ($role) {
             $query->where(function ($q) use ($role) {
@@ -67,7 +67,7 @@ class UserController extends Controller
             $institutionId = $institution->id;
         }
 
-        User::create([
+        $user = User::create([
             'name'           => $request->name,
             'email'          => $request->email,
             'password'       => Hash::make($request->password),
@@ -76,7 +76,10 @@ class UserController extends Controller
             'institution_id' => $institutionId,
             'phone'          => $request->phone,
             'is_active'      => true,
-        ])->syncRoles([$request->role]);
+        ]);
+
+        $allRoles = array_unique(array_filter(array_merge([$request->role], (array) $request->input('roles', []))));
+        $user->syncRoles($allRoles);
 
         return redirect()->route('admin.users.index')->with('success', 'User berhasil ditambahkan!');
     }
@@ -84,7 +87,11 @@ class UserController extends Controller
     public function edit(User $user): View
     {
         $roles = $this->getAvailableRoles();
-        return view('admin.users.edit', compact('user', 'roles'));
+        $userRoles = $user->roles->pluck('name')->toArray();
+        if (empty($userRoles) && $user->role) {
+            $userRoles = [$user->role];
+        }
+        return view('admin.users.edit', compact('user', 'roles', 'userRoles'));
     }
 
     public function update(Request $request, User $user): RedirectResponse
@@ -94,6 +101,8 @@ class UserController extends Controller
             'name'        => ['required', 'string', 'max:255'],
             'email'       => ['required', 'email', "unique:users,email,{$user->id}"],
             'role'        => ['required', 'string', \Illuminate\Validation\Rule::in($roles)],
+            'roles'       => ['nullable', 'array'],
+            'roles.*'     => ['string', \Illuminate\Validation\Rule::in($roles)],
             'affiliation' => ['nullable', 'string', 'max:255'],
             'institution_id' => ['nullable', 'integer', 'exists:institutions,id'],
             'phone'       => ['nullable', 'string', 'max:20'],
@@ -121,7 +130,9 @@ class UserController extends Controller
             'phone'          => $request->phone,
             'is_active'      => $request->is_active,
         ]);
-        $user->syncRoles([$request->role]);
+
+        $allRoles = array_unique(array_filter(array_merge([$request->role], (array) $request->input('roles', []))));
+        $user->syncRoles($allRoles);
 
         if ($request->filled('password')) {
             $request->validate(['password' => [Password::min(8)]]);

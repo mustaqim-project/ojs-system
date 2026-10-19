@@ -50,13 +50,45 @@
             </x-ui.form-field>
           </div>
           <div class="col-md-6">
-            <x-ui.form-field label="Role" required :error="$errors->first('role')">
-              <x-ui.select name="role" :error="$errors->has('role')" placeholder="Select role" required>
+            <x-ui.form-field label="Peran Utama (Primary Role)" required :error="$errors->first('role')" hint="Menentukan portal dasbor utama pengguna.">
+              <x-ui.select name="role" :error="$errors->has('role')" placeholder="Pilih Peran Utama" required>
                 @foreach($roles as $r)
                   <option value="{{ $r }}" {{ old('role') === $r ? 'selected' : '' }}>{{ ucfirst($r) }}</option>
                 @endforeach
               </x-ui.select>
             </x-ui.form-field>
+          </div>
+        </div>
+
+        {{-- Multi-Role Assignment (1 Pengguna Banyak Role) --}}
+        <div style="margin-top: 18px; padding: 16px; background: var(--bg-app); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <label style="font-size: 13px; font-weight: 700; color: var(--text-main); margin: 0;">
+              <i class="bi bi-shield-check me-1" style="color: var(--primary);"></i> Penetapan Banyak Peran (Multi-Role Akses)
+            </label>
+            <span style="font-size: 11px; color: var(--text-muted);">Centang seluruh peran yang diemban</span>
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted); line-height: 1.4; margin-bottom: 12px;">
+            Satu pengguna dapat memiliki banyak peran sekaligus (misal: <strong>Author</strong> untuk mengirim naskah sekaligus <strong>Reviewer</strong> untuk menilai artikel).
+          </p>
+          <div class="row g-2">
+            @php
+              $selectedRoles = old('roles', []);
+            @endphp
+            @foreach($roles as $r)
+              @php $isAuthor = ($r === 'author'); @endphp
+              <div class="col-6 col-md-4">
+                <label style="display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: var(--bg-surface); border: 1px solid {{ in_array($r, $selectedRoles) ? 'var(--primary)' : 'var(--border)' }}; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; color: var(--text-main); margin: 0;">
+                  <input type="checkbox" name="roles[]" value="{{ $r }}" {{ in_array($r, $selectedRoles) ? 'checked' : '' }} style="accent-color: var(--primary);">
+                  <span>
+                    @if($isAuthor)
+                      <i class="bi bi-pen me-1" style="color: #10B981;"></i>
+                    @endif
+                    {{ ucfirst(str_replace('-', ' ', $r)) }}
+                  </span>
+                </label>
+              </div>
+            @endforeach
           </div>
         </div>
       </div>

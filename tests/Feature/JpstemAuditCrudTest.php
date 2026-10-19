@@ -228,6 +228,23 @@ class JpstemAuditCrudTest extends TestCase
         $user->refresh();
         $this->assertEquals('089876543210', $user->phone);
         $this->assertEquals('Finance Staff Updated', $user->name);
+
+        // 5. Multi-role assignment (e.g. user is simultaneously author and reviewer)
+        $this->actingAs($this->admin)->put(route('admin.users.update', $user), [
+            'name'        => 'Staff Multi Role',
+            'email'       => 'finance.staff@example.com',
+            'role'        => 'author',
+            'roles'       => ['author', 'reviewer', 'editor'],
+            'phone'       => '089876543210',
+            'affiliation' => 'Madani University Updated',
+            'is_active'   => 1,
+        ])->assertRedirect(route('admin.users.index'));
+
+        $user->refresh();
+        $this->assertEquals('author', $user->role);
+        $this->assertTrue($user->hasRole('author'));
+        $this->assertTrue($user->hasRole('reviewer'));
+        $this->assertTrue($user->hasRole('editor'));
     }
 
     public function test_roles_management_protects_system_role_name_while_allowing_permissions(): void
