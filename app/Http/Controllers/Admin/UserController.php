@@ -18,13 +18,22 @@ class UserController extends Controller
         $query = User::withTrashed()->latest();
 
         if ($role) {
-            $query->where('role', $role);
+            $query->where(function ($q) use ($role) {
+                $q->where('role', $role)
+                  ->orWhereHas('roles', fn ($r) => $r->where('name', $role));
+            });
         }
 
         $users = $query->paginate(15)->withQueryString();
         $roles = $this->getAvailableRoles();
 
-        return view('admin.users.index', compact('users', 'roles', 'role'));
+        $roleCounts = User::select('role', \Illuminate\Support\Facades\DB::raw('count(*) as count'))
+            ->whereNotNull('role')
+            ->groupBy('role')
+            ->pluck('count', 'role')
+            ->toArray();
+
+        return view('admin.users.index', compact('users', 'roles', 'role', 'roleCounts'));
     }
 
     public function create(): View

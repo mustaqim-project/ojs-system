@@ -14,14 +14,41 @@
 </div>
 
 {{-- Role Tabs --}}
-<div class="ds-ftabs mb-4" data-aos="fade-up">
+@php
+    $coreRoles = ['admin', 'editor', 'reviewer', 'author'];
+    $otherActiveRoles = array_filter($roles, fn($r) => !in_array($r, $coreRoles) && ((isset($roleCounts[$r]) && $roleCounts[$r] > 0) || $role === $r));
+@endphp
+<div class="ds-ftabs mb-4" data-aos="fade-up" style="display: flex; flex-wrap: wrap; gap: 8px;">
   <a href="{{ route('admin.users.index') }}" class="ds-ftab {{ !$role ? 'active' : '' }}">
-    All <span style="margin-left:4px;font-size:11px;opacity:0.7;">({{ $users->total() }})</span>
+    Semua Pengguna <span style="margin-left:4px;font-size:11px;opacity:0.8;font-weight:700;">({{ $users->total() }})</span>
   </a>
-  @foreach($roles as $r)
-  <a href="{{ route('admin.users.index',['role'=>$r]) }}" class="ds-ftab {{ $role === $r ? 'active' : '' }}">
-    {{ ucfirst($r) }}
-  </a>
+  
+  {{-- Core Primary OJS Roles --}}
+  @foreach($coreRoles as $cr)
+    @php
+      $count = $roleCounts[$cr] ?? 0;
+      $isAuthor = ($cr === 'author');
+    @endphp
+    <a href="{{ route('admin.users.index',['role'=>$cr]) }}" class="ds-ftab {{ $role === $cr ? 'active' : '' }}" style="{{ $isAuthor ? 'border-color: rgba(16, 185, 129, 0.3);' : '' }}">
+      @if($isAuthor)
+        <i class="bi bi-pen-fill me-1" style="color: #10b981;"></i>
+      @endif
+      {{ ucfirst($cr) }}
+      @if($count > 0)
+        <span style="margin-left:4px;font-size:11px;opacity:0.8;font-weight:700;">({{ $count }})</span>
+      @endif
+    </a>
+  @endforeach
+
+  {{-- Secondary Roles (Only if active or currently selected) --}}
+  @foreach($otherActiveRoles as $or)
+    @php $count = $roleCounts[$or] ?? 0; @endphp
+    <a href="{{ route('admin.users.index',['role'=>$or]) }}" class="ds-ftab {{ $role === $or ? 'active' : '' }}">
+      {{ ucfirst(str_replace('-', ' ', $or)) }}
+      @if($count > 0)
+        <span style="margin-left:4px;font-size:11px;opacity:0.8;font-weight:700;">({{ $count }})</span>
+      @endif
+    </a>
   @endforeach
 </div>
 

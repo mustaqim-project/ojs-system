@@ -14,7 +14,7 @@ use Spatie\Permission\PermissionRegistrar;
 
 class RoleController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
         $roles = Role::with('permissions')->orderBy('name')->get();
 
@@ -23,7 +23,43 @@ class RoleController extends Controller
             ->pluck('role_id')
             ->countBy();
 
-        return view('admin.roles.index', compact('roles', 'userCounts'));
+        $legacyCounts = User::select('role', DB::raw('count(*) as count'))
+            ->whereNotNull('role')
+            ->groupBy('role')
+            ->pluck('count', 'role')
+            ->toArray();
+
+        $totalUsers = User::count();
+        $totalPermissions = Permission::count();
+
+        // Granular permissions grouped by clean readable categories
+        $permissionsByCategory = Permission::orderBy('name')->get()
+            ->groupBy(function (Permission $p) {
+                $prefix = strtok($p->name, '.');
+                return match($prefix) {
+                    'submission', 'screening' => 'Pengajuan & Naskah (Submissions)',
+                    'review', 'reviewer' => 'Peninjauan Sejawat (Peer Review)',
+                    'decision', 'publication', 'volume', 'issue', 'doi' => 'Keputusan Redaksi & Terbitan',
+                    'copyediting', 'layout', 'proofreading' => 'Produksi & Tata Letak',
+                    'invoice', 'payment', 'waiver', 'receipt', 'refund' => 'Keuangan & APC',
+                    'users', 'roles', 'permissions' => 'Pengguna & Hak Akses',
+                    'system-settings', 'cms', 'api', 'audit', 'notifications', 'menus' => 'Pengaturan & Sistem',
+                    default => ucfirst($prefix),
+                };
+            });
+
+        // Members with their roles
+        $members = User::latest()->paginate(15, ['*'], 'members_page')->withQueryString();
+
+        return view('admin.roles.index', compact(
+            'roles',
+            'userCounts',
+            'legacyCounts',
+            'totalUsers',
+            'totalPermissions',
+            'permissionsByCategory',
+            'members'
+        ));
     }
 
     public function create(): View
