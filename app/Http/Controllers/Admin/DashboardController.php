@@ -18,13 +18,13 @@ class DashboardController extends Controller
             'total_journals'   => Journal::count(),
             'total_articles'   => Article::count(),
             'published'        => Article::where('status', 'published')->count(),
-            'pending_payment'  => Payment::whereIn('status', ['uploaded'])->count(),
+            'pending_payment'  => Payment::whereIn('status', ['uploaded', 'waiting_verification'])->count(),
             'total_revenue'    => Payment::where('status', 'verified')->sum('amount'),
         ];
 
         $recentArticles  = Article::with(['journal', 'author'])->latest()->take(8)->get();
         $pendingPayments = Payment::with(['article.author', 'article.journal'])
-            ->where('status', 'uploaded')
+            ->whereIn('status', ['uploaded', 'waiting_verification'])
             ->latest()
             ->take(5)
             ->get();

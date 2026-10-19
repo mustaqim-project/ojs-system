@@ -33,6 +33,9 @@
             <div id="affiliation-dropdown" class="dropdown-menu w-100 shadow border mt-1" style="display:none; max-height:250px; overflow-y:auto; z-index:1000; position:absolute; background:white;"></div>
           </div>
         </x-ui.form-field>
+        <x-ui.form-field label="Phone Number" :error="$errors->first('phone')">
+          <x-ui.input type="text" name="phone" :value="old('phone',$user->phone)" placeholder="+62 812 3456 7890" :error="$errors->has('phone')"/>
+        </x-ui.form-field>
         <div class="row g-3">
           <div class="col-md-6">
             <x-ui.form-field label="Role" required :error="$errors->first('role')">

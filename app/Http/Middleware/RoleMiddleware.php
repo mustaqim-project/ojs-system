@@ -35,9 +35,14 @@ class RoleMiddleware
                 ->with('error', 'Akun Anda telah dinonaktifkan. Hubungi administrator.');
         }
 
+        $hasSpatieRole = $user->hasRole($roles);
+        if (!$hasSpatieRole && in_array('admin', $roles)) {
+            $hasSpatieRole = $user->hasRole(self::ADMIN_ROLES);
+        }
+
         // Cek role — periksa Spatie roles DAN kolom legacy `users.role`
         if (!empty($roles)
-            && !$user->hasRole($roles)
+            && !$hasSpatieRole
             && !in_array($user->role, $roles)) {
             // Log akses yang tidak sah (opsional untuk audit)
             \Log::warning("Unauthorized access attempt", [

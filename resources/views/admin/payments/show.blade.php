@@ -103,7 +103,7 @@
     @endif
 
     {{-- Verify / Reject Actions --}}
-    @if($payment->status === 'uploaded')
+    @if(in_array($payment->status, ['uploaded', 'waiting_verification']))
     <div class="row g-3" data-aos="fade-up" data-aos-delay="400">
       <div class="col-md-6">
         <div style="background:var(--success-bg);border:1px solid var(--success);border-radius:10px;padding:20px;">

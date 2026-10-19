@@ -67,9 +67,13 @@
           </td>
           <td style="font-size:13px;color:var(--text-muted);">{{ $p->created_at->format('d M Y') }}</td>
           <td>
-            <a href="{{ route('admin.payments.show',$p) }}" class="ds-btn ds-btn-out ds-btn-xs">
-              Lihat <i class="bi bi-arrow-right ms-1"></i>
-            </a>
+            @if($p->id)
+              <a href="{{ route('admin.payments.show',$p->id) }}" class="ds-btn ds-btn-out ds-btn-xs">
+                Lihat <i class="bi bi-arrow-right ms-1"></i>
+              </a>
+            @else
+              <span style="font-size:12px;color:var(--text-muted);font-style:italic;">Belum diunggah</span>
+            @endif
           </td>
         </tr>
         @empty

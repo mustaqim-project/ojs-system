@@ -40,6 +40,35 @@ class IssueController extends Controller
         return redirect()->route('admin.issues.index')->with('success', 'Issue berhasil ditambahkan!');
     }
 
+    public function edit(Issue $issue): View
+    {
+        $journals = Journal::active()->get();
+        return view('admin.issues.edit', compact('issue', 'journals'));
+    }
+
+    public function update(Request $request, Issue $issue): RedirectResponse
+    {
+        $validated = $request->validate([
+            'journal_id'     => ['required', 'exists:journals,id'],
+            'title'          => ['required', 'string', 'max:255'],
+            'volume'         => ['required', 'integer', 'min:1'],
+            'number'         => ['required', 'integer', 'min:1'],
+            'year'           => ['required', 'integer', 'min:2000', 'max:2100'],
+            'description'    => ['nullable', 'string'],
+            'published_date' => ['nullable', 'date'],
+            'status'         => ['required', 'in:draft,published,scheduled'],
+        ]);
+
+        $issue->update($validated);
+        return redirect()->route('admin.issues.index')->with('success', 'Issue berhasil diperbarui!');
+    }
+
+    public function destroy(Issue $issue): RedirectResponse
+    {
+        $issue->delete();
+        return redirect()->route('admin.issues.index')->with('success', 'Issue berhasil dihapus!');
+    }
+
     public function publish(Issue $issue): RedirectResponse
     {
         $issue->update(['status' => 'published', 'published_date' => now()]);

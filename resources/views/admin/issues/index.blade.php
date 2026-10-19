@@ -44,17 +44,35 @@
           </td>
           <td style="font-size:13px;color:var(--text-muted);">{{ $issue->published_date?->format('d M Y') ?? '—' }}</td>
           <td>
-            @if($issue->status === 'draft')
-              <form method="POST" action="{{ route('admin.issues.publish',$issue) }}" style="display:inline;">
-                @csrf @method('PATCH')
-                <button type="submit" class="ds-btn ds-btn-suc ds-btn-sm"
-                        onclick="return confirm('Terbitkan nomor terbitan ini? Ini akan membuatnya terlihat secara publik.')">
-                  <i class="bi bi-send-check"></i> Terbitkan
-                </button>
-              </form>
-            @else
-              <span style="font-size:12px;color:var(--success);font-weight:600;"><i class="bi bi-check-circle me-1"></i>Diterbitkan</span>
-            @endif
+            <div style="display:flex;gap:6px;align-items:center;">
+              @can('issue.manage')
+                <a href="{{ route('admin.issues.edit', $issue) }}" class="ds-btn ds-btn-out ds-btn-xs" title="Edit Terbitan">
+                  <i class="bi bi-pencil"></i>
+                </a>
+              @endcan
+              @if($issue->status === 'draft')
+                @can('issue.manage')
+                  <form method="POST" action="{{ route('admin.issues.publish',$issue) }}" style="display:inline;">
+                    @csrf @method('PATCH')
+                    <button type="submit" class="ds-btn ds-btn-suc ds-btn-xs"
+                            onclick="return confirm('Terbitkan nomor terbitan ini? Ini akan membuatnya terlihat secara publik.')" title="Terbitkan">
+                      <i class="bi bi-send-check"></i>
+                    </button>
+                  </form>
+                @endcan
+              @else
+                <span style="font-size:12px;color:var(--success);font-weight:600;"><i class="bi bi-check-circle"></i></span>
+              @endif
+              @can('issue.manage')
+                <form method="POST" action="{{ route('admin.issues.destroy', $issue) }}" style="display:inline;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus terbitan ini?')">
+                  @csrf
+                  @method('DELETE')
+                  <button type="submit" class="ds-btn ds-btn-out ds-btn-xs" style="color:var(--danger);border-color:var(--danger);" title="Hapus Terbitan">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </form>
+              @endcan
+            </div>
           </td>
         </tr>
         @empty

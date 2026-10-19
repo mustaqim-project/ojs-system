@@ -64,7 +64,7 @@ class PaymentController extends Controller
             'admin_notes' => ['nullable', 'string', 'max:500'],
         ]);
 
-        if ($payment->status !== 'waiting_verification') {
+        if (!in_array($payment->status, ['waiting_verification', 'uploaded'])) {
             return back()->with('error', 'Pembayaran ini tidak bisa diverifikasi.');
         }
 
@@ -83,7 +83,7 @@ class PaymentController extends Controller
             'admin_notes' => ['required', 'string', 'max:500'],
         ]);
 
-        if ($payment->status !== 'waiting_verification') {
+        if (!in_array($payment->status, ['waiting_verification', 'uploaded'])) {
             return back()->with('error', 'Pembayaran ini tidak bisa ditolak.');
         }
 

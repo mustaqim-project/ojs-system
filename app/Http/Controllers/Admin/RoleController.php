@@ -37,7 +37,7 @@ class RoleController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'name' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9\-\_]+$/'],
+            'name' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9\-\_]+$/', 'unique:'.config('permission.table_names.roles').',name'],
             'permissions' => ['nullable', 'array'],
             'permissions.*' => ['string', 'exists:'.config('permission.table_names.permissions').',name'],
         ]);
@@ -62,17 +62,19 @@ class RoleController extends Controller
 
     public function update(Request $request, Role $role): RedirectResponse
     {
-        if (in_array($role->name, ['super-admin', 'system-admin'])) {
-            return back()->with('error', 'Role sistem tidak bisa diubah namanya.');
+        if (in_array($role->name, ['super-admin', 'system-admin']) && $request->input('name') !== $role->name) {
+            return back()->with('error', 'Nama role sistem tidak bisa diubah.');
         }
 
         $data = $request->validate([
-            'name' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9\-\_]+$/'],
+            'name' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9\-\_]+$/', 'unique:'.config('permission.table_names.roles').',name,'.$role->id],
             'permissions' => ['nullable', 'array'],
             'permissions.*' => ['string', 'exists:'.config('permission.table_names.permissions').',name'],
         ]);
 
-        $role->update(['name' => $data['name']]);
+        if (!in_array($role->name, ['super-admin', 'system-admin'])) {
+            $role->update(['name' => $data['name']]);
+        }
         $role->syncPermissions($data['permissions'] ?? []);
 
         app()[PermissionRegistrar::class]->forgetCachedPermissions();

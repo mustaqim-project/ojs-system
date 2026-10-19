@@ -1,4 +1,3 @@
-```
 # Dependency directories
 node_modules/
 vendor/
@@ -10,6 +9,12 @@ storage/logs/
 storage/framework/cache/
 storage/framework/sessions/
 storage/framework/views/
+
+# Uploads
+public/uploads/*
+!public/uploads/.gitkeep
+public/upload/*
+!public/upload/.gitkeep
 
 # Environment
 .env
@@ -38,7 +43,6 @@ htmlcov/
 # Temporary files
 *.tmp
 *.temp
-```
+
 # PHPUnit
 .phpunit.result.cache
-

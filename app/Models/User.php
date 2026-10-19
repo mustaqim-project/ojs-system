@@ -164,7 +164,10 @@ class User extends Authenticatable
 
     public function scopeByRole($query, string $role)
     {
-        return $query->where('role', $role);
+        return $query->where(function ($q) use ($role) {
+            $q->where('role', $role)
+              ->orWhereHas('roles', fn ($sq) => $sq->where('name', $role));
+        });
     }
 
     public function scopeActive($query)

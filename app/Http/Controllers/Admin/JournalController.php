@@ -73,12 +73,17 @@ class JournalController extends Controller
     public function update(Request $request, Journal $journal): RedirectResponse
     {
         $request->validate([
-            'title'       => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'frequency'   => ['required', 'in:monthly,bimonthly,quarterly,semiannual,annual'],
-            'editor_id'   => ['nullable', 'exists:users,id'],
-            'is_active'   => ['boolean'],
-            'cover_image' => ['nullable', 'image', 'max:2048'],
+            'title'        => ['required', 'string', 'max:255'],
+            'abbreviation' => ['nullable', 'string', 'max:20'],
+            'description'  => ['nullable', 'string'],
+            'issn_print'   => ['nullable', 'string', 'max:20'],
+            'issn_online'  => ['nullable', 'string', 'max:20'],
+            'publisher'    => ['nullable', 'string', 'max:255'],
+            'subject_area' => ['nullable', 'string', 'max:255'],
+            'frequency'    => ['required', 'in:monthly,bimonthly,quarterly,semiannual,annual'],
+            'editor_id'    => ['nullable', 'exists:users,id'],
+            'is_active'    => ['boolean'],
+            'cover_image'  => ['nullable', 'image', 'max:2048'],
         ]);
 
         $data = $request->except('cover_image', '_token', '_method');
@@ -109,6 +114,12 @@ class JournalController extends Controller
 
         $journal->update($data);
         return redirect()->route('admin.journals.index')->with('success', 'Jurnal berhasil diupdate!');
+    }
+
+    public function destroy(Journal $journal): RedirectResponse
+    {
+        $journal->delete();
+        return redirect()->route('admin.journals.index')->with('success', 'Jurnal berhasil dihapus!');
     }
 
     private function convertToWebp(string $sourcePath, string $destinationPath): bool

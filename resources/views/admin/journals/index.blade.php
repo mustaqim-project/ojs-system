@@ -52,11 +52,24 @@
             @endif
           </td>
           <td>
-            @if(!$j->trashed())
-              <a href="{{ route('admin.journals.edit',$j) }}" class="ds-btn ds-btn-out ds-btn-xs" title="Edit Journal">
-                <i class="bi bi-pencil"></i>
-              </a>
-            @endif
+            <div style="display:flex;gap:6px;align-items:center;">
+              @if(!$j->trashed())
+                @can('journal.update')
+                  <a href="{{ route('admin.journals.edit',$j) }}" class="ds-btn ds-btn-out ds-btn-xs" title="Edit Journal">
+                    <i class="bi bi-pencil"></i>
+                  </a>
+                @endcan
+                @can('journal.delete')
+                  <form method="POST" action="{{ route('admin.journals.destroy', $j) }}" style="display:inline;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus jurnal {{ $j->title }}?')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="ds-btn ds-btn-out ds-btn-xs" style="color:var(--danger);border-color:var(--danger);" title="Hapus Jurnal">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </form>
+                @endcan
+              @endif
+            </div>
           </td>
         </tr>
         @empty

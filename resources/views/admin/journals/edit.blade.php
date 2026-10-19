@@ -23,6 +23,35 @@
           <x-ui.input type="text" name="title" :value="old('title',$journal->title)" required :error="$errors->has('title')"/>
         </x-ui.form-field>
         <div class="row g-3">
+          <div class="col-md-4">
+            <x-ui.form-field label="Abbreviation" hint="e.g. IJST">
+              <x-ui.input type="text" name="abbreviation" :value="old('abbreviation',$journal->abbreviation)" placeholder="IJST"/>
+            </x-ui.form-field>
+          </div>
+          <div class="col-md-4">
+            <x-ui.form-field label="ISSN Print" hint="XXXX-XXXX format">
+              <x-ui.input type="text" name="issn_print" :value="old('issn_print',$journal->issn_print)" placeholder="2580-XXXX"/>
+            </x-ui.form-field>
+          </div>
+          <div class="col-md-4">
+            <x-ui.form-field label="ISSN Online" hint="XXXX-XXXX format">
+              <x-ui.input type="text" name="issn_online" :value="old('issn_online',$journal->issn_online)" placeholder="2580-XXXX"/>
+            </x-ui.form-field>
+          </div>
+        </div>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <x-ui.form-field label="Publisher">
+              <x-ui.input type="text" name="publisher" :value="old('publisher',$journal->publisher)" placeholder="Institution / Publisher name"/>
+            </x-ui.form-field>
+          </div>
+          <div class="col-md-6">
+            <x-ui.form-field label="Subject Area">
+              <x-ui.input type="text" name="subject_area" :value="old('subject_area',$journal->subject_area)" placeholder="Computer Science, Engineering..."/>
+            </x-ui.form-field>
+          </div>
+        </div>
+        <div class="row g-3">
           <div class="col-md-6">
             <x-ui.form-field label="Publication Frequency" required>
               <x-ui.select name="frequency" required>

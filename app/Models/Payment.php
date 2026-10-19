@@ -30,6 +30,18 @@ class Payment extends Model
         return $this->belongsTo(Invoice::class);
     }
 
+    public function article()
+    {
+        return $this->hasOneThrough(
+            Article::class,
+            Invoice::class,
+            'id',
+            'id',
+            'invoice_id',
+            'submission_id'
+        );
+    }
+
     public function author()
     {
         return $this->belongsTo(User::class, 'author_id');
@@ -82,11 +94,6 @@ class Payment extends Model
             'rejected'             => 'Ditolak',
         ];
         return $statusLabels[$this->status] ?? $this->status;
-    }
-
-    public function getArticleAttribute()
-    {
-        return $this->invoice?->submission;
     }
 
     public function getUploadedAtAttribute()

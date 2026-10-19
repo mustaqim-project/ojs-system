@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -85,12 +85,14 @@ Route::middleware(['auth', 'admin.panel'])
         // Navigations (dinamis: header publik + sidebar permission-driven)
         Route::middleware('permission:menus.view')->group(function () {
             Route::get('/navigations', [NavigationController::class, 'index'])->name('navigations.index');
+            Route::get('/navigations/{navigation}/edit', [NavigationController::class, 'edit'])->name('navigations.edit');
         });
         Route::middleware('permission:menus.create')->group(function () {
             Route::post('/navigations', [NavigationController::class, 'store'])->name('navigations.store');
         });
         Route::middleware('permission:menus.update')->group(function () {
             Route::put('/navigations/{navigation}', [NavigationController::class, 'update'])->name('navigations.update');
+            Route::patch('/navigations/{navigation}/toggle-active', [NavigationController::class, 'toggleActive'])->name('navigations.toggle-active');
         });
         Route::middleware('permission:menus.delete')->group(function () {
             Route::delete('/navigations/{navigation}', [NavigationController::class, 'destroy'])->name('navigations.destroy');
@@ -108,12 +110,18 @@ Route::middleware(['auth', 'admin.panel'])
         Route::middleware('permission:journal.update')->group(function () {
             Route::put('/journals/{journal}', [JournalController::class, 'update'])->name('journals.update');
         });
+        Route::middleware('permission:journal.delete')->group(function () {
+            Route::delete('/journals/{journal}', [JournalController::class, 'destroy'])->name('journals.destroy');
+        });
 
         // Issues
         Route::middleware('permission:issue.manage')->group(function () {
             Route::get('/issues', [IssueController::class, 'index'])->name('issues.index');
             Route::get('/issues/create', [IssueController::class, 'create'])->name('issues.create');
             Route::post('/issues', [IssueController::class, 'store'])->name('issues.store');
+            Route::get('/issues/{issue}/edit', [IssueController::class, 'edit'])->name('issues.edit');
+            Route::put('/issues/{issue}', [IssueController::class, 'update'])->name('issues.update');
+            Route::delete('/issues/{issue}', [IssueController::class, 'destroy'])->name('issues.destroy');
             Route::patch('/issues/{issue}/publish', [IssueController::class, 'publish'])->name('issues.publish');
         });
 

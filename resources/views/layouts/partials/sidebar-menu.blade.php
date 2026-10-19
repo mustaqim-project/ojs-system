@@ -11,8 +11,26 @@
 
 @foreach ($sidebarMenus as $menu)
     @php
-        $visibleChildren = $menu->children->filter(function ($child) {
-            return ! $child->permission || auth()->user()->can($child->permission);
+        $user = auth()->user();
+        $visibleChildren = $menu->children->filter(function ($child) use ($user) {
+            // 1. Permission check
+            if ($child->permission && ! $user->can($child->permission)) {
+                return false;
+            }
+
+            // 2. Portal / Role context check to prevent route bleeding and 403 errors
+            $target = $child->route_name ?? $child->url ?? '';
+            if (str_starts_with($target, 'admin.') || str_contains($target, 'route::admin.')) {
+                if (! $user->isAdmin()) return false;
+            } elseif (str_starts_with($target, 'editor.') || str_contains($target, 'route::editor.')) {
+                if (! $user->isEditor() && ! $user->isAdmin()) return false;
+            } elseif (str_starts_with($target, 'reviewer.') || str_contains($target, 'route::reviewer.')) {
+                if (! $user->isReviewer()) return false;
+            } elseif (str_starts_with($target, 'author.') || str_contains($target, 'route::author.')) {
+                if (! $user->isAuthor()) return false;
+            }
+
+            return true;
         });
     @endphp
 
@@ -23,7 +41,7 @@
             @foreach ($visibleChildren as $child)
                 @php
                     $isPayments = $child->route_name === 'admin.payments';
-                    $pendingCount = $isPayments ? \App\Models\Payment::where('status', 'uploaded')->count() : 0;
+                    $pendingCount = $isPayments ? \App\Models\Payment::whereIn('status', ['uploaded', 'waiting_verification'])->count() : 0;
                 @endphp
                 <li>
                     <a href="{{ nav_url($child) }}"
