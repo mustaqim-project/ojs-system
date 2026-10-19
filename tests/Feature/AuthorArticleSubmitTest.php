@@ -2,9 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\Article;
 use App\Models\Journal;
 use App\Models\User;
-use App\Models\Article;
+use Database\Seeders\NavigationSeeder;
+use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Notification;
@@ -13,12 +15,34 @@ use Tests\TestCase;
 
 class AuthorArticleSubmitTest extends TestCase
 {
-    public function test_author_can_view_create_article_page(): void
+    use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Roles/permissions (Spatie) harus ada agar middleware `permission:`
+        // dan menu sidebar berbasis `can()` dapat dievaluasi.
+        $this->seed([
+            RolePermissionSeeder::class,
+            NavigationSeeder::class,
+        ]);
+    }
+
+    private function makeAuthor(): User
     {
         $author = User::factory()->create([
             'role' => 'author',
-            'status' => 'active',
+            'is_active' => true,
         ]);
+        $author->syncRoles(['author']);
+
+        return $author;
+    }
+
+    public function test_author_can_view_create_article_page(): void
+    {
+        $author = $this->makeAuthor();
 
         $response = $this->actingAs($author)->get(route('author.articles.create'));
         $response->assertStatus(200);
@@ -30,10 +54,7 @@ class AuthorArticleSubmitTest extends TestCase
         Notification::fake();
         Storage::fake('public');
 
-        $author = User::factory()->create([
-            'role' => 'author',
-            'status' => 'active',
-        ]);
+        $author = $this->makeAuthor();
 
         $journal = Journal::factory()->create([
             'is_active' => true,
@@ -72,10 +93,7 @@ class AuthorArticleSubmitTest extends TestCase
 
     public function test_submit_fails_when_required_fields_are_missing(): void
     {
-        $author = User::factory()->create([
-            'role' => 'author',
-            'status' => 'active',
-        ]);
+        $author = $this->makeAuthor();
 
         $response = $this->actingAs($author)->post(route('author.articles.store'), []);
 

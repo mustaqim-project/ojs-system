@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UserSeeder extends Seeder
 {
@@ -70,7 +71,15 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($users as $user) {
-            User::updateOrCreate(['email' => $user['email']], $user);
+            $email = $user['email'];
+            unset($user['is_active']); // is_active dipasang via updateOrCreate data di bawah
+            $user = User::updateOrCreate(['email' => $email], [...$user, 'is_active' => true]);
+
+            // Sinkronkan role Spatie dari kolom legacy `role`
+            $spatieRole = Role::where('name', $user->role)->where('guard_name', 'web')->first();
+            if ($spatieRole) {
+                $user->syncRoles([$spatieRole->name]);
+            }
         }
 
         $this->command->info('Users seeded! Login: admin@ojs.id / password');

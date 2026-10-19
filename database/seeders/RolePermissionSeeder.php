@@ -105,10 +105,28 @@ class RolePermissionSeeder extends Seeder
 
             // API
             'api.tokens.manage',
+
+            // Admin Panel / RBAC Management (permission-driven)
+            'dashboard.view',
+
+            'roles.view',
+            'roles.create',
+            'roles.update',
+            'roles.delete',
+
+            'permissions.view',
+            'permissions.create',
+            'permissions.update',
+            'permissions.delete',
+
+            'menus.view',
+            'menus.create',
+            'menus.update',
+            'menus.delete',
         ];
 
         foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission]);
+            Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
         }
 
         // ============================================================
@@ -243,12 +261,92 @@ class RolePermissionSeeder extends Seeder
                 'submission.withdraw',
             ],
 
+            // ============================================================
+            // Role tambahan untuk arsitektur baru (permission-driven).
+            // 'editor' & 'admin' dijaga paralel dengan kolom legacy users.role.
+            // ============================================================
+
+            'editor' => [
+                'submission.view',
+                'submission.update',
+                'screening.view',
+                'screening.decide',
+                'reviewer.assign',
+                'reviewer.view',
+                'decision.make',
+                'decision.view',
+                'publication.approve',
+                'volume.manage',
+                'issue.manage',
+                'cms.view',
+                'cms.update',
+                'reports.view',
+            ],
+
+            'admin' => [
+                'dashboard.view',
+                'users.view',
+                'users.create',
+                'users.update',
+                'users.delete',
+                'roles.view',
+                'roles.create',
+                'roles.update',
+                'roles.delete',
+                'permissions.view',
+                'permissions.create',
+                'permissions.update',
+                'permissions.delete',
+                'menus.view',
+                'menus.create',
+                'menus.update',
+                'menus.delete',
+                'journal.view',
+                'journal.create',
+                'journal.update',
+                'journal.delete',
+                'issue.manage',
+                'submission.view',
+                'submission.update',
+                'publication.approve',
+                'invoice.view',
+                'invoice.create',
+                'invoice.update',
+                'payment.verify',
+                'payment.reject',
+                'system-settings.view',
+                'system-settings.create',
+                'system-settings.update',
+                'system-settings.delete',
+                'cms.view',
+                'cms.create',
+                'cms.update',
+                'cms.delete',
+                'cms.publish',
+                'api.tokens.manage',
+                'reports.view',
+                'reports.export',
+                'audit.view',
+                'notifications.configure',
+            ],
+
             'reader' => [],
         ];
 
         foreach ($rolePermissions as $roleName => $perms) {
-            $role = Role::firstOrCreate(['name' => $roleName]);
-            $role->syncPermissions($perms);
+            $role = Role::firstOrCreate(['name' => $roleName, 'guard_name' => 'web']);
+
+            // `Permission::all()` mengembalikan Collection — konversi ke nama agar sync stabil.
+            $permissionNames = $perms instanceof \Illuminate\Database\Eloquent\Collection
+                ? $perms->pluck('name')->all()
+                : $perms;
+
+            $role->syncPermissions($permissionNames);
         }
+
+        // Clear cached permissions agar perubahan langsung berlaku (idempotent seed)
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+
+        $this->command->info('Roles & permissions berhasil disinkronkan (idempotent).');
     }
 }

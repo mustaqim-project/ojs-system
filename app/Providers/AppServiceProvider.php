@@ -16,6 +16,26 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // ============================================================
+        // GLOBAL AUTHORIZATION BYPASS (backward-compat safety net)
+        // ------------------------------------------------------------
+        // Pengguna dengan role Spatie 'super-admin' / 'system-admin' ATAU
+        // kolom legacy `users.role = 'admin'` diizinkan melakukan semua
+        // aksi (Gate::check / can()). Permission middleware tetap memfilter
+        // per-resource untuk role lain (editor/reviewer/author/finance, dsb).
+        \Illuminate\Support\Facades\Gate::before(function ($user, $ability) {
+            // Guest / user non-Eloquent → biarkan pipeline default menanganinya.
+            if (! $user || ! method_exists($user, 'hasRole')) {
+                return null;
+            }
+
+            if ($user->hasRole(['super-admin', 'system-admin']) || ($user->role ?? null) === 'admin') {
+                return true;
+            }
+
+            return null; // Lanjut ke Gate::before milik Spatie / policy
+        });
+
         // Register Socialite Providers listener
         \Illuminate\Support\Facades\Event::listen(
             \SocialiteProviders\Manager\SocialiteWasCalled::class,

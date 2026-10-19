@@ -9,6 +9,10 @@ use Symfony\Component\HttpFoundation\Response;
 class RoleMiddleware
 {
     /**
+     * Nama-nama role Spatie yang dianggap memiliki akses penuh ke panel admin.
+     */
+    public const ADMIN_ROLES = ['admin', 'super-admin', 'system-admin'];
+    /**
      * Handle an incoming request.
      * Middleware RBAC - cek role user sebelum akses route
      *
@@ -31,8 +35,10 @@ class RoleMiddleware
                 ->with('error', 'Akun Anda telah dinonaktifkan. Hubungi administrator.');
         }
 
-        // Cek role
-        if (!empty($roles) && !in_array($user->role, $roles)) {
+        // Cek role — periksa Spatie roles DAN kolom legacy `users.role`
+        if (!empty($roles)
+            && !$user->hasRole($roles)
+            && !in_array($user->role, $roles)) {
             // Log akses yang tidak sah (opsional untuk audit)
             \Log::warning("Unauthorized access attempt", [
                 'user_id' => $user->id,

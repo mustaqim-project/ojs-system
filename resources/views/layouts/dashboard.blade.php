@@ -317,78 +317,7 @@
             </div>
 
             <ul class="sidebar-menu">
-                @if (auth()->user()->isAdmin())
-                    <li class="sidebar-category">Administrasi</li>
-                    <li><a href="{{ route('admin.dashboard') }}"
-                            class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"><i
-                                class="bi bi-grid-1x2"></i> Dasbor</a></li>
-                    <li><a href="{{ route('admin.users.index') }}"
-                            class="sidebar-link {{ request()->routeIs('admin.users*') ? 'active' : '' }}"><i
-                                class="bi bi-people"></i> Pengguna</a></li>
-                    <li><a href="{{ route('admin.journals.index') }}"
-                            class="sidebar-link {{ request()->routeIs('admin.journals*') ? 'active' : '' }}"><i
-                                class="bi bi-journals"></i> Jurnal</a></li>
-                    <li><a href="{{ route('admin.issues.index') }}"
-                            class="sidebar-link {{ request()->routeIs('admin.issues*') ? 'active' : '' }}"><i
-                                class="bi bi-collection"></i> Terbitan</a></li>
-                    <li><a href="{{ route('admin.articles.index') }}"
-                            class="sidebar-link {{ request()->routeIs('admin.articles*') ? 'active' : '' }}"><i
-                                class="bi bi-file-earmark-text"></i> Artikel</a></li>
-                    <li>
-                        <a href="{{ route('admin.payments.index') }}"
-                            class="sidebar-link {{ request()->routeIs('admin.payments*') ? 'active' : '' }}">
-                            <i class="bi bi-credit-card"></i> Pembayaran
-                            @php $pc = \App\Models\Payment::where('status','uploaded')->count(); @endphp
-                            @if ($pc)
-                                <span class="badge rounded-pill"
-                                    style="background-color: #ef4444; font-size: 10px; margin-left: auto;">{{ $pc }}</span>
-                            @endif
-                        </a>
-                    </li>
-                    <li class="sidebar-category">Pengaturan</li>
-                    <li><a href="{{ route('admin.settings.index') }}"
-                            class="sidebar-link {{ request()->routeIs('admin.settings*') ? 'active' : '' }}"><i
-                                class="bi bi-sliders"></i> Pengaturan</a></li>
-                    <li><a href="{{ route('admin.pages.index') }}"
-                            class="sidebar-link {{ request()->routeIs('admin.pages*') ? 'active' : '' }}"><i
-                                class="bi bi-file-earmark-richtext"></i> Halaman Situs</a></li>
-                    <li><a href="{{ route('admin.integrations.index') }}"
-                            class="sidebar-link {{ request()->routeIs('admin.integrations*') ? 'active' : '' }}"><i
-                                class="bi bi-plug"></i> Integrasi API</a></li>
-                @endif
-
-                @if (auth()->user()->isEditor())
-                    <li class="sidebar-category">Redaksi</li>
-                    <li><a href="{{ route('editor.dashboard') }}"
-                            class="sidebar-link {{ request()->routeIs('editor.dashboard') ? 'active' : '' }}"><i
-                                class="bi bi-grid-1x2"></i> Dasbor</a></li>
-                    <li><a href="{{ route('editor.articles.index') }}"
-                            class="sidebar-link {{ request()->routeIs('editor.articles*') ? 'active' : '' }}"><i
-                                class="bi bi-file-earmark-text"></i> Naskah</a></li>
-                @endif
-
-                @if (auth()->user()->isReviewer())
-                    <li class="sidebar-category">Peninjau</li>
-                    <li><a href="{{ route('reviewer.dashboard') }}"
-                            class="sidebar-link {{ request()->routeIs('reviewer.dashboard') ? 'active' : '' }}"><i
-                                class="bi bi-grid-1x2"></i> Dasbor</a></li>
-                    <li><a href="{{ route('reviewer.reviews.index') }}"
-                            class="sidebar-link {{ request()->routeIs('reviewer.reviews*') ? 'active' : '' }}"><i
-                                class="bi bi-clipboard-check"></i> Antrean Tinjauan</a></li>
-                @endif
-
-                @if (auth()->user()->isAuthor())
-                    <li class="sidebar-category">Penulis</li>
-                    <li><a href="{{ route('author.dashboard') }}"
-                            class="sidebar-link {{ request()->routeIs('author.dashboard') ? 'active' : '' }}"><i
-                                class="bi bi-grid-1x2"></i> Dasbor</a></li>
-                    <li><a href="{{ route('author.articles.index') }}"
-                            class="sidebar-link {{ request()->routeIs('author.articles.index') ? 'active' : '' }}"><i
-                                class="bi bi-file-earmark-text"></i> Kiriman Saya</a></li>
-                    <li><a href="{{ route('author.articles.create') }}"
-                            class="sidebar-link {{ request()->routeIs('author.articles.create') ? 'active' : '' }}"><i
-                                class="bi bi-plus-circle"></i> Kirim Naskah</a></li>
-                @endif
+                @include('layouts.partials.sidebar-menu')
 
                 <li style="margin: 16px 16px 8px; border-top: 1px solid #1e293b;"></li>
                 <li><a href="{{ route('public.home') }}" class="sidebar-link" target="_blank"><i

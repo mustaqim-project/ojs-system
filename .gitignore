@@ -39,3 +39,6 @@ htmlcov/
 *.tmp
 *.temp
 ```
+# PHPUnit
+.phpunit.result.cache
+

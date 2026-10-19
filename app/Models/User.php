@@ -11,9 +11,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, SoftDeletes, HasRoles {
-        hasRole as spatieHasRole;
-    }
+    use HasFactory, Notifiable, SoftDeletes, HasRoles;
 
     protected $fillable = [
         'name',
@@ -56,43 +54,38 @@ class User extends Authenticatable
     // ===========================
     // ROLE HELPERS (Backward Compat)
     // ===========================
+    // Helper di bawah tetap memeriksa kolom legacy `users.role` sebagai
+    // fallback, SELAIN role Spatie. Method `hasRole()` TIDAK dioverride
+    // (biarkan dari Spatie) agar pipeline permission internal tetap bekerja.
 
     public function isAdmin(): bool
     {
-        return $this->hasRole(['super-admin', 'system-admin', 'admin']);
+        return $this->hasRole(['super-admin', 'system-admin', 'admin'])
+            || $this->role === 'admin';
     }
 
     public function isEditor(): bool
     {
-        return $this->hasRole(['managing-editor', 'section-editor', 'editor']);
+        return $this->hasRole(['managing-editor', 'section-editor', 'editor'])
+            || $this->role === 'editor';
     }
 
     public function isReviewer(): bool
     {
-        return $this->hasRole('reviewer');
+        return $this->hasRole('reviewer')
+            || $this->role === 'reviewer';
     }
 
     public function isAuthor(): bool
     {
-        return $this->hasRole('author');
+        return $this->hasRole('author')
+            || $this->role === 'author';
     }
 
     public function isFinance(): bool
     {
-        return $this->hasRole('finance');
-    }
-
-    public function hasRole(string|array $roles): bool
-    {
-        if (is_array($roles)) {
-            foreach ($roles as $role) {
-                if ($this->hasRole($role)) return true;
-            }
-            return false;
-        }
-
-        // Check Spatie role, fallback to legacy role column
-        return $this->spatieHasRole($roles) || $this->role === $roles;
+        return $this->hasRole('finance')
+            || $this->role === 'finance';
     }
 
     public function dashboardRoute(): string

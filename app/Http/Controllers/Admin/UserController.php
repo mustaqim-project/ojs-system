@@ -66,7 +66,7 @@ class UserController extends Controller
             'institution_id' => $institutionId,
             'phone'          => $request->phone,
             'is_active'      => true,
-        ]);
+        ])->syncRoles([$request->role]);
 
         return redirect()->route('admin.users.index')->with('success', 'User berhasil ditambahkan!');
     }
@@ -108,7 +108,7 @@ class UserController extends Controller
             'institution_id' => $institutionId,
             'phone'          => $request->phone,
             'is_active'      => $request->is_active,
-        ]);
+        ])->syncRoles([$request->role]);
 
         if ($request->filled('password')) {
             $request->validate(['password' => [Password::min(8)]]);
