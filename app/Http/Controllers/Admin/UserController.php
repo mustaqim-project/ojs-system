@@ -44,12 +44,14 @@ class UserController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $roles = $this->getAvailableRoles();
+        $roles = $this->getAvailableRoles($request->input('role'));
         $request->validate([
             'name'        => ['required', 'string', 'max:255'],
             'email'       => ['required', 'email', 'unique:users,email'],
             'password'    => ['required', Password::min(8)],
             'role'        => ['required', 'string', \Illuminate\Validation\Rule::in($roles)],
+            'roles'       => ['nullable', 'array'],
+            'roles.*'     => ['string', \Illuminate\Validation\Rule::in($roles)],
             'affiliation' => ['nullable', 'string', 'max:255'],
             'institution_id' => ['nullable', 'integer', 'exists:institutions,id'],
             'phone'       => ['nullable', 'string', 'max:20'],
@@ -67,18 +69,39 @@ class UserController extends Controller
             $institutionId = $institution->id;
         }
 
-        $user = User::create([
-            'name'           => $request->name,
-            'email'          => $request->email,
-            'password'       => Hash::make($request->password),
-            'role'           => $request->role,
-            'affiliation'    => $request->affiliation,
-            'institution_id' => $institutionId,
-            'phone'          => $request->phone,
-            'is_active'      => true,
-        ]);
+        $roleToSave = $request->role;
+        try {
+            $user = User::create([
+                'name'           => $request->name,
+                'email'          => $request->email,
+                'password'       => Hash::make($request->password),
+                'role'           => $roleToSave,
+                'affiliation'    => $request->affiliation,
+                'institution_id' => $institutionId,
+                'phone'          => $request->phone,
+                'is_active'      => true,
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            if (str_contains($e->getMessage(), '1265') || str_contains($e->getMessage(), '22001') || str_contains($e->getMessage(), 'Data truncated')) {
+                $user = User::create([
+                    'name'           => $request->name,
+                    'email'          => $request->email,
+                    'password'       => Hash::make($request->password),
+                    'role'           => $this->mapToCoreEnumRole($request->role),
+                    'affiliation'    => $request->affiliation,
+                    'institution_id' => $institutionId,
+                    'phone'          => $request->phone,
+                    'is_active'      => true,
+                ]);
+            } else {
+                throw $e;
+            }
+        }
 
         $allRoles = array_unique(array_filter(array_merge([$request->role], (array) $request->input('roles', []))));
+        foreach ($allRoles as $roleName) {
+            \Spatie\Permission\Models\Role::findOrCreate($roleName, 'web');
+        }
         $user->syncRoles($allRoles);
 
         return redirect()->route('admin.users.index')->with('success', 'User berhasil ditambahkan!');
@@ -86,7 +109,7 @@ class UserController extends Controller
 
     public function edit(User $user): View
     {
-        $roles = $this->getAvailableRoles();
+        $roles = $this->getAvailableRoles($user->role);
         $userRoles = $user->roles->pluck('name')->toArray();
         if (empty($userRoles) && $user->role) {
             $userRoles = [$user->role];
@@ -96,7 +119,7 @@ class UserController extends Controller
 
     public function update(Request $request, User $user): RedirectResponse
     {
-        $roles = $this->getAvailableRoles();
+        $roles = $this->getAvailableRoles($user->role, $request->input('role'));
         $request->validate([
             'name'        => ['required', 'string', 'max:255'],
             'email'       => ['required', 'email', "unique:users,email,{$user->id}"],
@@ -121,17 +144,37 @@ class UserController extends Controller
             $institutionId = $institution->id;
         }
 
-        $user->update([
-            'name'           => $request->name,
-            'email'          => $request->email,
-            'role'           => $request->role,
-            'affiliation'    => $request->affiliation,
-            'institution_id' => $institutionId,
-            'phone'          => $request->phone,
-            'is_active'      => $request->is_active,
-        ]);
+        $roleToSave = $request->role;
+        try {
+            $user->update([
+                'name'           => $request->name,
+                'email'          => $request->email,
+                'role'           => $roleToSave,
+                'affiliation'    => $request->affiliation,
+                'institution_id' => $institutionId,
+                'phone'          => $request->phone,
+                'is_active'      => $request->is_active,
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            if (str_contains($e->getMessage(), '1265') || str_contains($e->getMessage(), '22001') || str_contains($e->getMessage(), 'Data truncated')) {
+                $user->update([
+                    'name'           => $request->name,
+                    'email'          => $request->email,
+                    'role'           => $this->mapToCoreEnumRole($request->role),
+                    'affiliation'    => $request->affiliation,
+                    'institution_id' => $institutionId,
+                    'phone'          => $request->phone,
+                    'is_active'      => $request->is_active,
+                ]);
+            } else {
+                throw $e;
+            }
+        }
 
         $allRoles = array_unique(array_filter(array_merge([$request->role], (array) $request->input('roles', []))));
+        foreach ($allRoles as $roleName) {
+            \Spatie\Permission\Models\Role::findOrCreate($roleName, 'web');
+        }
         $user->syncRoles($allRoles);
 
         if ($request->filled('password')) {
@@ -176,9 +219,30 @@ class UserController extends Controller
         return !empty($acronym) ? $acronym : null;
     }
 
-    private function getAvailableRoles(): array
+    private function getAvailableRoles(...$extraRoles): array
     {
         $dbRoles = \Spatie\Permission\Models\Role::pluck('name')->toArray();
-        return array_values(array_unique(array_merge(['admin', 'editor', 'reviewer', 'author', 'reader'], $dbRoles)));
+        $merged = array_merge(
+            ['admin', 'editor', 'reviewer', 'author', 'reader'],
+            $dbRoles,
+            array_filter($extraRoles)
+        );
+        return array_values(array_unique($merged));
+    }
+
+    private function mapToCoreEnumRole(string $role): string
+    {
+        $coreEnum = ['admin', 'editor', 'reviewer', 'author', 'reader'];
+        if (in_array($role, $coreEnum)) {
+            return $role;
+        }
+
+        return match ($role) {
+            'super-admin', 'system-admin' => 'admin',
+            'journal-manager', 'managing-editor', 'section-editor', 'layout-editor', 'copy-editor', 'proofreader', 'publisher' => 'editor',
+            'reviewer' => 'reviewer',
+            'author' => 'author',
+            default => 'reader',
+        };
     }
 }

@@ -245,6 +245,18 @@ class JpstemAuditCrudTest extends TestCase
         $this->assertTrue($user->hasRole('author'));
         $this->assertTrue($user->hasRole('reviewer'));
         $this->assertTrue($user->hasRole('editor'));
+
+        // 6. Test updating with journal-manager (even if not pre-seeded in DB)
+        $this->actingAs($this->admin)->put(route('admin.users.update', $user), [
+            'name'        => 'Ari Limay Trisno Putra, M.Pd',
+            'email'       => 'finance.staff@example.com',
+            'role'        => 'journal-manager',
+            'affiliation' => 'Universitas Nahdlatul Ulama Sumatera Barat',
+            'is_active'   => 1,
+        ])->assertRedirect(route('admin.users.index'));
+
+        $user->refresh();
+        $this->assertTrue($user->hasRole('journal-manager'));
     }
 
     public function test_roles_management_protects_system_role_name_while_allowing_permissions(): void
