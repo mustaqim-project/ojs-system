@@ -30,6 +30,11 @@
         </button>
       </li>
       @endforeach
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tab-maintenance" data-bs-toggle="tab" data-bs-target="#pane-maintenance" type="button" role="tab" style="font-weight: 600; font-size: 14px; padding: 12px 20px; color: var(--text-main); border: none; border-bottom: 3px solid transparent; border-radius: 0; background: transparent;" onclick="document.querySelectorAll('#settingsTab .nav-link').forEach(el => el.style.borderBottomColor = 'transparent'); this.style.borderBottomColor = 'var(--primary)';">
+          <span style="color:#0284c7"><i class="bi bi-cpu-fill me-2"></i></span> Cache & Pemeliharaan
+        </button>
+      </li>
     </ul>
   </div>
   
@@ -109,6 +114,64 @@
       </form>
     </div>
     @endforeach
+
+    <div class="tab-pane fade" id="pane-maintenance" role="tabpanel">
+      <div style="padding: 24px;">
+        <div class="row g-4">
+          <div class="col-12 col-md-6">
+            <div style="background: var(--bg-app); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                  <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(2, 132, 199, 0.1); color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                    <i class="bi bi-arrow-repeat"></i>
+                  </div>
+                  <div>
+                    <h4 style="font-size: 15px; font-weight: 700; margin: 0; color: var(--text-main);">Bersihkan Seluruh Cache</h4>
+                    <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Menjalankan <code>php artisan optimize:clear</code></p>
+                  </div>
+                </div>
+                <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
+                  Menghapus cache bootstrap, compiled views, routes, events, dan configuration cache. Sangat berguna jika Anda baru saja mengubah kode, template Blade, atau pengaturan konfigurasi.
+                </p>
+              </div>
+              <form method="POST" action="{{ route('admin.settings.clear-cache') }}" class="m-0">
+                @csrf
+                <input type="hidden" name="action" value="optimize_clear"/>
+                <button type="submit" class="ds-btn ds-btn-sec" style="width: 100%; height: 38px; font-size: 13px;">
+                  <i class="bi bi-trash3-fill me-2"></i> Clear Cache Sekarang
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <div style="background: var(--bg-app); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                  <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(16, 185, 129, 0.1); color: #10b981; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                    <i class="bi bi-lightning-charge-fill"></i>
+                  </div>
+                  <div>
+                    <h4 style="font-size: 15px; font-weight: 700; margin: 0; color: var(--text-main);">Optimalkan Performa Sistem</h4>
+                    <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Menjalankan <code>php artisan optimize</code></p>
+                  </div>
+                </div>
+                <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
+                  Melakukan pra-kompilasi konfigurasi, route, dan view ke dalam metadata teroptimasi agar response time website semakin cepat di server produksi.
+                </p>
+              </div>
+              <form method="POST" action="{{ route('admin.settings.clear-cache') }}" class="m-0">
+                @csrf
+                <input type="hidden" name="action" value="optimize"/>
+                <button type="submit" class="ds-btn ds-btn-pri" style="width: 100%; height: 38px; font-size: 13px;">
+                  <i class="bi bi-lightning-fill me-2"></i> Optimalkan Sistem Sekarang
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 

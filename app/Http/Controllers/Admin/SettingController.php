@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\View\View;
 
 class SettingController extends Controller
@@ -111,5 +112,24 @@ class SettingController extends Controller
         }
 
         return back()->with('success', 'Pengaturan berhasil disimpan!');
+    }
+
+    public function clearCache(Request $request): RedirectResponse
+    {
+        $action = $request->input('action', 'optimize_clear');
+
+        try {
+            if ($action === 'optimize') {
+                Artisan::call('optimize');
+                $output = Artisan::output();
+                return back()->with('success', 'Sistem berhasil dioptimalkan (config, route, and views cached). ' . trim($output));
+            }
+
+            Artisan::call('optimize:clear');
+            $output = Artisan::output();
+            return back()->with('success', 'Seluruh cache sistem berhasil dibersihkan. ' . trim($output));
+        } catch (\Throwable $e) {
+            return back()->with('error', 'Gagal memproses cache: ' . $e->getMessage());
+        }
     }
 }

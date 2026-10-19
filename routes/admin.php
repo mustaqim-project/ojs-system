@@ -155,6 +155,7 @@ Route::middleware(['auth', 'admin.panel'])
         });
         Route::middleware('permission:system-settings.update')->group(function () {
             Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
+            Route::post('/settings/clear-cache', [SettingController::class, 'clearCache'])->name('settings.clear-cache');
         });
 
         // API Integrations Manager
