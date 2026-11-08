@@ -31,15 +31,15 @@
     <div class="d-flex flex-wrap gap-3 align-items-center border-top border-bottom py-3 mb-2" style="background:var(--bg-app); border-radius:8px; padding:12px 16px !important;">
       <div class="d-flex align-items-center gap-3">
         <div style="width:40px; height:40px; border-radius:50%; background:var(--primary-light); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; flex-shrink:0;">
-          {{ strtoupper(substr($article->author->name, 0, 1)) }}
+          {{ strtoupper(substr($article->author?->name ?? 'A', 0, 1)) }}
         </div>
         <div>
           <div style="font-weight:700; font-size:15px; color:var(--text-main); display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-            {{ $article->author->name }}
+            {{ $article->author?->name ?? 'Penulis' }}
             <a href="https://orcid.org" target="_blank" style="color:#A6CE39;" title="ORCID iD"><i class="bi bi-patch-check-fill"></i></a>
             <i class="bi bi-envelope-fill text-muted" title="Penulis Korespondensi"></i>
           </div>
-          <div style="font-size: 13px; color: var(--text-muted);"><i class="bi bi-building me-1"></i> {{ $article->author->affiliation ?? 'Institusi Akademik' }}</div>
+          <div style="font-size: 13px; color: var(--text-muted);"><i class="bi bi-building me-1"></i> {{ $article->author?->affiliation ?? 'Institusi Akademik' }}</div>
         </div>
       </div>
     </div>
@@ -184,7 +184,7 @@
           <h5 style="font-weight:700; margin-bottom:16px;">Cara Mensitasi</h5>
           
           <div style="background:var(--bg-app); border:1px solid var(--border); border-radius:8px; padding:12px; font-size:13px; color:var(--text-main); line-height:1.6; margin-bottom:16px;">
-            {{ $article->author->name }}. ({{ $article->published_at ? $article->published_at->format('Y') : date('Y') }}). {{ $article->title }}. <em>{{ $article->journal->title }}</em>, @if($article->issue) {{ $article->issue->volume }}({{ $article->issue->number }}). @endif
+            {{ $article->author?->name ?? 'Penulis' }}. ({{ $article->published_at ? ($article->published_at instanceof \Carbon\Carbon ? $article->published_at->format('Y') : \Carbon\Carbon::parse($article->published_at)->format('Y')) : date('Y') }}). {{ $article->title }}. <em>{{ $article->journal?->title ?? '-' }}</em>, @if($article->issue) {{ $article->issue->volume }}({{ $article->issue->number }}). @endif
           </div>
 
           <div class="dropdown w-100">

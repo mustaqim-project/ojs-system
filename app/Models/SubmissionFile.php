@@ -31,7 +31,7 @@ class SubmissionFile extends Model
 
     public function uploadedBy()
     {
-        return $this->belongsTo(User::class, 'uploaded_by');
+        return $this->belongsTo(User::class, 'uploaded_by')->withTrashed();
     }
 
     public function getFileUrlAttribute(): ?string

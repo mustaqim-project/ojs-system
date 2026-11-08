@@ -131,9 +131,9 @@
           </h2>
           
           <div class="d-flex flex-wrap gap-3 mb-3" style="font-size:14px; color:var(--text-main); font-weight:600;">
-            <span><i class="bi bi-person-circle text-muted me-1"></i> {{ $article->author->name }}</span>
+            <span><i class="bi bi-person-circle text-muted me-1"></i> {{ $article->author?->name ?? 'Penulis' }}</span>
             <span class="text-muted">|</span>
-            <span style="color:var(--text-muted);"><i class="bi bi-building me-1"></i> {{ $article->author->affiliation ?? 'Institusi Akademik' }}</span>
+            <span style="color:var(--text-muted);"><i class="bi bi-building me-1"></i> {{ $article->author?->affiliation ?? 'Institusi Akademik' }}</span>
             <span class="text-muted">|</span>
             <a href="https://orcid.org" target="_blank" style="color:#A6CE39; text-decoration:none;"><i class="bi bi-patch-check-fill"></i> ORCID</a>
           </div>

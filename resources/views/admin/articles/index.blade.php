@@ -52,7 +52,7 @@
             </a>
           </td>
           <td style="font-size:13px;color:var(--text-muted);">{{ $a->journal->abbreviation ?? '—' }}</td>
-          <td style="font-size:13px;color:var(--text-muted);">{{ $a->author->name }}</td>
+          <td style="font-size:13px;color:var(--text-muted);">{{ $a->author?->name ?? 'User Terhapus' }}</td>
           <td><x-status-badge :status="$a->status" :label="$a->status_label"/></td>
           <td>
             @if($a->payment)

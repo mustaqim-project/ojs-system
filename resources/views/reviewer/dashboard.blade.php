@@ -82,9 +82,9 @@ $cards = [
             <div style="font-weight:600;color:var(--text-main);max-width:280px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="{{ $review->article->title }}">
               {{ $review->article->title }}
             </div>
-            <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">{{ $review->article->author->name }}</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">{{ $review->article?->author?->name ?? 'User Terhapus' }}</div>
           </td>
-          <td style="font-size:13px;color:var(--text-muted);">{{ $review->article->journal->abbreviation }}</td>
+          <td style="font-size:13px;color:var(--text-muted);">{{ $review->article?->journal?->abbreviation ?? '-' }}</td>
           <td>
             @php
               $statusMap = [

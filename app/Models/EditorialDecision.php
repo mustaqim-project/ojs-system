@@ -32,7 +32,7 @@ class EditorialDecision extends Model
 
     public function decidedBy()
     {
-        return $this->belongsTo(User::class, 'decided_by');
+        return $this->belongsTo(User::class, 'decided_by')->withTrashed();
     }
 
     public function getDecisionLabelAttribute(): string

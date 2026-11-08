@@ -23,7 +23,7 @@ class DashboardController extends Controller
         ];
 
         $recentArticles  = Article::with(['journal', 'author'])->latest()->take(8)->get();
-        $pendingPayments = Payment::with(['article.author', 'article.journal'])
+        $pendingPayments = Payment::with(['author', 'article.author', 'article.journal'])
             ->whereIn('status', ['uploaded', 'waiting_verification'])
             ->latest()
             ->take(5)

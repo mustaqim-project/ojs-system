@@ -163,9 +163,9 @@ $cards = [
             <tr>
               <td>
                 <div style="font-weight:600;color:var(--text-main);max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $a->title }}</div>
-                <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">{{ $a->journal->abbreviation }}</div>
+                <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">{{ $a->journal?->abbreviation ?? $a->journal?->title ?? '-' }}</div>
               </td>
-              <td style="color:var(--text-muted);font-size:14px;">{{ $a->author->name }}</td>
+              <td style="color:var(--text-muted);font-size:14px;">{{ $a->author?->name ?? 'User Terhapus' }}</td>
               <td>
                 <span class="ds-badge ds-badge-{{ $a->status }}" style="font-size:11px;">{{ $a->status_label }}</span>
               </td>
@@ -198,7 +198,7 @@ $cards = [
         <div style="flex:1;min-width:0;">
           <div style="font-size:14px;font-weight:600;color:var(--text-main);">{{ $payment->invoice_code }}</div>
           <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">
-            {{ $payment->author->name }} · Rp {{ number_format($payment->amount,0,',','.') }}
+            {{ $payment->author?->name ?? ($payment->article?->author?->name ?? 'User Terhapus') }} · Rp {{ number_format($payment->amount,0,',','.') }}
           </div>
         </div>
         <a href="{{ route('admin.payments.show',$payment) }}" class="ds-btn ds-btn-suc ds-btn-sm" style="flex-shrink:0;">

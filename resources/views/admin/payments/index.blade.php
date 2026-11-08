@@ -48,10 +48,10 @@
             <span style="font-family:monospace;font-size:13px;font-weight:700;color:var(--primary);">{{ $p->invoice_code }}</span>
           </td>
           <td>
-            <div style="font-weight:600;font-size:13px;max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text-main);" title="{{ $p->article->title }}">{{ $p->article->title }}</div>
-            <div style="font-size:12px;color:var(--text-muted);">{{ $p->article->journal->abbreviation }}</div>
+            <div style="font-weight:600;font-size:13px;max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text-main);" title="{{ $p->article?->title ?? '-' }}">{{ $p->article?->title ?? '-' }}</div>
+            <div style="font-size:12px;color:var(--text-muted);">{{ $p->article?->journal?->abbreviation ?? '-' }}</div>
           </td>
-          <td style="font-size:13px;color:var(--text-muted);">{{ $p->author->name }}</td>
+          <td style="font-size:13px;color:var(--text-muted);">{{ $p->author?->name ?? ($p->article?->author?->name ?? 'User Terhapus') }}</td>
           <td style="font-size:14px;font-weight:700;color:var(--text-main);">Rp {{ number_format($p->amount,0,',','.') }}</td>
           <td>
             @php

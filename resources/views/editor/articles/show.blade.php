@@ -33,8 +33,8 @@
       <div>
         @php
         $rows = [
-          'Journal' => $article->journal->title,
-          'Author'  => $article->author->name.($article->author->affiliation ? ' <span style="color:var(--text-muted);font-size:12px;">· '.$article->author->affiliation.'</span>' : ''),
+          'Journal' => $article->journal?->title ?? '-',
+          'Author'  => ($article->author?->name ?? 'User Terhapus').($article->author?->affiliation ? ' <span style="color:var(--text-muted);font-size:12px;">· '.$article->author->affiliation.'</span>' : ''),
           'Submitted'=> $article->submitted_at?->format('d M Y H:i'),
         ];
         if($article->author_note) $rows["Author's Note"] = '<div style="color:var(--text-muted);font-style:italic;">'.$article->author_note.'</div>';

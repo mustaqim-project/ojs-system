@@ -144,15 +144,16 @@
       <div class="ds-card" data-aos="fade-up" data-aos-delay="100">
         <div class="ds-card-hdr"><span class="ds-card-title">Penulis</span></div>
         <div style="padding:16px 20px;">
+          @php $author = $payment->author ?? $payment->article?->author; @endphp
           <div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg-app);border-radius:8px;">
             <div style="width:36px;height:36px;border-radius:9px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;">
-              {{ strtoupper(substr($payment->author->name,0,1)) }}
+              {{ strtoupper(substr($author?->name ?? 'U', 0, 1)) }}
             </div>
             <div>
-              <div style="font-size:13px;font-weight:700;color:var(--text-main);">{{ $payment->author->name }}</div>
-              <div style="font-size:12px;color:var(--text-muted);">{{ $payment->author->email }}</div>
-              @if($payment->author->affiliation)
-                <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">{{ $payment->author->affiliation }}</div>
+              <div style="font-size:13px;font-weight:700;color:var(--text-main);">{{ $author?->name ?? 'User Terhapus' }}</div>
+              <div style="font-size:12px;color:var(--text-muted);">{{ $author?->email ?? '-' }}</div>
+              @if($author?->affiliation)
+                <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">{{ $author->affiliation }}</div>
               @endif
             </div>
           </div>

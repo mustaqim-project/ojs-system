@@ -51,6 +51,7 @@ class Article extends Model
 
     protected $casts = [
         'submitted_at'    => 'datetime',
+        'accepted_at'     => 'datetime',
         'published_at'    => 'datetime',
         'keywords'        => 'array',
         'views_count'     => 'integer',
@@ -71,12 +72,12 @@ class Article extends Model
 
     public function author()
     {
-        return $this->belongsTo(User::class, 'author_id');
+        return $this->belongsTo(User::class, 'author_id')->withTrashed();
     }
 
     public function assignedEditor()
     {
-        return $this->belongsTo(User::class, 'assigned_editor_id');
+        return $this->belongsTo(User::class, 'assigned_editor_id')->withTrashed();
     }
 
     public function versions()

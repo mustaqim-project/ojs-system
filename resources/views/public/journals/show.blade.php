@@ -151,7 +151,7 @@
                                 <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
                                     <span style="font-size:13px;color:var(--text-main);font-weight:500;">
                                         <i class="bi bi-person me-1"
-                                            style="color:var(--text-muted);"></i>{{ $article->author->name }}
+                                            style="color:var(--text-muted);"></i>{{ $article->author?->name ?? 'Penulis' }}
                                     </span>
                                     @if ($article->pages_start)
                                         <span style="font-size:13px;color:var(--text-muted);">

@@ -91,7 +91,7 @@ $cards = [
               {{ $a->title }}
             </a>
           </td>
-          <td style="color:var(--text-muted);font-size:13px;">{{ $a->author->name }}</td>
+          <td style="color:var(--text-muted);font-size:13px;">{{ $a->author?->name ?? 'User Terhapus' }}</td>
           <td>
             <span class="ds-badge ds-badge-{{ $a->status }}" style="font-size:11px;">{{ $a->status_label }}</span>
           </td>

@@ -83,9 +83,9 @@
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;border-top:1px solid var(--border);padding-top:16px;">
           <div style="display:flex;align-items:center;gap:8px;">
             <div style="width:26px;height:26px;border-radius:6px;background:var(--bg-app);border:1px solid var(--border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">
-              {{ strtoupper(substr($article->author->name, 0, 1)) }}
+              {{ strtoupper(substr($article->author?->name ?? 'A', 0, 1)) }}
             </div>
-            <span style="font-size:13px;color:var(--text-main);font-weight:600;">{{ $article->author->name }}</span>
+            <span style="font-size:13px;color:var(--text-main);font-weight:600;">{{ $article->author?->name ?? 'Penulis' }}</span>
           </div>
 
           <div style="display:flex;align-items:center;gap:16px;">

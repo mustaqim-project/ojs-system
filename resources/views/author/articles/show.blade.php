@@ -41,13 +41,17 @@
       </div>
       <div>
         @php
+        $fmtDate = function($val, $fmt = 'd M Y H:i') {
+            if (!$val) return null;
+            return $val instanceof \Carbon\Carbon ? $val->format($fmt) : \Carbon\Carbon::parse($val)->format($fmt);
+        };
         $rows = [
-          'Jurnal'    => $article->journal->title,
+          'Jurnal'    => $article->journal?->title ?? '-',
           'Bahasa'    => strtoupper($article->language ?? 'id'),
-          'Dikirim'   => $article->submitted_at?->format('d M Y H:i'),
+          'Dikirim'   => $fmtDate($article->submitted_at),
         ];
-        if($article->accepted_at)  $rows['Diterima']  = $article->accepted_at->format('d M Y H:i');
-        if($article->published_at) $rows['Diterbitkan'] = $article->published_at->format('d M Y H:i');
+        if($article->accepted_at)  $rows['Diterima']  = $fmtDate($article->accepted_at);
+        if($article->published_at) $rows['Diterbitkan'] = $fmtDate($article->published_at);
         if($article->doi) $rows['DOI'] = '<span style="font-family:monospace;color:var(--primary);">'.$article->doi.'</span>';
         @endphp
         @foreach($rows as $k => $v)

@@ -79,8 +79,8 @@
       <div>
         @php
         $rows = [
-          'Jurnal'     => $article->journal->title,
-          'Penulis'    => $article->author->name.' <span style="color:var(--text-muted);font-size:12px;">('.$article->author->email.')</span>',
+          'Jurnal'     => $article->journal?->title ?? '-',
+          'Penulis'    => $article->author ? ($article->author->name.' <span style="color:var(--text-muted);font-size:12px;">('.($article->author->email ?? '-').')</span>') : 'Penulis Tidak Diketahui',
           'Bahasa'     => strtoupper($article->language ?? 'id'),
         ];
         if($article->assignedEditor) $rows['Editor yang Ditugaskan'] = $article->assignedEditor->name;
@@ -197,12 +197,16 @@
         <div class="ds-card-hdr"><span class="ds-card-title">Sekilas Info</span></div>
         <div>
           @php
+          $fmtDate = function($val, $fmt = 'd M Y') {
+              if (!$val) return null;
+              return $val instanceof \Carbon\Carbon ? $val->format($fmt) : \Carbon\Carbon::parse($val)->format($fmt);
+          };
           $meta = [
             'Status'       => null,
             'Tinjauan'     => $article->reviews->count().' penelaah',
-            'Dikirim'      => $article->submitted_at?->format('d M Y H:i'),
-            'Diterima'     => $article->accepted_at?->format('d M Y'),
-            'Diterbitkan'  => $article->published_at?->format('d M Y'),
+            'Dikirim'      => $fmtDate($article->submitted_at, 'd M Y H:i'),
+            'Diterima'     => $fmtDate($article->accepted_at, 'd M Y'),
+            'Diterbitkan'  => $fmtDate($article->published_at, 'd M Y'),
           ];
           if($article->pages_start) $meta['Halaman'] = $article->pages_start.'–'.$article->pages_end;
           @endphp

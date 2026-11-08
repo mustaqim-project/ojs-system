@@ -37,14 +37,14 @@
             <a href="{{ route('editor.articles.show',$article) }}"
                style="font-weight:600;color:var(--text-main);text-decoration:none;max-width:240px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"
                title="{{ $article->title }}">{{ $article->title }}</a>
-            <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">{{ $article->journal->abbreviation ?? $article->journal->title }}</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">{{ $article->journal?->abbreviation ?? $article->journal?->title ?? '-' }}</div>
           </td>
           <td>
             <div style="display:flex;align-items:center;gap:8px;">
               <div style="width:26px;height:26px;border-radius:6px;background:#F0FDF4;color:#15803D;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">
-                {{ strtoupper(substr($article->author->name,0,1)) }}
+                {{ strtoupper(substr($article->author?->name ?? 'A', 0, 1)) }}
               </div>
-              <span style="font-size:13px;color:var(--text-muted);">{{ $article->author->name }}</span>
+              <span style="font-size:13px;color:var(--text-muted);">{{ $article->author?->name ?? 'Penulis Tidak Diketahui' }}</span>
             </div>
           </td>
           <td>
