@@ -130,59 +130,31 @@
 
 
     {{-- ── JARINGAN JURNAL ── --}}
+    @php
+        $networkJournals = \App\Models\Setting::get('network_journals');
+        if (empty($networkJournals)) {
+            $otherJournals = \App\Models\Journal::where('is_active', true)->get();
+            if ($otherJournals->count() > 1) {
+                $networkJournals = $otherJournals->map(fn($j) => [
+                    'name' => $j->abbreviation ?: Str::limit($j->title, 15),
+                    'title' => $j->title,
+                    'description' => $j->description ? Str::limit(strip_tags($j->description), 95) : 'Publikasi ilmiah.',
+                    'url' => route('public.journals.show', $j->slug),
+                    'logo' => $j->cover_image ? asset($j->cover_image) : null,
+                    'domain' => $j->slug,
+                ])->toArray();
+            }
+        }
+    @endphp
+
+    @if(!empty($networkJournals) && count($networkJournals) > 0)
     <section class="section" style="background:var(--bg-app); border-top:1px solid var(--border);">
         <div class="container" style="max-width:1100px;">
             <div class="text-center mb-5" data-aos="fade-up">
                 <div class="section-tag">Ekosistem</div>
                 <h2 class="section-title">Jaringan Jurnal Kami</h2>
-                <p class="section-desc mx-auto">Kami terhubung dengan berbagai jurnal ilmiah bereputasi di bawah Indonesia
-                    Madani. Jelajahi portal jurnal lainnya dalam jaringan kami.</p>
+                <p class="section-desc mx-auto">Kami terhubung dengan berbagai jurnal ilmiah di bawah naungan penerbit. Jelajahi portal jurnal lainnya dalam jaringan kami.</p>
             </div>
-
-            @php
-                $networkJournals = \App\Models\Setting::get('network_journals');
-                if (empty($networkJournals)) {
-                    $otherJournals = \App\Models\Journal::where('is_active', true)->get();
-                    if ($otherJournals->count() > 1) {
-                        $networkJournals = $otherJournals->map(fn($j) => [
-                            'name' => $j->abbreviation ?: Str::limit($j->title, 15),
-                            'title' => $j->title,
-                            'description' => $j->description ? Str::limit(strip_tags($j->description), 95) : 'Publikasi ilmiah terakreditasi.',
-                            'url' => route('public.journals.show', $j->slug),
-                            'logo' => $j->cover_image ? asset($j->cover_image) : null,
-                            'domain' => $j->slug,
-                        ])->toArray();
-                    }
-                }
-                if (empty($networkJournals)) {
-                    $networkJournals = [
-                        [
-                            'name' => 'JHAM',
-                            'title' => 'Jurnal Humaniora dan Agama Madani',
-                            'description' => 'Publikasi ilmiah bidang humaniora & keagamaan.',
-                            'url' => 'https://jham.indonesiamadani.com/',
-                            'logo' => 'https://jham.indonesiamadani.com/uploads/settings/1786621030_WhatsApp%20Image%202026-07-12%20at%2013.34.49(2).jpeg',
-                            'domain' => 'jham.indonesiamadani.com',
-                        ],
-                        [
-                            'name' => 'JPSTEM',
-                            'title' => 'Jurnal Pendidikan Sains, Teknologi, Engineering & Matematika',
-                            'description' => 'Inovasi riset STEM Indonesia.',
-                            'url' => 'https://jpstem.indonesiamadani.com/',
-                            'logo' => 'https://jpstem.indonesiamadani.com/uploads/settings/1786625429_WhatsApp%20Image%202026-07-12%20at%2013.34.49(1).jpeg',
-                            'domain' => 'jpstem.indonesiamadani.com',
-                        ],
-                        [
-                            'name' => 'JPMM',
-                            'title' => 'Jurnal Pengabdian Dan Pemberdayaan Masyarakat',
-                            'description' => 'Pengabdian dan pemberdayaan masyarakat berbasis ilmu pengetahuan & teknologi.',
-                            'url' => 'https://jpmm.indonesiamadani.com/',
-                            'logo' => 'https://jpmm.indonesiamadani.com/uploads/settings/1786623829_WhatsApp%20Image%202026-07-12%20at%2013.34.49.jpeg',
-                            'domain' => 'jpmm.indonesiamadani.com',
-                        ],
-                    ];
-                }
-            @endphp
 
             <div class="row g-4 justify-content-center">
                 @foreach($networkJournals as $i => $net)
@@ -211,6 +183,7 @@
             </div>
         </div>
     </section>
+    @endif
 
 
     {{-- ── CURRENT ISSUE & LATEST ARTICLES ── --}}

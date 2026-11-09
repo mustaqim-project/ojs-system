@@ -69,48 +69,36 @@ class SitePage extends Model
         return [
             'about' => [
                 'title'            => 'Tentang Jurnal',
-                'meta_description' => 'Pelajari lebih lanjut tentang jurnal kami, visi, misi, dan sejarah penerbitannya.',
+                'meta_description' => 'Pelajari lebih lanjut tentang jurnal kami, visi, misi, dan informasi penerbitan.',
                 'body'             => '<h2>Tentang Kami</h2>
-<p>Jurnal ini merupakan publikasi ilmiah peer-reviewed dengan akses terbuka (open-access) yang didedikasikan untuk memajukan pengetahuan di berbagai disiplin ilmu. Sejak didirikan, kami berkomitmen untuk menerbitkan penelitian berkualitas tinggi yang memberikan kontribusi nyata bagi komunitas akademik global.</p>
+<p>Jurnal ini merupakan publikasi ilmiah peer-reviewed dengan akses terbuka (open-access) yang didedikasikan untuk memajukan ilmu pengetahuan. Kami berkomitmen untuk menerbitkan penelitian berkualitas tinggi yang memberikan kontribusi nyata bagi komunitas akademik global.</p>
 <h3>Visi & Misi</h3>
-<p>Visi kami adalah menjadi platform akses terbuka utama untuk penelitian inovatif, membina ekosistem inklusif di mana pengetahuan dibagikan tanpa batas.</p>
-<p>Misi kami adalah mempromosikan penyebaran pengetahuan ilmiah melalui proses peninjauan sejawat (peer-review) yang ketat dan penerbitan akses terbuka, membuat hasil penelitian tersedia secara bebas bagi para akademisi dan masyarakat luas di seluruh dunia.</p>',
+<p>Visi kami adalah menjadi sarana publikasi ilmiah terpercaya untuk penelitian inovatif yang dapat diakses oleh masyarakat luas.</p>
+<p>Misi kami adalah mempromosikan penyebaran pengetahuan ilmiah melalui proses peninjauan sejawat (peer-review) yang objektif, transparan, dan profesional.</p>',
                 'extra' => [
-                    'founded_year'     => '2010',
-                    'issn_print'       => '0000-0000',
-                    'issn_online'      => '0000-0001',
-                    'publisher'        => 'OJS Publishing',
-                    'frequency'        => 'Kuartalan',
+                    'founded_year'     => '',
+                    'issn_print'       => '',
+                    'issn_online'      => '',
+                    'publisher'        => '',
+                    'frequency'        => '',
                 ],
             ],
 
             'editorial-team' => [
                 'title'            => 'Tim Redaksi',
                 'meta_description' => 'Temui dewan redaksi dan tim di balik jurnal ini.',
-                'body'             => '<p>Tim redaksi kami terdiri dari para akademisi dan praktisi terkemuka dari seluruh dunia, yang berkomitmen untuk menjaga standar tertinggi peninjauan sejawat akademis.</p>',
+                'body'             => '<p>Tim redaksi kami berkomitmen untuk menjaga standar tertinggi peninjauan sejawat akademis.</p>',
                 'extra' => [
-                    'editor_in_chief' => ['name' => 'Prof. Dr. John Smith', 'affiliation' => 'Universitas Ilmu Pengetahuan', 'email' => 'editor@jurnal.com', 'orcid' => ''],
-                    // 'section_editors'  => [
-                    //     ['name' => 'Dr. Jane Doe', 'affiliation' => 'MIT, AS', 'area' => 'Ilmu Komputer'],
-                    //     ['name' => 'Dr. Ahmad Fauzi', 'affiliation' => 'UI, Indonesia', 'area' => 'Sistem Informasi'],
-                    //     ['name' => 'Dr. Maria Santos', 'affiliation' => 'USP, Brasil', 'area' => 'Rekayasa Data'],
-                    // ],
+                    'editor_in_chief' => null,
                 ],
             ],
 
             'reviewer-board' => [
                 'title'            => 'Dewan Penelaah',
                 'meta_description' => 'Dewan penelaah ahli kami yang memastikan kualitas peninjauan sejawat.',
-                'body'             => '<p>Kami sangat berterima kasih kepada anggota dewan penelaah kami yang berdedikasi yang secara sukarela menyumbangkan keahlian mereka untuk menjaga kualitas penelitian yang diterbitkan.</p>',
+                'body'             => '<p>Kami sangat berterima kasih kepada anggota dewan mitra bestari yang mendedikasikan keahlian mereka untuk menjaga kualitas penelitian yang diterbitkan.</p>',
                 'extra' => [
-                    'reviewers' => [
-                        ['name' => 'Dr. Reviewer Satu', 'affiliation' => 'Harvard University, AS', 'area' => 'Pembelajaran Mesin'],
-                        ['name' => 'Dr. Reviewer Dua', 'affiliation' => 'Oxford University, Inggris', 'area' => 'Algoritma'],
-                        ['name' => 'Dr. Reviewer Tiga', 'affiliation' => 'ETH Zurich, Swiss', 'area' => 'Sistem'],
-                        ['name' => 'Dr. Reviewer Empat', 'affiliation' => 'NUS, Singapura', 'area' => 'Basis Data'],
-                        ['name' => 'Dr. Reviewer Lima', 'affiliation' => 'IIT Delhi, India', 'area' => 'Jaringan'],
-                        ['name' => 'Dr. Reviewer Enam', 'affiliation' => 'UGM, Indonesia', 'area' => 'Rekayasa Perangkat Lunak'],
-                    ],
+                    'reviewers' => [],
                 ],
             ],
 
@@ -206,28 +194,21 @@ class SitePage extends Model
 
             'indexing' => [
                 'title'            => 'Pengindeksan & Abstrak',
-                'meta_description' => 'Basis data dan indeks yang mencakup jurnal kami.',
-                'body'             => '<p>Jurnal ini terindeks dan terabstrak dalam basis data berikut:</p>',
+                'meta_description' => 'Basis data dan indeks resmi jurnal kami.',
+                'body'             => '<p>Informasi pengindeksan resmi akan diperbarui sesuai akreditasi jurnal.</p>',
                 'extra' => [
-                    'indexes' => [
-                        ['name' => 'DOAJ', 'url' => 'https://doaj.org', 'logo' => ''],
-                        ['name' => 'Scopus', 'url' => 'https://scopus.com', 'logo' => ''],
-                        ['name' => 'Google Scholar', 'url' => 'https://scholar.google.com', 'logo' => ''],
-                        ['name' => 'SINTA', 'url' => 'https://sinta.kemdikbud.go.id', 'logo' => ''],
-                        ['name' => 'Garuda', 'url' => 'https://garuda.kemdikbud.go.id', 'logo' => ''],
-                        ['name' => 'Crossref', 'url' => 'https://crossref.org', 'logo' => ''],
-                    ],
+                    'indexes' => [],
                 ],
             ],
 
             'contact' => [
                 'title'            => 'Hubungi Kami',
                 'meta_description' => 'Hubungi tim editorial kami.',
-                'body'             => '<p>Kami menyambut baik pertanyaan mengenai pengiriman naskah, proses peninjauan sejawat, dan masalah jurnal umum lainnya.</p>',
+                'body'             => '<p>Kami menyambut baik pertanyaan mengenai pengiriman naskah, proses peninjauan sejawat, dan informasi penerbitan lainnya.</p>',
                 'extra' => [
-                    'email'   => 'editor@jurnal.com',
-                    'phone'   => '+62 21 1234 5678',
-                    'address' => 'Jl. Contoh No. 1, Jakarta 12345, Indonesia',
+                    'email'   => '',
+                    'phone'   => '',
+                    'address' => '',
                     'maps_embed_url' => '',
                 ],
             ],

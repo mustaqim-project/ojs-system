@@ -30,9 +30,10 @@
                 @endif
 
                 @php
-                    $contactAddress = $global_settings['contact_address'] ?? $page['extra']['address'] ?? '';
-                    $contactEmail = $global_settings['site_email'] ?? $page['extra']['email'] ?? '';
-                    $contactPhone = $global_settings['contact_phone'] ?? $page['extra']['phone'] ?? '';
+                    $activeJournal = \App\Models\Journal::where('is_active', true)->first();
+                    $contactAddress = $global_settings['contact_address'] ?? $activeJournal?->address ?? $page['extra']['address'] ?? '';
+                    $contactEmail = $global_settings['site_email'] ?? $activeJournal?->email ?? $page['extra']['email'] ?? '';
+                    $contactPhone = $global_settings['contact_phone'] ?? $activeJournal?->phone ?? $page['extra']['phone'] ?? '';
                 @endphp
 
                 @if(!empty($contactAddress))

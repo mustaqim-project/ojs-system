@@ -32,10 +32,10 @@
             {{-- Sidebar --}}
             @php
                 $activeJournal = \App\Models\Journal::where('is_active', true)->first();
-                $publisher = $page['extra']['publisher'] ?? $activeJournal?->publisher ?? \App\Models\Setting::get('site_publisher', '');
-                $issnPrint = $page['extra']['issn_print'] ?? $activeJournal?->issn_print ?? '';
-                $issnOnline = $page['extra']['issn_online'] ?? $activeJournal?->issn_online ?? '';
-                $frequency = $page['extra']['frequency'] ?? ($activeJournal ? ucfirst($activeJournal->frequency) . ' Edition' : '');
+                $publisher = $activeJournal?->publisher ?? \App\Models\Setting::get('site_publisher', '') ?: ($page['extra']['publisher'] ?? '');
+                $issnPrint = $activeJournal?->issn_print ?? ($page['extra']['issn_print'] ?? '');
+                $issnOnline = $activeJournal?->issn_online ?? ($page['extra']['issn_online'] ?? '');
+                $frequency = $activeJournal && $activeJournal->frequency ? ucfirst($activeJournal->frequency) . ' Edition' : ($page['extra']['frequency'] ?? '');
                 $foundedYear = $page['extra']['founded_year'] ?? '';
             @endphp
             <div class="col-lg-4">

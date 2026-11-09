@@ -37,10 +37,10 @@
 
                 // Try to find an editor-in-chief
                 $dbEic = $dbEditors->first(
-                    fn($u) => $u->role === 'managing-editor' || $u->roles->pluck('name')->contains('managing-editor'),
+                    fn($u) => $u->role === 'managing-editor' || (method_exists($u, 'roles') && $u->roles->pluck('name')->contains('managing-editor')),
                 );
                 if (!$dbEic && $dbEditors->isNotEmpty()) {
-                    $dbEic = $dbEditors->first(); // fallback to first editor
+                    $dbEic = $dbEditors->first(); // fallback to first editor from DB
                 }
 
                 $eic = $dbEic
@@ -49,8 +49,9 @@
                         'affiliation' => $dbEic->affiliation ?? 'Lembaga Redaksi',
                         'email' => $dbEic->email,
                         'orcid' => $dbEic->orcid ?? '',
+                        'scholar' => $dbEic->google_scholar_url ?? '',
                     ]
-                    : $page['extra']['editor_in_chief'] ?? null;
+                    : null;
 
                 $sectionEditors = $dbEditors->filter(fn($u) => !$dbEic || $u->id !== $dbEic->id);
                 $editors = $sectionEditors->isNotEmpty()
@@ -60,10 +61,12 @@
                                 'name' => $u->name,
                                 'affiliation' => $u->affiliation ?? 'Universitas/Instansi',
                                 'area' => $u->research_interest ?? '',
+                                'orcid' => $u->orcid ?? '',
+                                'scholar' => $u->google_scholar_url ?? '',
                             ],
                         )
                         ->toArray()
-                    : $page['extra']['section_editors'] ?? [];
+                    : [];
             @endphp
 
             @if ($eic)
@@ -76,17 +79,18 @@
                             <h4 style="font-weight:700;font-size:18px;margin-bottom:4px;">{{ $eic['name'] }}</h4>
                             <p style="font-size:14px;color:var(--primary);font-weight:500;margin-bottom:12px;">
                                 {{ $eic['affiliation'] ?? '' }}</p>
-                            <div class="d-flex justify-content-center gap-2">
-                                @if (!empty($eic['orcid']))
-                                    <a href="{{ $eic['orcid'] }}" class="badge badge-neutral text-decoration-none"
-                                        target="_blank"><i class="bi bi-person-badge"></i> ORCID</a>
-                                @else
-                                    <a href="https://orcid.org" class="badge badge-neutral text-decoration-none"
-                                        target="_blank"><i class="bi bi-person-badge"></i> ORCID</a>
-                                @endif
-                                <a href="https://scholar.google.com" class="badge badge-neutral text-decoration-none"
-                                    target="_blank"><i class="bi bi-mortarboard-fill"></i> Scholar</a>
-                            </div>
+                            @if (!empty($eic['orcid']) || !empty($eic['scholar']))
+                                <div class="d-flex justify-content-center gap-2">
+                                    @if (!empty($eic['orcid']))
+                                        <a href="{{ str_starts_with($eic['orcid'], 'http') ? $eic['orcid'] : 'https://orcid.org/' . $eic['orcid'] }}" class="badge badge-neutral text-decoration-none"
+                                            target="_blank"><i class="bi bi-person-badge"></i> ORCID</a>
+                                    @endif
+                                    @if (!empty($eic['scholar']))
+                                        <a href="{{ $eic['scholar'] }}" class="badge badge-neutral text-decoration-none"
+                                            target="_blank"><i class="bi bi-mortarboard-fill"></i> Scholar</a>
+                                    @endif
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -108,15 +112,29 @@
                                     <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">
                                         {{ $ed['area'] }}</p>
                                 @endif
-                                <div class="d-flex justify-content-center gap-2">
-                                    <a href="https://orcid.org" class="badge badge-neutral text-decoration-none"
-                                        target="_blank"><i class="bi bi-person-badge"></i> ORCID</a>
-                                    <a href="https://scholar.google.com" class="badge badge-neutral text-decoration-none"
-                                        target="_blank"><i class="bi bi-mortarboard-fill"></i> Scholar</a>
-                                </div>
+                                @if (!empty($ed['orcid']) || !empty($ed['scholar']))
+                                    <div class="d-flex justify-content-center gap-2">
+                                        @if (!empty($ed['orcid']))
+                                            <a href="{{ str_starts_with($ed['orcid'], 'http') ? $ed['orcid'] : 'https://orcid.org/' . $ed['orcid'] }}" class="badge badge-neutral text-decoration-none"
+                                                target="_blank"><i class="bi bi-person-badge"></i> ORCID</a>
+                                        @endif
+                                        @if (!empty($ed['scholar']))
+                                            <a href="{{ $ed['scholar'] }}" class="badge badge-neutral text-decoration-none"
+                                                target="_blank"><i class="bi bi-mortarboard-fill"></i> Scholar</a>
+                                        @endif
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     @endforeach
+                </div>
+            @endif
+
+            @if (!$eic && count($editors) === 0)
+                <div class="pub-card text-center py-5" data-aos="fade-up">
+                    <i class="bi bi-people" style="font-size:48px; color:var(--text-muted); opacity:0.6;"></i>
+                    <h5 class="mt-3" style="font-weight:700; color:var(--text-main);">Informasi Tim Redaksi</h5>
+                    <p class="text-muted" style="max-width:500px; margin:8px auto 0;">Daftar dewan redaksi saat ini sedang dalam proses pembaruan oleh pengelola jurnal.</p>
                 </div>
             @endif
 

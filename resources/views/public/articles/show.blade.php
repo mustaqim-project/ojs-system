@@ -154,7 +154,7 @@
             </h2>
             <div id="collapseFunding" class="accordion-collapse collapse" data-bs-parent="#accordionInfo">
               <div class="accordion-body" style="font-size:14px; color:var(--text-muted); line-height:1.7;">
-                {{ $article->funding_statement ?: ($article->acknowledgement ?: 'Penulis tidak menerima pendanaan khusus untuk karya ini. Penulis mengucapkan terima kasih kepada dewan redaksi dan mitra bestari atas masukan mereka.') }}
+                {{ $article->funding_statement ?: ($article->acknowledgement ?: 'Tidak ada pernyataan pendanaan yang dilaporkan.') }}
               </div>
             </div>
           </div>
@@ -167,7 +167,7 @@
             </h2>
             <div id="collapseConflict" class="accordion-collapse collapse" data-bs-parent="#accordionInfo">
               <div class="accordion-body" style="font-size:14px; color:var(--text-muted); line-height:1.7;">
-                {{ $article->conflict_of_interest ?: 'Penulis menyatakan tidak ada konflik kepentingan finansial atau hubungan personal yang dapat memengaruhi karya yang dilaporkan dalam naskah ini.' }}
+                {{ $article->conflict_of_interest ?: 'Tidak ada konflik kepentingan yang dilaporkan.' }}
               </div>
             </div>
           </div>

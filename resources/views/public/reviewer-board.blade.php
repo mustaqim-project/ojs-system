@@ -39,10 +39,16 @@
                     <h4 style="font-weight:600;font-size:14px;margin-bottom:4px;">{{ $reviewer->name }}</h4>
                     <p style="font-size:12px;color:var(--primary);font-weight:500;margin-bottom:6px;">{{ $reviewer->affiliation ?? 'Lembaga Akademik' }}</p>
                     @if(!empty($reviewer->research_interest))<p style="font-size:11px;color:var(--text-muted);margin-bottom:12px;">{{ $reviewer->research_interest }}</p>@endif
+                    @if(!empty($reviewer->orcid) || !empty($reviewer->google_scholar_url))
                     <div class="d-flex justify-content-center gap-2">
-                        <a href="{{ $reviewer->orcid ? 'https://orcid.org/' . $reviewer->orcid : 'https://orcid.org' }}" class="badge badge-neutral text-decoration-none" target="_blank"><i class="bi bi-person-badge"></i> ORCID</a>
-                        <a href="{{ $reviewer->google_scholar_url ?? 'https://scholar.google.com' }}" class="badge badge-neutral text-decoration-none" target="_blank"><i class="bi bi-mortarboard-fill"></i> Scholar</a>
+                        @if(!empty($reviewer->orcid))
+                            <a href="{{ str_starts_with($reviewer->orcid, 'http') ? $reviewer->orcid : 'https://orcid.org/' . $reviewer->orcid }}" class="badge badge-neutral text-decoration-none" target="_blank"><i class="bi bi-person-badge"></i> ORCID</a>
+                        @endif
+                        @if(!empty($reviewer->google_scholar_url))
+                            <a href="{{ $reviewer->google_scholar_url }}" class="badge badge-neutral text-decoration-none" target="_blank"><i class="bi bi-mortarboard-fill"></i> Scholar</a>
+                        @endif
                     </div>
+                    @endif
                 </div>
             </div>
             @empty

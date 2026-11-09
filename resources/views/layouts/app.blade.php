@@ -228,11 +228,16 @@
                         style="font-size: 12px; font-weight: 700; color: #E2E8F0; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 24px;">
                         Hubungi Kami</div>
                     <div style="display: flex; flex-direction: column; gap: 16px;">
-                        <div style="display: flex; gap: 14px; align-items: flex-start;">
-                            <i class="bi bi-envelope" style="color: #64748B; font-size: 18px; margin-top: 1px;"></i>
-                            <span
-                                style="font-size: 14px; color: #94A3B8; line-height: 1.6; font-weight: 500;">{{ \App\Models\Setting::get('site_email', 'editorial@journal.ac.id') }}</span>
-                        </div>
+                        @php
+                            $footerEmail = \App\Models\Setting::get('site_email') ?: (\App\Models\Journal::where('is_active', true)->value('email') ?: '');
+                        @endphp
+                        @if($footerEmail)
+                            <div style="display: flex; gap: 14px; align-items: flex-start;">
+                                <i class="bi bi-envelope" style="color: #64748B; font-size: 18px; margin-top: 1px;"></i>
+                                <span
+                                    style="font-size: 14px; color: #94A3B8; line-height: 1.6; font-weight: 500;">{{ $footerEmail }}</span>
+                            </div>
+                        @endif
                         @if (\App\Models\Setting::get('contact_phone'))
                             <div style="display: flex; gap: 14px; align-items: flex-start;">
                                 <i class="bi bi-telephone"

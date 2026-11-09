@@ -37,11 +37,13 @@
                     <h4 class="mb-3" style="font-weight: 700; font-size: 18px;">Siap Mengajukan Naskah?</h4>
                     <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px;">Unduh template naskah resmi kami untuk memastikan format Anda benar sebelum dikirimkan.</p>
                     
-                    <a href="{{ !empty($page['extra']['template_url']) ? $page['extra']['template_url'] : '#' }}"
+                    @if(!empty($page['extra']['template_url']))
+                    <a href="{{ $page['extra']['template_url'] }}"
                        class="btn btn-secondary w-100 mb-3" style="height: 44px;"
-                       {{ !empty($page['extra']['template_url']) ? 'target="_blank"' : '' }}>
+                       target="_blank">
                         <i class="bi bi-file-word me-2"></i> Unduh Template (.docx)
                     </a>
+                    @endif
                     <a href="{{ route('login') }}" class="btn btn-primary w-100" style="height: 44px;">
                         Ajukan Naskah <i class="bi bi-arrow-right ms-2"></i>
                     </a>
