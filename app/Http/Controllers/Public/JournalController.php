@@ -22,9 +22,16 @@ class JournalController extends Controller
     {
         $journal = Journal::where('slug', $slug)
             ->active()
-            ->with(['editor', 'issues' => function ($q) {
-                $q->published()->orderByDesc('year')->orderByDesc('volume')->orderByDesc('number');
-            }])
+            ->with([
+                'editor',
+                'issues' => function ($q) {
+                    $q->published()
+                        ->with(['publishedArticles.author'])
+                        ->orderByDesc('year')
+                        ->orderByDesc('volume')
+                        ->orderByDesc('number');
+                }
+            ])
             ->firstOrFail();
 
         return view('public.journals.show', compact('journal'));

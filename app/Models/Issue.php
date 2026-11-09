@@ -50,14 +50,12 @@ class Issue extends Model
 
     public function articles()
     {
-        return $this->belongsToMany(Article::class, 'issue_article')
-            ->withPivot('order')
-            ->orderBy('order');
+        return $this->hasMany(Article::class);
     }
 
     public function publishedArticles()
     {
-        return $this->articles()->where('articles.status', 'published');
+        return $this->hasMany(Article::class)->where('status', 'published');
     }
 
     public function scopePublished($query)

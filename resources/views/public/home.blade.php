@@ -104,28 +104,28 @@
             <div class="row g-4 text-center">
                 <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="100">
                     <h2 class="display-5" style="font-weight:800; color:var(--primary);"
-                        data-countup="{{ $totalPublished }}">0</h2>
+                        data-countup="{{ $totalPublished }}">{{ $totalPublished }}</h2>
                     <p class="stat-label-text"
                         style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">
                         Artikel Diterbitkan</p>
                 </div>
                 <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="200">
                     <h2 class="display-5" style="font-weight:800; color:var(--primary);"
-                        data-countup="{{ $totalAuthors }}">0</h2>
+                        data-countup="{{ $totalAuthors }}">{{ $totalAuthors }}</h2>
                     <p class="stat-label-text"
                         style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">
                         Penulis Aktif</p>
                 </div>
                 <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="300">
                     <h2 class="display-5" style="font-weight:800; color:var(--primary);"
-                        data-countup="{{ $totalReviewers }}">0</h2>
+                        data-countup="{{ $totalReviewers }}">{{ $totalReviewers }}</h2>
                     <p class="stat-label-text"
                         style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">
                         Mitra Bestari Global</p>
                 </div>
                 <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="400">
                     <h2 class="display-5" style="font-weight:800; color:var(--primary);"
-                        data-countup="{{ $avgFirstDecisionDays }}">0</h2>
+                        data-countup="{{ $avgFirstDecisionDays }}">{{ $avgFirstDecisionDays }}</h2>
                     <p class="stat-label-text"
                         style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">
                         Waktu hingga Keputusan Pertama</p>
@@ -445,27 +445,33 @@
     </section>
 @endsection
 
-@section('scripts')
+@push('scripts')
     <script>
-        // Simple CountUp animation script
+        // CountUp animation script
         document.addEventListener('DOMContentLoaded', () => {
             const counters = document.querySelectorAll('[data-countup]');
 
             const animateCount = (el) => {
-                const target = parseInt(el.getAttribute('data-countup').replace(/[^0-9]/g, ''));
-                const text = el.getAttribute('data-countup');
-                const suffix = text.replace(/[0-9]/g, '');
-                const duration = 2000;
-                const step = target / (duration / 16);
-                let current = 0;
+                const rawAttr = el.getAttribute('data-countup') || '';
+                const target = parseInt(rawAttr.replace(/[^0-9]/g, ''), 10) || 0;
+                const suffix = rawAttr.replace(/[0-9]/g, '');
+                if (target <= 0) {
+                    el.innerText = '0' + suffix;
+                    return;
+                }
+                const duration = 1200;
+                const totalFrames = Math.round(duration / 16);
+                let frame = 0;
 
                 const timer = setInterval(() => {
-                    current += step;
-                    if (current >= target) {
+                    frame++;
+                    const progress = frame / totalFrames;
+                    // easeOutQuad
+                    const current = Math.min(target, Math.round(target * (progress * (2 - progress))));
+                    el.innerText = current + suffix;
+                    if (frame >= totalFrames) {
                         clearInterval(timer);
                         el.innerText = target + suffix;
-                    } else {
-                        el.innerText = Math.floor(current) + suffix;
                     }
                 }, 16);
             };
@@ -477,9 +483,9 @@
                         observer.unobserve(entry.target);
                     }
                 });
-            });
+            }, { threshold: 0.1 });
 
             counters.forEach(c => observer.observe(c));
         });
     </script>
-@endsection
+@endpush
