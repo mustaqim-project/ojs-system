@@ -18,33 +18,44 @@ class ArticleSubmittedNotification extends Notification implements ShouldQueue
     public function via(object $notifiable): array
     {
         $channels = ['mail', 'database'];
-        if ($notifiable->phone) $channels[] = FonnteChannel::class;
+        if (!empty($notifiable->phone)) {
+            $channels[] = FonnteChannel::class;
+        }
         return $channels;
     }
 
     public function toMail(object $notifiable): MailMessage
     {
+        $journalTitle = $this->article->journal->title ?? $this->article->journal->name ?? 'Jurnal Ilmiah';
+        $authorName = $this->article->author->name ?? 'Author';
+
         return (new MailMessage)
-            ->subject("[{$this->article->tracking_code}] New Article Submitted")
-            ->greeting("Hello {$notifiable->name},")
-            ->line("A new article has been submitted: **{$this->article->title}**")
-            ->line("Author: {$this->article->author->name}")
-            ->line("Journal: " . ($this->article->journal->title ?? $this->article->journal->name ?? '—'))
-            ->action('Review Submission', url('/editor/articles/' . $this->article->id))
-            ->line('Please review it as soon as possible.');
+            ->subject("[{$this->article->tracking_code}] Naskah Baru Masuk (New Submission): {$this->article->title}")
+            ->greeting("Halo {$notifiable->name},")
+            ->line("Sebuah naskah artikel ilmiah baru telah disubmit ke dalam sistem:")
+            ->line("Judul Naskah: **{$this->article->title}**")
+            ->line("Penulis: **{$authorName}**")
+            ->line("Jurnal: **{$journalTitle}**")
+            ->line("Kode Tracking: **{$this->article->tracking_code}**")
+            ->line("Naskah ini memerlukan pemeriksaan awal (editorial screening) sebelum ditugaskan kepada editor bidang atau reviewer.")
+            ->action('Periksa Naskah Submission', url('/editor/articles/' . $this->article->id))
+            ->line('Silakan tinjau kelayakan naskah sesegera mungkin.');
     }
 
     public function toWhatsApp(object $notifiable): string
     {
-        return "New article submitted: '{$this->article->title}' by {$this->article->author->name}. Please review: " . url('/editor/dashboard');
+        $authorName = $this->article->author->name ?? 'Author';
+        return "Naskah baru masuk: '{$this->article->title}' oleh {$authorName} [{$this->article->tracking_code}]. Periksa di: " . url('/editor/articles/' . $this->article->id);
     }
 
     public function toDatabase(object $notifiable): array
     {
+        $authorName = $this->article->author->name ?? 'Author';
         return [
-            'article_id' => $this->article->id,
-            'message' => "New submission: {$this->article->title}",
-            'url' => url('/editor/articles/' . $this->article->id),
+            'article_id'    => $this->article->id,
+            'tracking_code' => $this->article->tracking_code,
+            'message'       => "Naskah baru masuk dari {$authorName}: '{$this->article->title}'",
+            'url'           => url('/editor/articles/' . $this->article->id),
         ];
     }
 }

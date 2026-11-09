@@ -41,6 +41,15 @@ class ReviewController extends Controller
         }
 
         $this->reviewService->acceptAssignment($review);
+
+        // Notify Editors that Reviewer accepted assignment
+        try {
+            $editors = $review->article->getEditorialRecipients();
+            \Illuminate\Support\Facades\Notification::send($editors, new \App\Notifications\ReviewResponseNotification($review->article, 'accepted', auth()->user()->name));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Failed sending ReviewResponseNotification: ' . $e->getMessage());
+        }
+
         return back()->with('success', 'Anda menerima tugas review ini.');
     }
 
@@ -53,6 +62,15 @@ class ReviewController extends Controller
         }
 
         $this->reviewService->declineAssignment($review);
+
+        // Notify Editors that Reviewer declined assignment
+        try {
+            $editors = $review->article->getEditorialRecipients();
+            \Illuminate\Support\Facades\Notification::send($editors, new \App\Notifications\ReviewResponseNotification($review->article, 'declined', auth()->user()->name, request('reason')));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Failed sending ReviewResponseNotification: ' . $e->getMessage());
+        }
+
         return back()->with('success', 'Anda menolak tugas review ini.');
     }
 
@@ -66,9 +84,16 @@ class ReviewController extends Controller
 
         $this->reviewService->submitReview($review, $request->validated());
 
-        // Notify Editors
-        $editors = \App\Models\User::where('role', 'editor')->active()->get();
-        \Illuminate\Support\Facades\Notification::send($editors, new \App\Notifications\ReviewSubmittedNotification($review->article, auth()->user()->name));
+        // Notify Editors and send Acknowledgment to Reviewer
+        try {
+            $editors = $review->article->getEditorialRecipients();
+            \Illuminate\Support\Facades\Notification::send($editors, new \App\Notifications\ReviewSubmittedNotification($review->article, auth()->user()->name, $review->recommendation));
+
+            // Thank reviewer
+            auth()->user()->notify(new \App\Notifications\ReviewAcknowledgmentNotification($review->article));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Failed sending review completion notifications: ' . $e->getMessage());
+        }
 
         return redirect()
             ->route('reviewer.reviews.show', $review)

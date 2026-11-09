@@ -42,6 +42,22 @@ class ReviewController extends Controller
             ]);
         }
 
+        // Notify Editors
+        try {
+            $article = $assignment->round?->submission;
+            if ($article) {
+                $editors = $article->getEditorialRecipients();
+                \Illuminate\Support\Facades\Notification::send($editors, new \App\Notifications\ReviewResponseNotification(
+                    $article,
+                    $validated['response'] === 'accept' ? 'accepted' : 'declined',
+                    $user->name,
+                    $validated['decline_reason'] ?? null
+                ));
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('API Review response notification error: ' . $e->getMessage());
+        }
+
         return response()->json($assignment);
     }
 
@@ -75,6 +91,22 @@ class ReviewController extends Controller
         );
 
         $assignment->update(['status' => 'completed']);
+
+        // Notify Editors and send Acknowledgment to Reviewer
+        try {
+            $article = $assignment->round?->submission;
+            if ($article) {
+                $editors = $article->getEditorialRecipients();
+                \Illuminate\Support\Facades\Notification::send($editors, new \App\Notifications\ReviewSubmittedNotification(
+                    $article,
+                    $user->name,
+                    $validated['recommendation']
+                ));
+                $user->notify(new \App\Notifications\ReviewAcknowledgmentNotification($article));
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('API Review submit notification error: ' . $e->getMessage());
+        }
 
         return response()->json($response, 201);
     }

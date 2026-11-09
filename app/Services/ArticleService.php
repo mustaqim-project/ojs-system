@@ -165,7 +165,18 @@ class ArticleService
             'published_at' => now(),
         ]);
 
-        return $article->fresh();
+        $publishedArticle = $article->fresh(['author', 'journal', 'issue']);
+
+        // Notify Author on publication
+        try {
+            if ($publishedArticle->author) {
+                $publishedArticle->author->notify(new \App\Notifications\ArticlePublishedNotification($publishedArticle));
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Failed sending ArticlePublishedNotification: ' . $e->getMessage());
+        }
+
+        return $publishedArticle;
     }
 
     /**

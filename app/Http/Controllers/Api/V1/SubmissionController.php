@@ -75,12 +75,25 @@ class SubmissionController extends Controller
         $article->update(['submitted_at' => now()]);
 
         // Notify editors
-        $editors = $article->journal->users()
-            ->whereHas('roles', fn($q) => $q->whereIn('name', ['managing-editor', 'section-editor']))
-            ->get();
+        try {
+            $editors = $article->journal?->users()
+                ->whereHas('roles', fn($q) => $q->whereIn('name', ['managing-editor', 'section-editor']))
+                ->get() ?? collect();
 
-        foreach ($editors as $editor) {
-            $editor->notify(new \App\Notifications\ArticleSubmittedNotification($article));
+            if ($editors->isEmpty()) {
+                $editors = $article->getEditorialRecipients();
+            }
+
+            foreach ($editors as $editor) {
+                $editor->notify(new \App\Notifications\ArticleSubmittedNotification($article));
+            }
+
+            // Notify author (acknowledgment)
+            if ($article->author) {
+                $article->author->notify(new \App\Notifications\SubmissionAcknowledgmentNotification($article));
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('API Submission notification error: ' . $e->getMessage());
         }
 
         return response()->json($article);

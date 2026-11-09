@@ -89,6 +89,16 @@ class PaymentController extends Controller
 
         $this->paymentService->reject($payment, auth()->id(), $request->admin_notes);
 
-        return back()->with('success', 'Bukti pembayaran ditolak. Author akan diminta mengupload ulang.');
+        // Notify Author that payment proof was rejected with notes
+        try {
+            $article = $payment->article;
+            if ($payment->author && $article) {
+                $payment->author->notify(new \App\Notifications\PaymentRejectedNotification($article, $request->admin_notes));
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Failed sending PaymentRejectedNotification: ' . $e->getMessage());
+        }
+
+        return back()->with('success', 'Bukti pembayaran ditolak. Author telah diberitahu untuk mengupload ulang.');
     }
 }

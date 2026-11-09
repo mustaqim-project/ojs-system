@@ -72,6 +72,32 @@ class IssueController extends Controller
     public function publish(Issue $issue): RedirectResponse
     {
         $issue->update(['status' => 'published', 'published_date' => now()]);
+
+        // Publish and notify authors of articles in this issue
+        $articles = $issue->articles;
+        if ($articles->isEmpty()) {
+            $articles = \App\Models\Article::where('issue_id', $issue->id)->get();
+        }
+
+        foreach ($articles as $article) {
+            if ($article->status !== \App\Models\Article::STATUS_PUBLISHED) {
+                $article->update([
+                    'status'       => \App\Models\Article::STATUS_PUBLISHED,
+                    'issue_id'     => $issue->id,
+                    'published_at' => now(),
+                ]);
+
+                try {
+                    $article->loadMissing(['author', 'journal', 'issue']);
+                    if ($article->author) {
+                        $article->author->notify(new \App\Notifications\ArticlePublishedNotification($article));
+                    }
+                } catch (\Throwable $e) {
+                    \Illuminate\Support\Facades\Log::error('Failed sending ArticlePublishedNotification for issue ' . $issue->id . ': ' . $e->getMessage());
+                }
+            }
+        }
+
         return back()->with('success', "Issue {$issue->display_title} berhasil dipublish!");
     }
 }

@@ -35,9 +35,17 @@ class ArticleController extends Controller
     {
         $article = $this->articleService->submit($request->validated(), auth()->id());
 
-        // Notify Editors & Admins
-        $adminsAndEditors = \App\Models\User::whereIn('role', ['admin', 'editor'])->active()->get();
-        \Illuminate\Support\Facades\Notification::send($adminsAndEditors, new \App\Notifications\ArticleSubmittedNotification($article));
+        // Notify Editors & Admins and send Submission Acknowledgment to Author
+        try {
+            $editors = $article->getEditorialRecipients();
+            \Illuminate\Support\Facades\Notification::send($editors, new \App\Notifications\ArticleSubmittedNotification($article));
+
+            if ($article->author) {
+                $article->author->notify(new \App\Notifications\SubmissionAcknowledgmentNotification($article));
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Failed sending submission notification: ' . $e->getMessage());
+        }
 
         return redirect()
             ->route('author.articles.show', $article)
@@ -80,6 +88,14 @@ class ArticleController extends Controller
             $request->file('revision_file'),
             $request->author_note
         );
+
+        // Notify Editors that revision has been submitted
+        try {
+            $editors = $article->getEditorialRecipients();
+            \Illuminate\Support\Facades\Notification::send($editors, new \App\Notifications\RevisionSubmittedNotification($article, $request->author_note));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Failed sending revision notification: ' . $e->getMessage());
+        }
 
         return redirect()
             ->route('author.articles.show', $article)

@@ -63,10 +63,14 @@ class ArticleController extends Controller
         }
 
         try {
-            $this->articleService->assignReviewer($article, $request->reviewer_id);
+            $review = $this->articleService->assignReviewer($article, $request->reviewer_id);
             
             // Notify Reviewer
-            $reviewer->notify(new \App\Notifications\ReviewAssignedNotification($article));
+            try {
+                $reviewer->notify(new \App\Notifications\ReviewAssignedNotification($article, $review));
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error('Failed sending ReviewAssignedNotification: ' . $e->getMessage());
+            }
 
             return back()->with('success', 'Reviewer berhasil diassign!');
         } catch (\Exception $e) {
@@ -99,9 +103,21 @@ class ArticleController extends Controller
                 'revision' => 'Permintaan revisi telah dikirim ke author.',
             };
 
-            // Notify Author
+            // Notify Author with dedicated academic notification
             $article->refresh();
-            $article->author->notify(new \App\Notifications\ArticleStatusUpdatedNotification($article, ucfirst($article->status)));
+            try {
+                if ($article->author) {
+                    if ($request->decision === 'accept') {
+                        $article->author->notify(new \App\Notifications\ArticleAcceptedNotification($article, $request->editor_note));
+                    } elseif ($request->decision === 'reject') {
+                        $article->author->notify(new \App\Notifications\ArticleRejectedNotification($article, $request->editor_note));
+                    } elseif ($request->decision === 'revision') {
+                        $article->author->notify(new \App\Notifications\RevisionRequiredNotification($article, $request->editor_note));
+                    }
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error('Failed sending decision notification: ' . $e->getMessage());
+            }
 
             return back()->with('success', $message);
         } catch (\Exception $e) {

@@ -97,6 +97,23 @@
                   <input type="hidden" name="settings[{{ $groupKey }}_{{ $idx }}][key]" value="{{ $setting->key }}"/>
                   <input type="hidden" name="settings[{{ $groupKey }}_{{ $idx }}][value]" value="{{ $setting->value }}"/>
                 </x-ui.form-field>
+              @elseif($setting->type === 'password')
+                <x-ui.form-field :label="$setting->label ?? $setting->key" :hint="$setting->description ?? null">
+                  <div style="position:relative;">
+                    <x-ui.input type="password" id="input_{{ $setting->key }}" name="settings[{{ $groupKey }}_{{ $idx }}][value]" :value="$setting->value" placeholder="Kosongkan jika tidak diubah" style="padding-right:40px;"/>
+                    <button type="button" onclick="const f = document.getElementById('input_{{ $setting->key }}'); f.type = f.type === 'password' ? 'text' : 'password';" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;" title="Lihat/Sembunyikan">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
+                </x-ui.form-field>
+              @elseif($setting->type === 'select')
+                <x-ui.form-field :label="$setting->label ?? $setting->key" :hint="$setting->description ?? null">
+                  <select name="settings[{{ $groupKey }}_{{ $idx }}][value]" class="form-select" style="font-size: 14px; border-radius: var(--radius-sm); border-color: var(--border); background-color: var(--bg-surface); color: var(--text-main); height: 42px;">
+                    <option value="tls" {{ $setting->value === 'tls' ? 'selected' : '' }}>TLS / STARTTLS (Port 587 - Disarankan)</option>
+                    <option value="ssl" {{ $setting->value === 'ssl' ? 'selected' : '' }}>SSL (Port 465)</option>
+                    <option value="none" {{ in_array($setting->value, ['none', '']) ? 'selected' : '' }}>Tanpa Enkripsi (None / Port 25)</option>
+                  </select>
+                </x-ui.form-field>
               @else
                 <x-ui.form-field :label="$setting->label ?? $setting->key" :hint="$setting->description ?? null">
                   <x-ui.input type="text" name="settings[{{ $groupKey }}_{{ $idx }}][value]" :value="$setting->value"/>
@@ -112,6 +129,36 @@
           </button>
         </div>
       </form>
+
+      @if($groupKey === 'email')
+      <div style="padding: 24px; border-top: 1px solid var(--border); background: rgba(245, 158, 11, 0.03);">
+        <div style="background: var(--bg-surface); border: 1px dashed var(--warning); border-radius: var(--radius-md); padding: 20px;">
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+            <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(245, 158, 11, 0.15); color: var(--warning); display: flex; align-items: center; justify-content: center; font-size: 18px;">
+              <i class="bi bi-envelope-check-fill"></i>
+            </div>
+            <div>
+              <h5 style="font-size: 15px; font-weight: 700; color: var(--text-main); margin: 0;">Uji Coba Pengiriman Email (Test SMTP)</h5>
+              <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Kirim email tes langsung ke alamat Anda untuk memverifikasi apakah akun SMTP berfungsi normal.</p>
+            </div>
+          </div>
+
+          <form method="POST" action="{{ route('admin.settings.test-email') }}" class="m-0">
+            @csrf
+            <div class="row align-items-center g-2 mt-2">
+              <div class="col-12 col-md-8">
+                <input type="email" name="test_email" class="form-control" placeholder="Masukkan alamat email penerima tes (contoh: admin@ojs.id)" value="{{ auth()->user()->email }}" required style="font-size: 14px; border-radius: var(--radius-sm); height: 40px;"/>
+              </div>
+              <div class="col-12 col-md-4">
+                <button type="submit" class="ds-btn ds-btn-sec" style="height: 40px; width: 100%; font-size: 13px; font-weight: 600;">
+                  <i class="bi bi-send-fill me-2 text-warning"></i> Kirim Test Email
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      @endif
     </div>
     @endforeach
 

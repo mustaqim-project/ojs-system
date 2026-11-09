@@ -26,12 +26,14 @@
     <i class="bi bi-rocket-takeoff-fill"></i> Terbitkan Sekarang
   </button>
 </div>
-<div class="modal fade" id="publishModal" tabindex="-1">
+
+@push('modals')
+<div class="modal fade" id="publishModal" tabindex="-1" aria-labelledby="publishModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content" style="border-radius:12px;border:1px solid var(--border);">
       <div class="modal-header" style="border-bottom:1px solid var(--border);padding:20px 24px;">
-        <h5 class="modal-title" style="font-weight:700;font-size:15px;"><i class="bi bi-rocket-takeoff-fill me-2" style="color:var(--success);"></i>Terbitkan Artikel</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <h5 class="modal-title" id="publishModalLabel" style="font-weight:700;font-size:15px;"><i class="bi bi-rocket-takeoff-fill me-2" style="color:var(--success);"></i>Terbitkan Artikel</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
       </div>
       <div class="modal-body" style="padding:24px;">
         <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">Pilih terbitan (issue) untuk menempatkan artikel ini:</p>
@@ -55,6 +57,7 @@
     </div>
   </div>
 </div>
+@endpush
 @endif
 
 <div class="row g-3">

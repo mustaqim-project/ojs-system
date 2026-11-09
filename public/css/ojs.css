@@ -2010,3 +2010,23 @@ img {
     padding: 32px 0 20px !important;
   }
 }
+
+/* ── Bootstrap Modal & Backdrop Fixes (Stacking Context & Clickability) ── */
+.modal-backdrop {
+  z-index: 1050 !important;
+}
+
+.modal {
+  z-index: 1060 !important;
+}
+
+.modal-dialog {
+  z-index: 1065 !important;
+  pointer-events: auto !important;
+}
+
+.modal-content {
+  position: relative;
+  pointer-events: auto !important;
+  background-clip: padding-box;
+}

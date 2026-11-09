@@ -283,9 +283,25 @@
         </div>
     </div>
 
+    @stack('modals')
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+        // Ensure any Bootstrap modal is placed at <body> level to avoid stacking context traps
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.modal').forEach(function (modalEl) {
+                if (modalEl.parentElement !== document.body) {
+                    document.body.appendChild(modalEl);
+                }
+            });
+        });
+        document.addEventListener('show.bs.modal', function (event) {
+            if (event.target && event.target.parentElement !== document.body) {
+                document.body.appendChild(event.target);
+            }
+        });
+
         // Initialize AOS
         AOS.init({
             duration: 400,

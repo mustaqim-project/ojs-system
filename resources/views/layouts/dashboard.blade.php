@@ -23,6 +23,24 @@
     <link rel="stylesheet" href="{{ asset('css/ojs.css') }}">
 
     <style>
+        /* Bootstrap Modal & Backdrop Stacking Fixes */
+        .modal-backdrop {
+            z-index: 1050 !important;
+        }
+
+        .modal {
+            z-index: 1060 !important;
+        }
+
+        .modal-dialog {
+            z-index: 1065 !important;
+            pointer-events: auto !important;
+        }
+
+        .modal-content {
+            pointer-events: auto !important;
+        }
+
         /* Add minor fixes specifically for integrating Bootstrap and custom layout */
         .wrapper {
             display: flex;
@@ -503,11 +521,27 @@
         </div>
     </div>
 
+    @stack('modals')
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/countup.js/2.0.0/countUp.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
+        // Ensure any Bootstrap modal is placed at <body> level to avoid stacking context traps
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.modal').forEach(function (modalEl) {
+                if (modalEl.parentElement !== document.body) {
+                    document.body.appendChild(modalEl);
+                }
+            });
+        });
+        document.addEventListener('show.bs.modal', function (event) {
+            if (event.target && event.target.parentElement !== document.body) {
+                document.body.appendChild(event.target);
+            }
+        });
+
         // Initialize AOS
         AOS.init({
             duration: 600,

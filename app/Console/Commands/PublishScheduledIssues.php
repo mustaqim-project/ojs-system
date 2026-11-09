@@ -28,6 +28,15 @@ class PublishScheduledIssues extends Command
                         'status'       => 'published',
                         'published_at' => now(),
                     ]);
+
+                    try {
+                        $article->loadMissing(['author', 'journal', 'issue']);
+                        if ($article->author) {
+                            $article->author->notify(new \App\Notifications\ArticlePublishedNotification($article));
+                        }
+                    } catch (\Throwable $e) {
+                        \Illuminate\Support\Facades\Log::error('Failed sending ArticlePublishedNotification: ' . $e->getMessage());
+                    }
                 }
             }
 

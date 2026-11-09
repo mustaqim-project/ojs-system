@@ -154,6 +154,35 @@ class Article extends Model
         return false;
     }
 
+    /**
+     * Dapatkan daftar editor & admin terkait untuk notifikasi editorial
+     */
+    public function getEditorialRecipients(): \Illuminate\Support\Collection
+    {
+        $recipients = collect();
+
+        // 1. Assigned Editor
+        if ($this->assignedEditor && $this->assignedEditor->is_active) {
+            $recipients->push($this->assignedEditor);
+        }
+
+        // 2. Journal Editor
+        if ($this->journal && $this->journal->editor && $this->journal->editor->is_active) {
+            $recipients->push($this->journal->editor);
+        }
+
+        // 3. Fallback jika belum ada editor khusus: semua admin & editor aktif
+        if ($recipients->isEmpty()) {
+            $editors = User::where(function ($q) {
+                $q->whereIn('role', ['admin', 'editor', 'managing-editor', 'section-editor'])
+                  ->orWhereHas('roles', fn ($sq) => $sq->whereIn('name', ['admin', 'super-admin', 'editor', 'managing-editor', 'section-editor']));
+            })->active()->get();
+            $recipients = $recipients->merge($editors);
+        }
+
+        return $recipients->unique('id');
+    }
+
     // ========== LOCAL SCOPES ==========
 
     public function scopePublished($query)
