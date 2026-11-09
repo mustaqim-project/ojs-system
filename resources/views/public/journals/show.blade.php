@@ -1,4 +1,9 @@
 @extends('layouts.app')
+
+@section('title', $journal->title)
+@section('meta_description', Str::limit(strip_tags($journal->description), 200))
+@section('og_image', $journal->cover_image ? asset($journal->cover_image) : (\App\Models\Setting::get('site_logo') ? asset(\App\Models\Setting::get('site_logo')) : ''))
+
 @section('content')
 
     {{-- Hero Header --}}

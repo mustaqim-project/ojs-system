@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('title', $page['title'] ?? 'Etika Publikasi')
+@section('meta_description', $page['meta_description'] ?? 'Kami berkomitmen untuk mempertahankan standar tertinggi etika publikasi.')
+
 @section('content')
 
 {{-- Hero Section --}}

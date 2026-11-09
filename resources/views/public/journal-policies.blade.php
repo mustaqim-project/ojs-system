@@ -1,4 +1,8 @@
 @extends('layouts.app')
+
+@section('title', $page['title'] ?? 'Kebijakan Jurnal')
+@section('meta_description', $page['meta_description'] ?? 'Panduan komprehensif tentang kebijakan akses terbuka, hak cipta, pengarsipan, dan Crossmark.')
+
 @section('content')
 
 {{-- PAGE HEADER --}}

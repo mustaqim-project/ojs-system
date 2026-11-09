@@ -1,4 +1,8 @@
 @extends('layouts.app')
+
+@section('title', 'Jelajahi Artikel Ilmiah')
+@section('meta_description', 'Jelajahi makalah penelitian ilmiah dari berbagai disiplin akademik.')
+
 @section('content')
 
 {{-- Header --}}

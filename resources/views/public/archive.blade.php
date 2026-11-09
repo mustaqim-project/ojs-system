@@ -1,4 +1,8 @@
 @extends('layouts.app')
+
+@section('title', 'Arsip Terbitan')
+@section('meta_description', 'Jelajahi semua terbitan dan volume jurnal kami yang lalu.')
+
 @section('content')
 
 <section style="background:linear-gradient(135deg, var(--bg-app) 0%, #fff 100%); padding:60px 0; border-bottom:1px solid var(--border);">

@@ -1,4 +1,8 @@
 @extends('layouts.app')
+
+@section('title', $query ? 'Hasil Pencarian: ' . $query : 'Cari Artikel')
+@section('meta_description', 'Pencarian artikel ilmiah berdasarkan judul, abstrak, penulis, atau kata kunci.')
+
 @section('content')
 
 {{-- Search Header --}}

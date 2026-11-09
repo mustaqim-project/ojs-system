@@ -1,4 +1,8 @@
 @extends('layouts.app')
+
+@section('title', 'Daftar Jurnal Ilmiah')
+@section('meta_description', 'Temukan seluruh jurnal ilmiah terakreditasi dan bereputasi dalam jaringan kami.')
+
 @section('content')
 
 {{-- Header --}}

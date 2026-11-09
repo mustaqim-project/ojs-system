@@ -1,4 +1,8 @@
 @extends('layouts.app')
+
+@section('title', $page['title'] ?? 'Fokus & Ruang Lingkup')
+@section('meta_description', $page['meta_description'] ?? 'Bidang minat dan domain ilmiah yang dicakup oleh jurnal.')
+
 @section('content')
 
 {{-- PAGE HEADER --}}

@@ -1,4 +1,8 @@
 @extends('layouts.app')
+
+@section('title', $currentIssue ? 'Terbitan ' . $currentIssue->title : ($page['title'] ?? 'Terbitan Saat Ini'))
+@section('meta_description', $page['meta_description'] ?? 'Jelajahi artikel-artikel terbaru yang telah ditelaah sejawat dan diterbitkan dalam jurnal kami.')
+
 @section('content')
 
 <section style="background:linear-gradient(135deg, var(--bg-app) 0%, #fff 100%); padding:60px 0; border-bottom:1px solid var(--border);">

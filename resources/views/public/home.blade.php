@@ -1,4 +1,8 @@
 @extends('layouts.app')
+
+@section('title', 'Beranda')
+@section('meta_description', $siteDescription ?: 'Platform penerbitan jurnal ilmiah akses terbuka bereputasi.')
+
 @section('content')
     {{-- ── HERO SECTION ── --}}
     <section class="hero" style="position:relative; overflow:hidden;">

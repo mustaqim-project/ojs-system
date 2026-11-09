@@ -5,12 +5,100 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>{{ $title ?? ($page['title'] ?? config('app.name')) }} — {{ \App\Models\Setting::get('site_name', 'OJS') }}
-    </title>
-    <meta name="description"
-        content="{{ $description ?? ($page['meta_description'] ?? \App\Models\Setting::get('seo_meta_description', \App\Models\Setting::get('site_description', ''))) }}" />
-    <meta name="keywords"
-        content="{{ $page['extra']['meta_keywords'] ?? \App\Models\Setting::get('seo_meta_keywords', '') }}" />
+    @php
+        try {
+            $siteName = \App\Models\Setting::get('site_name', config('app.name', 'OJS System'));
+            $siteDesc = \App\Models\Setting::get('seo_meta_description', \App\Models\Setting::get('site_description', 'Platform Penerbitan Jurnal Ilmiah'));
+        } catch (\Throwable $e) {
+            $siteName = config('app.name', 'OJS System');
+            $siteDesc = 'Platform Penerbitan Jurnal Ilmiah';
+        }
+        
+        $pageTitle = trim($__env->yieldContent('title'));
+        if (empty($pageTitle)) {
+            $pageTitle = $title ?? ($page['title'] ?? '');
+        }
+        $fullTitle = $pageTitle ? $pageTitle . ' — ' . $siteName : $siteName;
+
+        $pageDesc = trim($__env->yieldContent('meta_description'));
+        if (empty($pageDesc)) {
+            $pageDesc = $description ?? ($page['meta_description'] ?? $siteDesc);
+        }
+        $pageDesc = Str::limit(strip_tags($pageDesc), 200);
+
+        // Resolve Open Graph Image (Logo / Cover)
+        $customOgImage = trim($__env->yieldContent('og_image'));
+        $rawImage = null;
+
+        try {
+            if (!empty($customOgImage)) {
+                $rawImage = $customOgImage;
+            } elseif (!empty($og_image)) {
+                $rawImage = $og_image;
+            } elseif (isset($article) && $article instanceof \App\Models\Article && !empty($article->journal?->cover_image)) {
+                $rawImage = $article->journal->cover_image;
+            } elseif (isset($journal) && $journal instanceof \App\Models\Journal && !empty($journal->cover_image)) {
+                $rawImage = $journal->cover_image;
+            } elseif (!empty(\App\Models\Setting::get('site_logo'))) {
+                $rawImage = \App\Models\Setting::get('site_logo');
+            } else {
+                $firstCover = \App\Models\Journal::where('is_active', true)->whereNotNull('cover_image')->where('cover_image', '!=', '')->value('cover_image');
+                $rawImage = $firstCover ?: \App\Models\Setting::get('site_favicon');
+            }
+        } catch (\Throwable $e) {
+            $rawImage = null;
+        }
+
+        $shareImageUrl = '';
+        if ($rawImage) {
+            $shareImageUrl = (str_starts_with($rawImage, 'http://') || str_starts_with($rawImage, 'https://'))
+                ? $rawImage
+                : asset($rawImage);
+        }
+
+        // Detect mime type for Open Graph
+        $imageType = 'image/jpeg';
+        if (str_ends_with(strtolower($shareImageUrl), '.png')) {
+            $imageType = 'image/png';
+        } elseif (str_ends_with(strtolower($shareImageUrl), '.webp')) {
+            $imageType = 'image/webp';
+        } elseif (str_ends_with(strtolower($shareImageUrl), '.svg')) {
+            $imageType = 'image/svg+xml';
+        }
+
+        $ogType = trim($__env->yieldContent('og_type')) ?: 'website';
+        $currentUrl = url()->current();
+    @endphp
+
+    <title>{{ $fullTitle }}</title>
+    <meta name="description" content="{{ $pageDesc }}" />
+    <meta name="keywords" content="{{ $page['extra']['meta_keywords'] ?? \App\Models\Setting::get('seo_meta_keywords', '') }}" />
+    <link rel="canonical" href="{{ $currentUrl }}" />
+
+    {{-- Open Graph / Facebook / WhatsApp / LinkedIn / Telegram --}}
+    <meta property="og:type" content="{{ $ogType }}" />
+    <meta property="og:site_name" content="{{ $siteName }}" />
+    <meta property="og:title" content="{{ $pageTitle ?: $siteName }}" />
+    <meta property="og:description" content="{{ $pageDesc }}" />
+    <meta property="og:url" content="{{ $currentUrl }}" />
+    @if(!empty($shareImageUrl))
+        <meta property="og:image" content="{{ $shareImageUrl }}" />
+        <meta property="og:image:secure_url" content="{{ $shareImageUrl }}" />
+        <meta property="og:image:type" content="{{ $imageType }}" />
+        <meta property="og:image:alt" content="{{ $pageTitle ?: $siteName }}" />
+        <link rel="image_src" href="{{ $shareImageUrl }}" />
+    @endif
+
+    {{-- Twitter Card --}}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="{{ $currentUrl }}" />
+    <meta name="twitter:title" content="{{ $pageTitle ?: $siteName }}" />
+    <meta name="twitter:description" content="{{ $pageDesc }}" />
+    @if(!empty($shareImageUrl))
+        <meta name="twitter:image" content="{{ $shareImageUrl }}" />
+    @endif
+
+    @stack('meta')
 
     @if (\App\Models\Setting::get('site_favicon'))
         <link rel="icon" href="{{ asset(\App\Models\Setting::get('site_favicon')) }}">

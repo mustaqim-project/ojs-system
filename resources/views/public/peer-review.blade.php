@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('title', $page['title'] ?? 'Proses Tinjauan Sejawat')
+@section('meta_description', $page['meta_description'] ?? 'Kami menggunakan sistem penelaahan sejawat ganda-buta (double-blind) yang ketat untuk memastikan evaluasi objektif setiap naskah.')
+
 @section('content')
 
 {{-- Hero Section --}}

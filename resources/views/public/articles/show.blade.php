@@ -1,4 +1,41 @@
 @extends('layouts.app')
+
+@section('title', $article->title)
+@section('meta_description', Str::limit(strip_tags($article->abstract), 200))
+@section('og_type', 'article')
+@section('og_image', $article->journal?->cover_image ? asset($article->journal->cover_image) : (\App\Models\Setting::get('site_logo') ? asset(\App\Models\Setting::get('site_logo')) : ''))
+
+@push('meta')
+  {{-- Google Scholar / Highwire Press Academic Meta Tags --}}
+  <meta name="citation_title" content="{{ $article->title }}">
+  <meta name="citation_author" content="{{ $article->author?->name }}">
+  @if($article->published_at)
+    <meta name="citation_publication_date" content="{{ $article->published_at instanceof \Carbon\Carbon ? $article->published_at->format('Y/m/d') : \Carbon\Carbon::parse($article->published_at)->format('Y/m/d') }}">
+  @endif
+  @if($article->journal)
+    <meta name="citation_journal_title" content="{{ $article->journal->title }}">
+    @if($article->journal->issn_online)
+      <meta name="citation_issn" content="{{ $article->journal->issn_online }}">
+    @elseif($article->journal->issn_print)
+      <meta name="citation_issn" content="{{ $article->journal->issn_print }}">
+    @endif
+  @endif
+  @if($article->issue)
+    <meta name="citation_volume" content="{{ $article->issue->volume }}">
+    <meta name="citation_issue" content="{{ $article->issue->number }}">
+  @endif
+  @if($article->pages_start)
+    <meta name="citation_firstpage" content="{{ $article->pages_start }}">
+  @endif
+  @if($article->pages_end)
+    <meta name="citation_lastpage" content="{{ $article->pages_end }}">
+  @endif
+  @if($article->doi)
+    <meta name="citation_doi" content="{{ $article->doi }}">
+  @endif
+  <meta name="citation_pdf_url" content="{{ route('public.articles.download', $article->slug) }}">
+@endpush
+
 @section('content')
 
 {{-- Breadcrumb & Title Area --}}
