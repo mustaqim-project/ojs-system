@@ -11,7 +11,12 @@
       <span style="color:var(--primary);">Detail Artikel</span>
     </div>
 
-    <div class="d-flex flex-wrap gap-2 mb-3">
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+      @if($article->journal?->cover_image)
+        <a href="{{ route('public.journals.show', $article->journal->slug) }}" class="d-inline-block me-1" title="{{ $article->journal->title }}">
+          <img src="{{ asset($article->journal->cover_image) }}" alt="{{ $article->journal->title }}" style="width:28px; height:38px; object-fit:cover; border-radius:4px; border:1px solid var(--border); box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+        </a>
+      @endif
       <a href="{{ route('public.journals.show', $article->journal->slug) }}" class="badge bg-primary text-white text-decoration-none" style="padding:6px 12px; font-weight:600; font-size:12px; border-radius:4px;">
         {{ $article->journal->title }}
       </a>
@@ -23,12 +28,17 @@
       <span class="badge bg-success-subtle text-success border" style="padding:6px 12px; font-weight:600; font-size:12px; border-radius:4px;">
         <i class="bi bi-unlock-fill me-1"></i> Akses Terbuka
       </span>
+      @if($article->published_at)
+        <span class="badge bg-light text-dark border d-inline-flex align-items-center gap-1" style="padding:6px 12px; font-weight:600; font-size:12px; border-radius:4px;">
+          <i class="bi bi-calendar-check text-primary me-1"></i> Diterbitkan: {{ $article->published_at instanceof \Carbon\Carbon ? $article->published_at->locale('id')->translatedFormat('d F Y') : \Carbon\Carbon::parse($article->published_at)->locale('id')->translatedFormat('d F Y') }}
+        </span>
+      @endif
     </div>
 
     <h1 style="font-size:clamp(22px,4vw,36px); font-weight:800; color:var(--text-main); letter-spacing:-0.03em; line-height:1.3; margin-bottom:24px;">{{ $article->title }}</h1>
     
-    {{-- Authors --}}
-    <div class="d-flex flex-wrap gap-3 align-items-center border-top border-bottom py-3 mb-2" style="background:var(--bg-app); border-radius:8px; padding:12px 16px !important;">
+    {{-- Authors & Publication Date --}}
+    <div class="d-flex flex-wrap gap-3 align-items-center justify-content-between border-top border-bottom py-3 mb-2" style="background:var(--bg-app); border-radius:8px; padding:12px 16px !important;">
       <div class="d-flex align-items-center gap-3">
         <div style="width:40px; height:40px; border-radius:50%; background:var(--primary-light); color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; flex-shrink:0;">
           {{ strtoupper(substr($article->author?->name ?? 'A', 0, 1)) }}
@@ -46,6 +56,13 @@
           <div style="font-size: 13px; color: var(--text-muted);"><i class="bi bi-building me-1"></i> {{ $article->author?->affiliation ?? 'Institusi Akademik' }}</div>
         </div>
       </div>
+
+      @if($article->published_at)
+      <div class="d-flex align-items-center gap-2" style="font-size:13px; color:var(--text-muted); font-weight:600;">
+        <i class="bi bi-calendar3 text-primary" style="font-size:16px;"></i>
+        <span>Tanggal Terbit: <strong style="color:var(--text-main);">{{ $article->published_at instanceof \Carbon\Carbon ? $article->published_at->locale('id')->translatedFormat('d F Y') : \Carbon\Carbon::parse($article->published_at)->locale('id')->translatedFormat('d F Y') }}</strong></span>
+      </div>
+      @endif
     </div>
 
   </div>
@@ -182,10 +199,45 @@
     <div class="col-12 col-lg-4 article-sidebar">
       <div style="position:-webkit-sticky; position:sticky; top:90px; display:flex; flex-direction:column; gap:20px; z-index:2;">
         
+        {{-- Journal Cover & Branding Card --}}
+        @if($article->journal)
+        <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px; text-align:center;">
+          <a href="{{ route('public.journals.show', $article->journal->slug) }}" style="text-decoration:none; display:block;">
+            @if($article->journal->cover_image)
+              <img src="{{ asset($article->journal->cover_image) }}" alt="{{ $article->journal->title }}" style="width:140px; height:195px; object-fit:cover; border-radius:8px; border:1px solid var(--border); box-shadow:0 6px 16px rgba(0,0,0,0.08); margin:0 auto 14px; display:block; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+            @else
+              <div style="width:140px; height:195px; border-radius:8px; background:linear-gradient(135deg, var(--primary-light), rgba(37,99,235,0.08)); color:var(--primary); display:flex; flex-direction:column; align-items:center; justify-content:center; margin:0 auto 14px; gap:8px; border:1px solid var(--border); box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+                <i class="bi bi-journal-bookmark-fill" style="font-size:40px;"></i>
+                <span style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">{{ $article->journal->abbreviation ?: 'Jurnal' }}</span>
+              </div>
+            @endif
+            <h6 style="font-weight:700; font-size:14px; color:var(--text-main); margin-bottom:6px; line-height:1.4;">{{ $article->journal->title }}</h6>
+          </a>
+          @if($article->journal->issn_online || $article->journal->issn_print)
+            <div style="font-size:11px; font-family:monospace; color:var(--text-muted); margin-bottom:8px;">
+              @if($article->journal->issn_online) E-ISSN: {{ $article->journal->issn_online }} @endif
+              @if($article->journal->issn_print) | P-ISSN: {{ $article->journal->issn_print }} @endif
+            </div>
+          @endif
+          @if($article->issue)
+            <span class="badge bg-light text-dark border" style="font-size:11px; font-weight:600;">
+              Vol {{ $article->issue->volume ?? '-' }}, No {{ $article->issue->number ?? '-' }} ({{ $article->issue->year ?? '-' }})
+            </span>
+          @endif
+        </div>
+        @endif
+
         {{-- Download & Read Action --}}
         <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px;">
           <h5 style="font-weight:700; margin-bottom:16px;">Akses Artikel</h5>
           
+          @if($article->published_at)
+          <div class="mb-3 pb-3 border-bottom d-flex align-items-center justify-content-between" style="font-size:13px;">
+            <span style="color:var(--text-muted);"><i class="bi bi-calendar-check me-1 text-primary"></i> Diterbitkan:</span>
+            <strong style="color:var(--text-main);">{{ $article->published_at instanceof \Carbon\Carbon ? $article->published_at->locale('id')->translatedFormat('d F Y') : \Carbon\Carbon::parse($article->published_at)->locale('id')->translatedFormat('d F Y') }}</strong>
+          </div>
+          @endif
+
           <a href="{{ route('public.articles.download', $article->slug) }}" class="btn btn-danger w-100 mb-2 d-flex align-items-center justify-content-center gap-2" style="font-weight: 600; padding: 12px; border-radius: 8px;">
             <i class="bi bi-file-earmark-pdf-fill" style="font-size:18px;"></i> Unduh PDF
           </a>
