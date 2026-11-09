@@ -66,6 +66,19 @@ class Payment extends Model
     // COMPATIBILITY ACCESSORS
     // ===========================
 
+    public function getArticleAttribute()
+    {
+        if ($this->relationLoaded('invoice') && $this->invoice && $this->invoice->relationLoaded('submission')) {
+            return $this->invoice->submission;
+        }
+
+        if ($this->invoice?->submission) {
+            return $this->invoice->submission;
+        }
+
+        return $this->getRelationValue('article');
+    }
+
     public function getInvoiceCodeAttribute()
     {
         return $this->invoice?->invoice_number;

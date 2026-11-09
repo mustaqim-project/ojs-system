@@ -12,7 +12,8 @@ class PaymentPolicy
      */
     public function view(User $user, Payment $payment): bool
     {
-        if ($user->hasRole(['super-admin', 'system-admin', 'finance'])) {
+        if ($user->hasRole(['super-admin', 'system-admin', 'admin', 'finance', 'journal-manager'])
+            || in_array(strtolower((string) ($user->role ?? '')), ['admin', 'super-admin', 'system-admin'])) {
             return true;
         }
 
@@ -25,7 +26,8 @@ class PaymentPolicy
      */
     public function verify(User $user, Payment $payment): bool
     {
-        return $user->hasRole(['super-admin', 'system-admin', 'finance', 'journal-manager']);
+        return $user->hasRole(['super-admin', 'system-admin', 'admin', 'finance', 'journal-manager'])
+            || in_array(strtolower((string) ($user->role ?? '')), ['admin', 'super-admin', 'system-admin']);
     }
 
     /**
@@ -33,6 +35,7 @@ class PaymentPolicy
      */
     public function reject(User $user, Payment $payment): bool
     {
-        return $user->hasRole(['super-admin', 'system-admin', 'finance', 'journal-manager']);
+        return $user->hasRole(['super-admin', 'system-admin', 'admin', 'finance', 'journal-manager'])
+            || in_array(strtolower((string) ($user->role ?? '')), ['admin', 'super-admin', 'system-admin']);
     }
 }

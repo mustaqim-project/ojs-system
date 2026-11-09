@@ -55,12 +55,12 @@
           <td style="font-size:14px;font-weight:700;color:var(--text-main);">Rp {{ number_format($p->amount,0,',','.') }}</td>
           <td>
             @php
-              $indonesianStatusLabel = match($p->status) {
+              $indonesianStatusLabel = match($p->status ?? '') {
                 'pending' => 'Menunggu Pembayaran',
-                'uploaded' => 'Menunggu Verifikasi',
+                'uploaded', 'waiting_verification' => 'Menunggu Verifikasi',
                 'verified' => 'Diverifikasi',
                 'rejected' => 'Ditolak',
-                default => $p->status_label
+                default => $p->status_label ?? ($p->status ?? '-')
               };
             @endphp
             <x-status-badge :status="$p->status" :label="$indonesianStatusLabel"/>

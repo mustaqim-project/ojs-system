@@ -143,6 +143,7 @@ Route::middleware(['auth', 'admin.panel'])
         Route::middleware('permission:invoice.view')->group(function () {
             Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
             Route::get('/payments/{payment}', [PaymentController::class, 'show'])->name('payments.show');
+            Route::get('/payments/{payment}/proof', [PaymentController::class, 'proof'])->name('payments.proof');
         });
         Route::middleware('permission:payment.verify')->group(function () {
             Route::post('/payments/{payment}/verify', [PaymentController::class, 'verify'])->name('payments.verify');

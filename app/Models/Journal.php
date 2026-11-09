@@ -79,4 +79,9 @@ class Journal extends Model
     {
         return $query->where('is_active', true);
     }
+
+    public function getNameAttribute(): string
+    {
+        return (string) ($this->title ?? '');
+    }
 }

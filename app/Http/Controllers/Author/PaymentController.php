@@ -97,9 +97,18 @@ class PaymentController extends Controller
             $request->proof_notes
         );
 
-        // Notify Admins
-        $admins = \App\Models\User::where('role', 'admin')->active()->get();
-        \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\PaymentUploadedNotification($article));
+        // Notify Admins safely
+        try {
+            $admins = \App\Models\User::role(['admin', 'super-admin', 'journal-manager'])
+                ->orWhereIn('role', ['admin', 'super-admin'])
+                ->get()
+                ->unique('id');
+            if ($admins->isNotEmpty()) {
+                \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\PaymentUploadedNotification($article));
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Failed sending PaymentUploadedNotification: ' . $e->getMessage());
+        }
 
         return redirect()
             ->route('author.payments.show', $article)

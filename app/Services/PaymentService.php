@@ -62,16 +62,24 @@ class PaymentService
             ]);
 
             $invoice = $payment->invoice;
-            $invoice->update([
-                'status'      => 'paid',
-                'approved_by' => $adminId,
-            ]);
+            if ($invoice) {
+                $invoice->update([
+                    'status'      => 'paid',
+                    'approved_by' => $adminId,
+                ]);
 
-            $invoice->submission->update(['status' => 'paid']);
+                if ($invoice->submission) {
+                    $invoice->submission->update(['status' => 'paid']);
+                }
 
-            // Auto-generate receipt
-            $receiptService = new ReceiptService();
-            $receiptService->generateReceipt($invoice);
+                // Auto-generate receipt safely without aborting payment verification
+                try {
+                    $receiptService = new ReceiptService();
+                    $receiptService->generateReceipt($invoice);
+                } catch (\Throwable $e) {
+                    \Illuminate\Support\Facades\Log::error('Auto-generate receipt failed during payment verification: ' . $e->getMessage());
+                }
+            }
 
             return $payment->fresh();
         });

@@ -152,4 +152,69 @@ class EditorialGalleyAndRevisionTest extends TestCase
         $response->assertStatus(200);
         $this->assertEquals('application/pdf', $response->headers->get('content-type'));
     }
+
+    public function test_admin_can_verify_payment_when_article_id_differs_from_invoice_id(): void
+    {
+        Storage::fake('private_upload');
+        $journal = Journal::create(['title' => 'JPSTEM', 'slug' => 'jpstem']);
+        $author = User::factory()->create(['role' => 'author', 'is_active' => true]);
+        $admin = User::factory()->create(['role' => 'admin', 'is_active' => true]);
+        $admin->assignRole('admin');
+
+        // Create 3 dummy articles to increment article IDs
+        for ($i = 0; $i < 3; $i++) {
+            Article::create([
+                'journal_id'      => $journal->id,
+                'author_id'       => $author->id,
+                'title'           => "Dummy Article {$i}",
+                'slug'            => "dummy-article-{$i}",
+                'abstract'        => 'Dummy abstract',
+                'manuscript_file' => 'manuscripts/dummy.pdf',
+                'status'          => 'submitted',
+            ]);
+        }
+
+        $realArticle = Article::create([
+            'journal_id'      => $journal->id,
+            'author_id'       => $author->id,
+            'title'           => 'Real Target Article For Payment',
+            'slug'            => 'real-target-article-for-payment',
+            'abstract'        => 'Real abstract',
+            'manuscript_file' => 'manuscripts/real.pdf',
+            'status'          => 'payment_uploaded',
+        ]);
+
+        $invoice = \App\Models\Invoice::create([
+            'journal_id'     => $journal->id,
+            'submission_id'  => $realArticle->id,
+            'invoice_number' => 'INV-2026-999',
+            'amount'         => 1500000,
+            'currency'       => 'IDR',
+            'due_date'       => now()->addDays(7),
+            'status'         => 'waiting_verification',
+        ]);
+
+        $payment = \App\Models\Payment::create([
+            'invoice_id'     => $invoice->id,
+            'author_id'      => $author->id,
+            'amount'         => 1500000,
+            'payment_method' => 'bank_transfer',
+            'payment_date'   => now(),
+            'proof_path'     => 'payments/proof-test.jpg',
+            'status'         => 'waiting_verification',
+            'notes'          => 'Paid via BCA',
+        ]);
+
+        $this->assertNotEquals($realArticle->id, $invoice->id);
+
+        $response = $this->actingAs($admin)->post(route('admin.payments.verify', $payment), [
+            'admin_notes' => 'Valid payment confirmed',
+        ]);
+
+        $response->assertRedirect(route('admin.payments.index'));
+        $payment->refresh();
+        $this->assertEquals('verified', $payment->status);
+        $realArticle->refresh();
+        $this->assertEquals('paid', $realArticle->status);
+    }
 }

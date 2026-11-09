@@ -54,15 +54,15 @@
     <div class="ds-card" data-aos="fade-up" data-aos-delay="200" style="margin-bottom:16px;">
       <div class="ds-card-hdr">
         <span class="ds-card-title"><i class="bi bi-image me-2" style="color:var(--primary);"></i>Bukti Pembayaran</span>
-        <a href="{{ asset($payment->proof_file) }}" target="_blank" class="ds-btn ds-btn-out ds-btn-sm">
+        <a href="{{ route('admin.payments.proof', $payment) }}" target="_blank" class="ds-btn ds-btn-out ds-btn-sm">
           <i class="bi bi-box-arrow-up-right"></i> Buka
         </a>
       </div>
       <div style="padding:20px;">
         @php $ext = strtolower(pathinfo($payment->proof_file, PATHINFO_EXTENSION)); @endphp
-        @if(in_array($ext, ['jpg','jpeg','png']))
+        @if(in_array($ext, ['jpg','jpeg','png', 'webp']))
           <div style="text-align:center;background:var(--bg-app);border-radius:8px;padding:12px;">
-            <img src="{{ asset($payment->proof_file) }}" alt="Proof" style="max-height:300px;max-width:100%;border-radius:8px;border:1px solid var(--border);"/>
+            <img src="{{ route('admin.payments.proof', $payment) }}" alt="Proof" style="max-height:300px;max-width:100%;border-radius:8px;border:1px solid var(--border);"/>
           </div>
         @else
           <div style="display:flex;align-items:center;gap:12px;padding:16px;background:var(--bg-app);border-radius:8px;border:1px solid var(--border);">
@@ -70,8 +70,8 @@
               <i class="bi bi-file-earmark-pdf-fill"></i>
             </div>
             <div>
-              <div style="font-size:13px;font-weight:600;color:var(--text-main);">Bukti Pembayaran (PDF)</div>
-              <a href="{{ asset($payment->proof_file) }}" target="_blank" style="font-size:12px;color:var(--primary);">Buka dokumen →</a>
+              <div style="font-size:13px;font-weight:600;color:var(--text-main);">Bukti Pembayaran (Dokumen)</div>
+              <a href="{{ route('admin.payments.proof', $payment) }}" target="_blank" style="font-size:12px;color:var(--primary);">Buka dokumen →</a>
             </div>
           </div>
         @endif
@@ -164,24 +164,30 @@
       <div class="ds-card" data-aos="fade-up" data-aos-delay="200">
         <div class="ds-card-hdr">
           <span class="ds-card-title">Artikel</span>
-          <a href="{{ route('admin.articles.show',$payment->article) }}" class="ds-btn ds-btn-ghost ds-btn-sm">Detail <i class="bi bi-arrow-right ms-1"></i></a>
+          @if($payment->article)
+            <a href="{{ route('admin.articles.show',$payment->article) }}" class="ds-btn ds-btn-ghost ds-btn-sm">Detail <i class="bi bi-arrow-right ms-1"></i></a>
+          @endif
         </div>
         <div style="padding:16px 20px;">
-          <div style="font-size:13px;font-weight:700;color:var(--text-main);line-height:1.4;margin-bottom:6px;">{{ $payment->article->title }}</div>
-          <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">{{ $payment->article->journal->title }}</div>
-          @php
-            $indonesianArticleStatus = match($payment->article->status) {
-              'submitted' => 'Mengajukan',
-              'screening' => 'Skrining',
-              'reviewing' => 'Ditinjau',
-              'accepted' => 'Diterima',
-              'declined' => 'Ditolak',
-              'paid' => 'Lunas',
-              'published' => 'Diterbitkan',
-              default => $payment->article->status
-            };
-          @endphp
-          <x-status-badge :status="$payment->article->status" :label="$indonesianArticleStatus"/>
+          @if($payment->article)
+            <div style="font-size:13px;font-weight:700;color:var(--text-main);line-height:1.4;margin-bottom:6px;">{{ $payment->article->title }}</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">{{ $payment->article->journal?->name ?? $payment->article->journal?->title ?? '-' }}</div>
+            @php
+              $indonesianArticleStatus = match($payment->article->status ?? '') {
+                'submitted' => 'Mengajukan',
+                'screening' => 'Skrining',
+                'reviewing' => 'Ditinjau',
+                'accepted' => 'Diterima',
+                'declined' => 'Ditolak',
+                'paid' => 'Lunas',
+                'published' => 'Diterbitkan',
+                default => $payment->article->status ?? '-'
+              };
+            @endphp
+            <x-status-badge :status="$payment->article->status" :label="$indonesianArticleStatus"/>
+          @else
+            <p class="text-muted mb-0" style="font-size:13px;">Data artikel tidak ditemukan.</p>
+          @endif
         </div>
       </div>
 

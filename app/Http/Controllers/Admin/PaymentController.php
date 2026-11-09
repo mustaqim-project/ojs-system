@@ -32,7 +32,7 @@ class PaymentController extends Controller
                     'status_label' => 'Menunggu Pembayaran',
                     'amount'       => $invoice->amount - ($invoice->discount_amount ?? 0),
                     'created_at'   => $invoice->created_at,
-                    'author'       => $invoice->submission->author,
+                    'author'       => $invoice->submission?->author,
                     'article'      => $invoice->submission,
                 ];
             });
@@ -58,6 +58,31 @@ class PaymentController extends Controller
         return view('admin.payments.show', compact('payment'));
     }
 
+    public function proof(Payment $payment)
+    {
+        $proofPath = $payment->proof_path;
+        if (!$proofPath) {
+            abort(404, 'Bukti pembayaran belum diunggah.');
+        }
+
+        // 1. Cek disk private_upload
+        if (\Illuminate\Support\Facades\Storage::disk('private_upload')->exists($proofPath)) {
+            return \Illuminate\Support\Facades\Storage::disk('private_upload')->response($proofPath);
+        }
+
+        // 2. Cek disk public
+        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($proofPath)) {
+            return \Illuminate\Support\Facades\Storage::disk('public')->response($proofPath);
+        }
+
+        // 3. Cek path publik langsung
+        if (file_exists(public_path($proofPath))) {
+            return response()->file(public_path($proofPath));
+        }
+
+        abort(404, 'File bukti pembayaran tidak ditemukan di server.');
+    }
+
     public function verify(Request $request, Payment $payment): RedirectResponse
     {
         $request->validate([
@@ -70,11 +95,20 @@ class PaymentController extends Controller
 
         $this->paymentService->verify($payment, auth()->id(), $request->admin_notes);
 
-        // Notify Author
-        $payment->author->notify(new \App\Notifications\PaymentVerifiedNotification($payment->article));
+        // Notify Author safely
+        try {
+            $article = $payment->article ?? $payment->invoice?->submission;
+            $author = $payment->author ?? $article?->author;
+            if ($author && $article) {
+                $author->notify(new \App\Notifications\PaymentVerifiedNotification($article));
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Failed sending PaymentVerifiedNotification: ' . $e->getMessage());
+        }
 
+        $invoiceCode = $payment->invoice_code ?? $payment->invoice?->invoice_number ?? "#{$payment->id}";
         return redirect()->route('admin.payments.index')
-            ->with('success', "Invoice {$payment->invoice_code} berhasil diverifikasi!");
+            ->with('success', "Invoice {$invoiceCode} berhasil diverifikasi!");
     }
 
     public function reject(Request $request, Payment $payment): RedirectResponse
@@ -91,14 +125,17 @@ class PaymentController extends Controller
 
         // Notify Author that payment proof was rejected with notes
         try {
-            $article = $payment->article;
-            if ($payment->author && $article) {
-                $payment->author->notify(new \App\Notifications\PaymentRejectedNotification($article, $request->admin_notes));
+            $article = $payment->article ?? $payment->invoice?->submission;
+            $author = $payment->author ?? $article?->author;
+            if ($author && $article) {
+                $author->notify(new \App\Notifications\PaymentRejectedNotification($article, $request->admin_notes));
             }
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::error('Failed sending PaymentRejectedNotification: ' . $e->getMessage());
         }
 
-        return back()->with('success', 'Bukti pembayaran ditolak. Author telah diberitahu untuk mengupload ulang.');
+        $invoiceCode = $payment->invoice_code ?? $payment->invoice?->invoice_number ?? "#{$payment->id}";
+        return redirect()->route('admin.payments.index')
+            ->with('success', "Bukti pembayaran untuk invoice {$invoiceCode} ditolak. Penulis telah diberitahu untuk mengunggah ulang.");
     }
 }

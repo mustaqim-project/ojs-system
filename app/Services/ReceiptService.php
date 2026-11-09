@@ -14,14 +14,15 @@ class ReceiptService
      */
     public function generateReceipt(Invoice $invoice): Receipt
     {
-        $journal = $invoice->journal;
+        $journal = $invoice->journal ?? $invoice->submission?->journal;
         $submission = $invoice->submission;
         $year = date('Y');
+        $journalSlug = $journal?->slug ?? 'journal';
 
         $receiptNumber = sprintf(
             'RCP/%s/%s/%04d',
             $year,
-            $journal->slug,
+            strtoupper($journalSlug),
             $invoice->id
         );
 
@@ -33,17 +34,24 @@ class ReceiptService
             'receiptNumber' => $receiptNumber,
         ]);
 
-        $path = "receipts/{$journal->slug}/{$year}/{$receiptNumber}.pdf";
+        $safeFileNumber = str_replace(['/', '\\'], '-', $receiptNumber);
+        $path = "receipts/{$journalSlug}/{$year}/{$safeFileNumber}.pdf";
         Storage::disk('private_upload')->put($path, $pdf->output());
 
-        $receipt = Receipt::create([
-            'invoice_id'     => $invoice->id,
-            'receipt_number' => $receiptNumber,
-            'pdf_path'       => $path,
-            'issued_at'      => now(),
-        ]);
+        $receipt = Receipt::updateOrCreate(
+            ['invoice_id' => $invoice->id],
+            [
+                'receipt_number' => $receiptNumber,
+                'pdf_path'       => $path,
+                'issued_at'      => now(),
+            ]
+        );
 
-        AuditService::log('Finance', 'receipt_generated', $receipt, null, $receipt->toArray());
+        try {
+            AuditService::log('Finance', 'receipt_generated', $receipt, null, $receipt->toArray());
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Audit log failed for receipt: ' . $e->getMessage());
+        }
 
         return $receipt;
     }
