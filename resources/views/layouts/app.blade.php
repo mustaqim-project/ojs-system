@@ -154,13 +154,13 @@
         </div>
     @endif
 
-    <main class="flex-grow-1">
+    <main class="flex-grow-1" style="position: relative; z-index: 1;">
         @yield('content')
     </main>
 
     {{-- FOOTER --}}
     <footer class="pub-footer animate__animated animate__fadeIn" role="contentinfo"
-        style="position: relative; z-index: 10; padding: 60px 0 20px; border-top: 1px solid rgba(255,255,255,0.1); background: #0a3161;">
+        style="position: relative; z-index: 2; padding: 60px 0 20px; border-top: 1px solid rgba(255,255,255,0.1); background: #0a3161; clear: both; margin-top: auto;">
         <div class="container" style="max-width: 1400px;">
             <div class="row g-5">
                 <div class="col-12 col-lg-5">

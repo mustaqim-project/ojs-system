@@ -783,6 +783,9 @@ textarea.form-control {
   background: #0a3161;
   color: #9CA3AF;
   margin-top: 80px;
+  clear: both;
+  position: relative;
+  z-index: 1;
 }
 
 .pub-footer-inner {
@@ -1522,7 +1525,7 @@ textarea.form-control {
   transition: all 0.2s ease;
   text-decoration: none;
   display: block;
-  height: 100%;
+  height: auto;
 }
 
 .pub-card:hover {

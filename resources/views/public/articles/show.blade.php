@@ -51,8 +51,8 @@
   </div>
 </div>
 
-<div class="container" style="max-width:1200px; padding:40px 12px;">
-  <div class="row g-5">
+<div class="container" style="max-width:1200px; padding:40px 16px 80px; margin-bottom:40px;">
+  <div class="row g-5 align-items-start">
     
     {{-- Main Article Content --}}
     <div class="col-12 col-lg-8">
@@ -78,6 +78,24 @@
           </div>
         </div>
         @endif
+      </div>
+
+      {{-- Full Text / PDF Galley Card --}}
+      <div class="pub-card mb-4" data-aos="fade-up">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+          <div>
+            <h5 style="font-weight:700; margin:0 0 6px 0; color:var(--text-main);"><i class="bi bi-file-earmark-pdf text-danger me-2"></i>Naskah Lengkap (PDF)</h5>
+            <span style="font-size:13px; color:var(--text-muted);">Tersedia berkas publikasi resmi untuk dibaca atau diunduh.</span>
+          </div>
+          <div class="d-flex gap-2 flex-wrap">
+            <a href="{{ route('public.articles.download', $article->slug) }}?mode=inline" target="_blank" class="btn btn-outline-primary d-inline-flex align-items-center gap-2" style="font-weight:600; border-radius:8px; padding:10px 18px;">
+              <i class="bi bi-layout-text-window"></i> Baca Online
+            </a>
+            <a href="{{ route('public.articles.download', $article->slug) }}" class="btn btn-danger d-inline-flex align-items-center gap-2" style="font-weight:600; border-radius:8px; padding:10px 18px;">
+              <i class="bi bi-file-earmark-pdf-fill"></i> Unduh PDF
+            </a>
+          </div>
+        </div>
       </div>
 
       {{-- Metrics & Stats (Visual) --}}
@@ -161,8 +179,8 @@
     </div>
 
     {{-- Sidebar (Actions & Citation) --}}
-    <div class="col-12 col-lg-4 article-sidebar" data-aos="fade-left">
-      <div style="position:sticky; top:100px; display:flex; flex-direction:column; gap:24px;">
+    <div class="col-12 col-lg-4 article-sidebar">
+      <div style="position:-webkit-sticky; position:sticky; top:90px; display:flex; flex-direction:column; gap:20px; z-index:2;">
         
         {{-- Download & Read Action --}}
         <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px;">
@@ -233,5 +251,6 @@
     </div>
 
   </div>
+  <div class="clearfix" style="clear:both;"></div>
 </div>
 @endsection
