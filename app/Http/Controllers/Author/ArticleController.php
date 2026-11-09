@@ -86,7 +86,9 @@ class ArticleController extends Controller
         $this->articleService->uploadRevision(
             $article,
             $request->file('revision_file'),
-            $request->author_note
+            $request->author_note,
+            $request->abstract,
+            $request->keywords
         );
 
         // Notify Editors that revision has been submitted

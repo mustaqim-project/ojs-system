@@ -83,6 +83,28 @@
           <x-ui.textarea name="author_note" rows="5" placeholder="Detailkan perubahan yang Anda buat berdasarkan umpan balik dari masing-masing penelaah...">{{ old('author_note') }}</x-ui.textarea>
         </x-ui.form-field>
 
+        {{-- Pembaruan Metadata (Abstrak & Keywords) --}}
+        <div style="background:var(--bg-app);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin-top:20px;margin-bottom:10px;">
+          <div style="font-size:13px;font-weight:700;color:var(--text-main);margin-bottom:6px;display:flex;align-items:center;gap:6px;">
+            <i class="bi bi-pencil-square" style="color:var(--primary);"></i>
+            Pembaruan Abstrak & Kata Kunci (Opsional)
+          </div>
+          <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px;">
+            Isi atau sesuaikan jika penelaah meminta perbaikan pada teks abstrak atau kata kunci naskah Anda.
+          </p>
+
+          <x-ui.form-field label="Abstrak Baru" hint="Sesuaikan teks abstrak naskah Anda jika diminta oleh penelaah.">
+            <x-ui.textarea name="abstract" rows="4" placeholder="Teks abstrak yang telah disempurnakan...">{{ old('abstract', $article->abstract) }}</x-ui.textarea>
+          </x-ui.form-field>
+
+          @php
+            $currentKw = is_array($article->keywords) ? implode(', ', $article->keywords) : $article->keywords;
+          @endphp
+          <x-ui.form-field label="Kata Kunci (Keywords)" hint="Pisahkan dengan tanda koma (contoh: teknologi, pendidikan, inovasi)">
+            <x-ui.input type="text" name="keywords" :value="old('keywords', $currentKw)" placeholder="Kata kunci dipisahkan dengan tanda koma"/>
+          </x-ui.form-field>
+        </div>
+
         <div style="display:flex;gap:12px;margin-top:24px;">
           <button type="submit" class="ds-btn ds-btn-pri" style="height:44px;padding:0 24px;background:var(--warning);border-color:var(--warning);">
             <i class="bi bi-upload"></i> Unggah Revisi

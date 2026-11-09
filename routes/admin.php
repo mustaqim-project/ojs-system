@@ -132,6 +132,8 @@ Route::middleware(['auth', 'admin.panel'])
         });
         Route::middleware('permission:submission.update')->group(function () {
             Route::post('/articles/{article}/metadata', [ArticleController::class, 'updateMetadata'])->name('articles.update-metadata');
+            Route::post('/articles/{article}/galley', [ArticleController::class, 'uploadGalley'])->name('articles.upload-galley');
+            Route::delete('/articles/{article}/galley/{galley}', [ArticleController::class, 'deleteGalley'])->name('articles.delete-galley');
         });
         Route::middleware('permission:publication.approve')->group(function () {
             Route::post('/articles/{article}/publish', [ArticleController::class, 'publish'])->name('articles.publish');

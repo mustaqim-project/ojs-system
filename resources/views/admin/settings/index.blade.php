@@ -108,11 +108,18 @@
                 </x-ui.form-field>
               @elseif($setting->type === 'select')
                 <x-ui.form-field :label="$setting->label ?? $setting->key" :hint="$setting->description ?? null">
-                  <select name="settings[{{ $groupKey }}_{{ $idx }}][value]" class="form-select" style="font-size: 14px; border-radius: var(--radius-sm); border-color: var(--border); background-color: var(--bg-surface); color: var(--text-main); height: 42px;">
-                    <option value="tls" {{ $setting->value === 'tls' ? 'selected' : '' }}>TLS / STARTTLS (Port 587 - Disarankan)</option>
-                    <option value="ssl" {{ $setting->value === 'ssl' ? 'selected' : '' }}>SSL (Port 465)</option>
-                    <option value="none" {{ in_array($setting->value, ['none', '']) ? 'selected' : '' }}>Tanpa Enkripsi (None / Port 25)</option>
-                  </select>
+                  @if($setting->key === 'mail_queue_driver')
+                    <select name="settings[{{ $groupKey }}_{{ $idx }}][value]" class="form-select" style="font-size: 14px; border-radius: var(--radius-sm); border-color: var(--border); background-color: var(--bg-surface); color: var(--text-main); height: 42px;">
+                      <option value="sync" {{ ($setting->value ?? 'sync') === 'sync' ? 'selected' : '' }}>Langsung / Seketika (Sync - Disarankan untuk cPanel / Shared Hosting)</option>
+                      <option value="database" {{ ($setting->value ?? '') === 'database' ? 'selected' : '' }}>Antrean Background (Queue - Butuh Worker/Supervisor Aktif)</option>
+                    </select>
+                  @else
+                    <select name="settings[{{ $groupKey }}_{{ $idx }}][value]" class="form-select" style="font-size: 14px; border-radius: var(--radius-sm); border-color: var(--border); background-color: var(--bg-surface); color: var(--text-main); height: 42px;">
+                      <option value="tls" {{ $setting->value === 'tls' ? 'selected' : '' }}>TLS / STARTTLS (Port 587 - Disarankan)</option>
+                      <option value="ssl" {{ $setting->value === 'ssl' ? 'selected' : '' }}>SSL (Port 465)</option>
+                      <option value="none" {{ in_array($setting->value, ['none', '']) ? 'selected' : '' }}>Tanpa Enkripsi (None / Port 25)</option>
+                    </select>
+                  @endif
                 </x-ui.form-field>
               @else
                 <x-ui.form-field :label="$setting->label ?? $setting->key" :hint="$setting->description ?? null">

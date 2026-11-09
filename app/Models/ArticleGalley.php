@@ -29,4 +29,17 @@ class ArticleGalley extends Model
     {
         return route('public.articles.download', ['slug' => $this->article->slug, 'galley' => $this->id]);
     }
+
+    public function getFormattedSizeAttribute(): string
+    {
+        if (!$this->size_bytes) {
+            return '-';
+        }
+        $units = ['B', 'KB', 'MB', 'GB'];
+        $bytes = max($this->size_bytes, 0);
+        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+        $pow = min($pow, count($units) - 1);
+        $bytes /= (1 << (10 * $pow));
+        return round($bytes, 2) . ' ' . $units[$pow];
+    }
 }

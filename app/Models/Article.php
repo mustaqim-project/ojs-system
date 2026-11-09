@@ -110,6 +110,12 @@ class Article extends Model
         return $this->hasMany(ArticleGalley::class);
     }
 
+    public function primaryGalley()
+    {
+        return $this->galleys()->where('is_published', true)->latest()->first() 
+            ?: $this->galleys()->latest()->first();
+    }
+
     public function doi()
     {
         return $this->hasOne(ArticleDoi::class);

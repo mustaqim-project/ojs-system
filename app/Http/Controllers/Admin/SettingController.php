@@ -152,6 +152,17 @@ class SettingController extends Controller
         );
 
         Setting::firstOrCreate(
+            ['key' => 'mail_queue_driver'],
+            [
+                'group'       => 'email',
+                'label'       => 'Metode Pengiriman Email',
+                'type'        => 'select',
+                'description' => 'Pilih "sync" agar email terkirim langsung seketika saat aksi berlangsung (Sangat disarankan untuk shared hosting / cPanel). Pilih "database" jika server Anda memiliki worker antrean.',
+                'value'       => 'sync',
+            ]
+        );
+
+        Setting::firstOrCreate(
             ['key' => 'email_submission_notification'],
             [
                 'group'       => 'email',

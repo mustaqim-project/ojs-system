@@ -62,6 +62,71 @@
       </div>
     </div>
 
+    {{-- Galley / Final Layout PDF Card --}}
+    <div class="ds-card" data-aos="fade-up" data-aos-delay="150" style="margin-top:16px;">
+      <div class="ds-card-hdr">
+        <span class="ds-card-title"><i class="bi bi-file-earmark-pdf-fill me-2" style="color:var(--danger);"></i>Galley / Final Layout (PDF Terbitan)</span>
+        @if($article->galleys->count())
+          <span class="badge bg-success" style="font-size:11px;">{{ $article->galleys->count() }} Galley Tersedia</span>
+        @endif
+      </div>
+      <div style="padding:20px 24px;">
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">
+          Unggah naskah yang telah selesai disetting dan dilayout oleh Editor. Berkas ini adalah file resmi yang akan diunduh oleh pembaca di portal publik.
+        </p>
+
+        @if($article->galleys->count())
+          <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+            @foreach($article->galleys as $galley)
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg-app);border:1px solid var(--border);border-radius:8px;">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="width:36px;height:36px;border-radius:8px;background:rgba(239,68,68,0.1);color:var(--danger);display:flex;align-items:center;justify-content:center;font-size:18px;">
+                  <i class="bi bi-file-pdf"></i>
+                </div>
+                <div>
+                  <div style="font-size:14px;font-weight:600;color:var(--text-main);">{{ $galley->label ?? 'PDF Terbitan' }}</div>
+                  <div style="font-size:12px;color:var(--text-muted);">Ukuran: {{ $galley->formatted_size }} • Diunggah: {{ $galley->created_at->format('d M Y H:i') }}</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <a href="{{ asset($galley->file_path) }}" target="_blank" class="ds-btn ds-btn-out ds-btn-sm">
+                  <i class="bi bi-eye"></i> Lihat PDF
+                </a>
+                <form method="POST" action="{{ route('editor.articles.delete-galley', [$article, $galley]) }}" onsubmit="return confirm('Yakin ingin menghapus berkas Galley ini?');" style="margin:0;">
+                  @csrf
+                  @method('DELETE')
+                  <button type="submit" class="ds-btn ds-btn-sm" style="color:var(--danger);background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+            @endforeach
+          </div>
+        @endif
+
+        {{-- Form Unggah Galley Baru --}}
+        <form method="POST" action="{{ route('editor.articles.upload-galley', $article) }}" enctype="multipart/form-data" style="background:#F8FAFC;padding:16px;border-radius:8px;border:1px dashed var(--border);">
+          @csrf
+          <div class="row g-2 align-items-center">
+            <div class="col-12 col-md-5">
+              <label style="font-size:12px;font-weight:600;color:var(--text-main);margin-bottom:4px;display:block;">Pilih Berkas PDF Layout</label>
+              <input type="file" name="galley_file" accept=".pdf" required class="form-control" style="font-size:13px;height:40px;">
+            </div>
+            <div class="col-12 col-md-4">
+              <label style="font-size:12px;font-weight:600;color:var(--text-main);margin-bottom:4px;display:block;">Label Format</label>
+              <input type="text" name="label" value="PDF" placeholder="Contoh: PDF Resmi" class="form-control" style="font-size:13px;height:40px;">
+            </div>
+            <div class="col-12 col-md-3" style="margin-top:auto;">
+              <button type="submit" class="ds-btn ds-btn-pri w-100" style="height:40px;font-size:13px;display:flex;align-items:center;justify-content:center;gap:6px;">
+                <i class="bi bi-cloud-arrow-up-fill"></i> Unggah Galley
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
     {{-- Peer Reviews --}}
     <div class="ds-card" data-aos="fade-up" data-aos-delay="200" style="margin-top:16px;">
       <div class="ds-card-hdr"><span class="ds-card-title">Peer Reviews ({{ $article->reviews->count() }})</span></div>

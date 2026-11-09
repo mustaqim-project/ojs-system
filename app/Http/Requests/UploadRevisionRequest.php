@@ -20,7 +20,9 @@ class UploadRevisionRequest extends FormRequest
                 'max:10240',
                 'mimes:pdf,doc,docx',
             ],
-            'author_note' => ['nullable', 'string', 'max:1000'],
+            'author_note' => ['nullable', 'string', 'max:2000'],
+            'abstract'    => ['nullable', 'string', 'max:5000'],
+            'keywords'    => ['nullable', 'string', 'max:500'],
         ];
     }
 

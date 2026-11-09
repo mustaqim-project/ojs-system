@@ -33,5 +33,7 @@ Route::middleware(['auth', 'role:editor,admin'])
 
         Route::middleware('permission:decision.make')->group(function () {
             Route::post('/articles/{article}/decision', [ArticleController::class, 'makeDecision'])->name('articles.decision');
+            Route::post('/articles/{article}/galley', [ArticleController::class, 'uploadGalley'])->name('articles.upload-galley');
+            Route::delete('/articles/{article}/galley/{galley}', [ArticleController::class, 'deleteGalley'])->name('articles.delete-galley');
         });
     });

@@ -34,8 +34,12 @@ class MailConfigServiceProvider extends ServiceProvider
         try {
             // 1. PRIORITAS UTAMA: Pengaturan dari Menu Setting Admin (tabel `settings`)
             if (Schema::hasTable('settings')) {
-                $enabled = Setting::get('mail_enabled', true);
-                $host    = Setting::get('mail_host');
+                $enabled     = Setting::get('mail_enabled', true);
+                $host        = Setting::get('mail_host');
+                $queueDriver = Setting::get('mail_queue_driver', 'sync');
+
+                // Set queue default ke sync (atau database jika dipilih oleh admin)
+                config(['queue.default' => $queueDriver]);
 
                 if ($enabled && !empty($host)) {
                     $port        = (int) Setting::get('mail_port', 587);

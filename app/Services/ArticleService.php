@@ -67,8 +67,13 @@ class ArticleService
     /**
      * Author upload revisi
      */
-    public function uploadRevision(Article $article, UploadedFile $file, ?string $note = null): Article
-    {
+    public function uploadRevision(
+        Article $article, 
+        UploadedFile $file, 
+        ?string $note = null,
+        ?string $abstract = null,
+        ?string $keywords = null
+    ): Article {
         // Hapus file revisi lama jika ada
         if ($article->revision_file) {
             Storage::disk('public')->delete($article->revision_file);
@@ -76,11 +81,22 @@ class ArticleService
 
         $revisionPath = $this->uploadFile($file, 'revisions');
 
-        $article->update([
+        $updateData = [
             'revision_file' => $revisionPath,
             'author_note'   => $note,
             'status'        => Article::STATUS_UNDER_REVIEW, // Kembali ke review setelah revisi
-        ]);
+        ];
+
+        if (!empty($abstract)) {
+            $updateData['abstract'] = $abstract;
+        }
+
+        if (!empty($keywords)) {
+            $kwArray = is_array($keywords) ? $keywords : array_map('trim', explode(',', $keywords));
+            $updateData['keywords'] = array_values(array_filter($kwArray));
+        }
+
+        $article->update($updateData);
 
         return $article->fresh();
     }

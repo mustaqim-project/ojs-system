@@ -45,10 +45,65 @@ class ArticleController extends Controller
 
     public function show(Article $article): View
     {
-        $article->load(['journal', 'author', 'reviews.reviewer', 'payment', 'issue']);
+        $article->load(['journal', 'author', 'reviews.reviewer', 'payment', 'issue', 'galleys']);
         $reviewers = User::byRole('reviewer')->active()->get();
 
         return view('editor.articles.show', compact('article', 'reviewers'));
+    }
+
+    public function uploadGalley(Request $request, Article $article): RedirectResponse
+    {
+        $request->validate([
+            'galley_file' => ['required', 'file', 'mimes:pdf', 'max:25600'],
+            'label'       => ['nullable', 'string', 'max:50'],
+        ], [
+            'galley_file.required' => 'Berkas Galley PDF wajib diunggah.',
+            'galley_file.mimes'    => 'Berkas Galley harus berupa file PDF (.pdf).',
+            'galley_file.max'      => 'Ukuran berkas Galley maksimal 25 MB.',
+        ]);
+
+        try {
+            $file = $request->file('galley_file');
+            $filename = 'galley_' . $article->id . '_' . \Illuminate\Support\Str::random(8) . '.pdf';
+
+            $targetDir = public_path('uploads/galleys');
+            if (!file_exists($targetDir)) {
+                mkdir($targetDir, 0755, true);
+            }
+
+            $file->move($targetDir, $filename);
+            $relativePath = 'uploads/galleys/' . $filename;
+
+            \App\Models\ArticleGalley::create([
+                'article_id'   => $article->id,
+                'label'        => $request->filled('label') ? $request->label : 'PDF',
+                'file_path'    => $relativePath,
+                'mime_type'    => 'application/pdf',
+                'size_bytes'   => file_exists(public_path($relativePath)) ? filesize(public_path($relativePath)) : null,
+                'is_published' => true,
+            ]);
+
+            return back()->with('success', 'Berkas Galley / Layout PDF berhasil diunggah!');
+        } catch (\Throwable $e) {
+            return back()->with('error', 'Gagal mengunggah berkas Galley: ' . $e->getMessage());
+        }
+    }
+
+    public function deleteGalley(Article $article, \App\Models\ArticleGalley $galley): RedirectResponse
+    {
+        if ($galley->article_id !== $article->id) {
+            abort(403);
+        }
+
+        try {
+            if ($galley->file_path && file_exists(public_path($galley->file_path))) {
+                @unlink(public_path($galley->file_path));
+            }
+            $galley->delete();
+            return back()->with('success', 'Berkas Galley berhasil dihapus.');
+        } catch (\Throwable $e) {
+            return back()->with('error', 'Gagal menghapus berkas Galley: ' . $e->getMessage());
+        }
     }
 
     public function assignReviewer(Request $request, Article $article): RedirectResponse
