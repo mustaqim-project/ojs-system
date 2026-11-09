@@ -77,20 +77,6 @@ class HomeController extends Controller
         $totalViewsVal = (int) Article::sum('views_count');
         $totalViews = $totalViewsVal >= 1000 ? round($totalViewsVal / 1000, 1) . 'K+' : (string) $totalViewsVal;
 
-        // Get Indexing Partners from Database (ApiIntegration, SitePage, or Setting)
-        $indexingPage = \App\Models\SitePage::findBySlug('indexing');
-        $dbIndexes = $indexingPage?->extra['indexes'] ?? Setting::get('indexing_list');
-        if (is_array($dbIndexes) && count($dbIndexes) > 0) {
-            $indexingPartners = implode(' & ', array_slice(array_column($dbIndexes, 'name'), 0, 2));
-        } else {
-            $activeIntegrations = \App\Models\ApiIntegration::where('status', 'active')
-                ->whereIn('provider', ['crossref', 'google-scholar', 'doaj', 'sinta', 'garuda', 'scopus'])
-                ->pluck('provider')
-                ->map(fn($p) => ucwords(str_replace('-', ' ', $p)))
-                ->toArray();
-            $indexingPartners = count($activeIntegrations) > 0 ? implode(' & ', array_slice($activeIntegrations, 0, 2)) : Setting::get('indexing_badge', 'Google Scholar & Crossref');
-        }
-
         return view('public.home', compact(
             'journals',
             'latestArticles',
@@ -104,8 +90,7 @@ class HomeController extends Controller
             'acceptanceRate',
             'avgPublicationDays',
             'totalDownloads',
-            'totalViews',
-            'indexingPartners'
+            'totalViews'
         ));
     }
 

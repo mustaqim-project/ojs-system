@@ -83,15 +83,6 @@
                                 <p class="text-muted small">Belum ada artikel yang diterbitkan.</p>
                             @endif
                         </div>
-                        {{-- Floating Badge --}}
-                        <div
-                            style="position:absolute; left:40px; bottom:120px; background:var(--bg-app); border:1px solid var(--border); border-radius:50px; padding:12px 24px; display:flex; align-items:center; gap:12px; box-shadow:0 10px 30px rgba(0,0,0,0.05); z-index:3; animation: float 6s ease-in-out infinite;">
-                            <i class="bi bi-globe-americas text-primary" style="font-size:24px;"></i>
-                            <div>
-                                <div style="font-size:12px; font-weight:700; color:var(--text-muted);">Terindeks di</div>
-                                <div style="font-size:15px; font-weight:800; color:var(--text-main);">{{ $indexingPartners }}</div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -299,7 +290,7 @@
             <div class="text-center mb-5" data-aos="fade-up">
                 <div class="section-tag">Publikasi</div>
                 <h2 class="section-title">Jurnal Kami</h2>
-                <p class="section-desc mx-auto">Temukan jurnal ilmiah kami yang telah terindeks dan bereputasi di berbagai
+                <p class="section-desc mx-auto">Temukan jurnal ilmiah kami yang bereputasi dan terpercaya di berbagai
                     bidang keilmuan.</p>
             </div>
 

@@ -100,7 +100,7 @@
                                     <option>Pertanyaan Umum</option>
                                     <option>Pertanyaan Pengajuan Naskah</option>
                                     <option>Proses Penelaahan</option>
-                                    <option>Pertanyaan Indeksasi</option>
+                                    <option>Pertanyaan Kerjasama</option>
                                 </select>
                             </div>
                             <div class="col-12">

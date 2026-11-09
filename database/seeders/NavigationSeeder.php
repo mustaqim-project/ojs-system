@@ -101,8 +101,7 @@ class NavigationSeeder extends Seeder
         $info->children()->createMany([
             ['title' => 'Announcements', 'url' => '/announcements', 'order' => 1],
             ['title' => 'Call for Papers', 'url' => '/call-for-papers', 'order' => 2],
-            ['title' => 'Indexing', 'url' => '/indexing', 'order' => 3],
-            ['title' => 'Contact Us', 'url' => '/contact', 'order' => 4],
+            ['title' => 'Contact Us', 'url' => '/contact', 'order' => 3],
         ]);
     }
 

@@ -80,6 +80,9 @@
             <div class="collapse navbar-collapse" id="mainNavbar">
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0" style="gap: 4px; align-items: center;">
                     @foreach ($global_navigations as $nav)
+                        @if(str_contains(strtolower($nav->url), 'indexing') || str_contains(strtolower($nav->title), 'indexing') || str_contains(strtolower($nav->title), 'indeks'))
+                            @continue
+                        @endif
                         @if ($nav->children->count() > 0)
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle"
@@ -91,6 +94,9 @@
                                 <ul class="dropdown-menu shadow-sm"
                                     style="border:1px solid var(--border); border-radius: var(--radius-md); font-size: 14px;">
                                     @foreach ($nav->children as $child)
+                                        @if(str_contains(strtolower($child->url), 'indexing') || str_contains(strtolower($child->title), 'indexing') || str_contains(strtolower($child->title), 'indeks'))
+                                            @continue
+                                        @endif
                                         <li><a class="dropdown-item"
                                                 href="{{ url($child->url) }}" style="min-height: 44px; display: flex; align-items: center;">{{ $child->title }}</a></li>
                                     @endforeach
