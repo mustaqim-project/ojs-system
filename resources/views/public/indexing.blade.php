@@ -26,20 +26,26 @@
         @endif
 
         @php
-        $indexes = $page['extra']['indexes'] ?? [
-            ['name'=>'Google Scholar', 'url'=>'https://scholar.google.com', 'icon'=>'bi-google',         'color'=>'#4285F4'],
-            ['name'=>'Crossref',       'url'=>'https://crossref.org',       'icon'=>'bi-diagram-3-fill', 'color'=>'#F0AB00'],
-            ['name'=>'DOAJ',           'url'=>'https://doaj.org',           'icon'=>'bi-journal-check',  'color'=>'#004d40'],
-            ['name'=>'Scopus',         'url'=>'https://scopus.com',         'icon'=>'bi-bar-chart-fill', 'color'=>'#ff6600'],
-            ['name'=>'SINTA',          'url'=>'https://sinta.kemdikbud.go.id','icon'=>'bi-award-fill',   'color'=>'#1E88E5'],
-            ['name'=>'Garuda',         'url'=>'https://garuda.kemdikbud.go.id','icon'=>'bi-shield-check','color'=>'#2563eb'],
-        ];
+        $dbIndexes = $page['extra']['indexes'] ?? \App\Models\Setting::get('indexing_list');
+        if (empty($dbIndexes)) {
+            $activeIntegrations = \App\Models\ApiIntegration::where('status', 'active')->get();
+            if ($activeIntegrations->isNotEmpty()) {
+                $dbIndexes = $activeIntegrations->map(fn($ai) => [
+                    'name' => $ai->name,
+                    'url'  => $ai->config['url'] ?? '#',
+                    'icon' => 'bi-diagram-3-fill',
+                    'color'=> '#2563eb',
+                    'description' => $ai->description ?? ''
+                ])->toArray();
+            }
+        }
+        $indexes = $dbIndexes ?? [];
         $icons = ['bi-google','bi-diagram-3-fill','bi-journal-check','bi-bar-chart-fill','bi-award-fill','bi-shield-check'];
         $colors = ['#4285F4','#F0AB00','#004d40','#ff6600','#1E88E5','#2563eb'];
         @endphp
 
         <div class="row g-4 justify-content-center">
-            @foreach($indexes as $i => $idx)
+            @forelse($indexes as $i => $idx)
             <div class="col-md-4" data-aos="fade-up" data-aos-delay="{{ ($i % 3 + 1) * 100 }}">
                 <a href="{{ $idx['url'] ?? '#' }}" target="_blank"
                    style="display:block;text-decoration:none;"
@@ -56,7 +62,12 @@
                     </div>
                 </a>
             </div>
-            @endforeach
+            @empty
+            <div class="col-12 text-center text-muted py-5">
+                <i class="bi bi-database-check" style="font-size:48px;"></i>
+                <p class="mt-3">Informasi indeksasi sedang diperbarui oleh pengelola jurnal.</p>
+            </div>
+            @endforelse
         </div>
 
     </div>

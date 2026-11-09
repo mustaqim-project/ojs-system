@@ -49,20 +49,9 @@
       </div>
       @endforeach
     @elseif(empty($page['body']))
-      {{-- Default hardcoded items as fallback --}}
-      <div class="pub-card mb-4" data-aos="fade-up">
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px;">
-          <h4 style="font-weight:700; margin:0; color:var(--primary);">Pemberitahuan Peningkatan Sistem</h4>
-          <span style="font-size:13px; color:var(--text-muted);"><i class="bi bi-calendar3 me-1"></i>{{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</span>
-        </div>
-        <p style="color:var(--text-muted); line-height:1.7;">Kami telah berhasil meningkatkan platform penerbitan kami untuk memberikan pengalaman yang lebih tangguh dan mulus bagi penulis dan penelaah kami.</p>
-      </div>
-      <div class="pub-card mb-4" data-aos="fade-up" data-aos-delay="100">
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px;">
-          <h4 style="font-weight:700; margin:0; color:var(--primary);">Jurnal Terbuka untuk Pengiriman</h4>
-          <span style="font-size:13px; color:var(--text-muted);"><i class="bi bi-calendar3 me-1"></i>{{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</span>
-        </div>
-        <p style="color:var(--text-muted); line-height:1.7;">Kami saat ini menerima naskah untuk terbitan kami yang akan datang. Silakan lihat Panduan Penulis untuk persyaratan pengiriman.</p>
+      <div class="col-12 text-center text-muted py-5 pub-card" data-aos="fade-up">
+        <i class="bi bi-megaphone" style="font-size:48px;"></i>
+        <p class="mt-3 mb-0">Belum ada pengumuman terbaru saat ini.</p>
       </div>
     @endif
 

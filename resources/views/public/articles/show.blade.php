@@ -36,8 +36,12 @@
         <div>
           <div style="font-weight:700; font-size:15px; color:var(--text-main); display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
             {{ $article->author?->name ?? 'Penulis' }}
-            <a href="https://orcid.org" target="_blank" style="color:#A6CE39;" title="ORCID iD"><i class="bi bi-patch-check-fill"></i></a>
-            <i class="bi bi-envelope-fill text-muted" title="Penulis Korespondensi"></i>
+            @if($article->author?->orcid)
+              <a href="https://orcid.org/{{ $article->author->orcid }}" target="_blank" style="color:#A6CE39;" title="ORCID iD: {{ $article->author->orcid }}"><i class="bi bi-patch-check-fill"></i></a>
+            @endif
+            @if($article->author?->email)
+              <a href="mailto:{{ $article->author->email }}" style="color:var(--text-muted);" title="Penulis Korespondensi ({{ $article->author->email }})"><i class="bi bi-envelope-fill"></i></a>
+            @endif
           </div>
           <div style="font-size: 13px; color: var(--text-muted);"><i class="bi bi-building me-1"></i> {{ $article->author?->affiliation ?? 'Institusi Akademik' }}</div>
         </div>
@@ -81,21 +85,21 @@
         <div class="col-sm-4">
           <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:8px; padding:16px; text-align:center;">
             <i class="bi bi-eye text-primary" style="font-size:24px; margin-bottom:8px; display:block;"></i>
-            <div style="font-size:24px; font-weight:800; color:var(--text-main);">{{ rand(500, 3000) }}</div>
+            <div style="font-size:24px; font-weight:800; color:var(--text-main);">{{ number_format($article->views_count ?? 0, 0, ',', '.') }}</div>
             <div style="font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase;">Dilihat</div>
           </div>
         </div>
         <div class="col-sm-4">
           <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:8px; padding:16px; text-align:center;">
             <i class="bi bi-download text-success" style="font-size:24px; margin-bottom:8px; display:block;"></i>
-            <div style="font-size:24px; font-weight:800; color:var(--text-main);">{{ rand(100, 1000) }}</div>
+            <div style="font-size:24px; font-weight:800; color:var(--text-main);">{{ number_format($article->downloads_count ?? 0, 0, ',', '.') }}</div>
             <div style="font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase;">Diunduh</div>
           </div>
         </div>
         <div class="col-sm-4">
           <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:8px; padding:16px; text-align:center;">
             <i class="bi bi-quote text-warning" style="font-size:24px; margin-bottom:8px; display:block;"></i>
-            <div style="font-size:24px; font-weight:800; color:var(--text-main);">{{ rand(5, 50) }}</div>
+            <div style="font-size:24px; font-weight:800; color:var(--text-main);">{{ number_format($article->citations_count ?? 0, 0, ',', '.') }}</div>
             <div style="font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase;">Disitasi</div>
           </div>
         </div>
@@ -115,7 +119,7 @@
             </h2>
             <div id="collapseFunding" class="accordion-collapse collapse" data-bs-parent="#accordionInfo">
               <div class="accordion-body" style="font-size:14px; color:var(--text-muted); line-height:1.7;">
-                Penulis tidak menerima pendanaan khusus untuk karya ini. Penulis mengucapkan terima kasih kepada dewan redaksi dan mitra bestari atas masukan mereka.
+                {{ $article->funding_statement ?: ($article->acknowledgement ?: 'Penulis tidak menerima pendanaan khusus untuk karya ini. Penulis mengucapkan terima kasih kepada dewan redaksi dan mitra bestari atas masukan mereka.') }}
               </div>
             </div>
           </div>
@@ -128,7 +132,7 @@
             </h2>
             <div id="collapseConflict" class="accordion-collapse collapse" data-bs-parent="#accordionInfo">
               <div class="accordion-body" style="font-size:14px; color:var(--text-muted); line-height:1.7;">
-                Penulis menyatakan tidak ada konflik kepentingan finansial atau hubungan personal yang dapat memengaruhi karya yang dilaporkan dalam makalah ini.
+                {{ $article->conflict_of_interest ?: 'Penulis menyatakan tidak ada konflik kepentingan finansial atau hubungan personal yang dapat memengaruhi karya yang dilaporkan dalam naskah ini.' }}
               </div>
             </div>
           </div>
@@ -142,10 +146,10 @@
             <div id="collapseHistory" class="accordion-collapse collapse" data-bs-parent="#accordionInfo">
               <div class="accordion-body" style="font-size:14px; color:var(--text-muted);">
                 <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;">
-                  <li><strong>Diterima:</strong> {{ $article->created_at ? $article->created_at->subDays(45)->locale('id')->translatedFormat('d F Y') : '—' }}</li>
-                  <li><strong>Direvisi:</strong> {{ $article->created_at ? $article->created_at->subDays(20)->locale('id')->translatedFormat('d F Y') : '—' }}</li>
-                  <li><strong>Disetujui:</strong> {{ $article->created_at ? $article->created_at->subDays(10)->locale('id')->translatedFormat('d F Y') : '—' }}</li>
-                  <li><strong>Diterbitkan:</strong> {{ $article->published_at ? $article->published_at->locale('id')->translatedFormat('d F Y') : '—' }}</li>
+                  <li><strong>Diterima:</strong> {{ $article->submitted_at ? \Carbon\Carbon::parse($article->submitted_at)->locale('id')->translatedFormat('d F Y') : ($article->created_at ? $article->created_at->locale('id')->translatedFormat('d F Y') : '—') }}</li>
+                  <li><strong>Direvisi:</strong> {{ $article->revision_file && $article->updated_at ? \Carbon\Carbon::parse($article->updated_at)->locale('id')->translatedFormat('d F Y') : '—' }}</li>
+                  <li><strong>Disetujui:</strong> {{ $article->accepted_at ? \Carbon\Carbon::parse($article->accepted_at)->locale('id')->translatedFormat('d F Y') : '—' }}</li>
+                  <li><strong>Diterbitkan:</strong> {{ $article->published_at ? \Carbon\Carbon::parse($article->published_at)->locale('id')->translatedFormat('d F Y') : '—' }}</li>
                 </ul>
               </div>
             </div>
@@ -171,12 +175,14 @@
             <i class="bi bi-layout-text-window" style="font-size:18px;"></i> Lihat HTML / PDF Inline
           </a>
           
+          @if($article->doi)
           <div class="mt-4 pt-3 border-top">
             <span style="font-size:13px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:8px;">DOI</span>
-            <a href="https://doi.org/10.5555/ojs.v1i1.{{ $article->id }}" target="_blank" class="doi-text" style="font-size:14px; font-family:monospace; font-weight:600; color:var(--primary); text-decoration:none;">
-              10.5555/ojs.v1i1.{{ $article->id }}
+            <a href="https://doi.org/{{ $article->doi }}" target="_blank" class="doi-text" style="font-size:14px; font-family:monospace; font-weight:600; color:var(--primary); text-decoration:none;">
+              {{ $article->doi }}
             </a>
           </div>
+          @endif
         </div>
 
         {{-- How to Cite --}}

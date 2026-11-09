@@ -27,24 +27,18 @@ class HomeController extends Controller
         $siteName         = Setting::get('site_name', 'Portal Jurnal');
         $siteDescription  = Setting::get('site_description', '');
 
-        // Dynamic metrics directly from database
+        // Dynamic metrics directly from database without hardcoded fallbacks
         $totalAuthors = \App\Models\User::where('role', 'author')
             ->orWhereHas('roles', function($q) { $q->where('name', 'author'); })
             ->orWhereHas('articles')
             ->distinct()
             ->count();
-        if ($totalAuthors === 0) {
-            $totalAuthors = 150;
-        }
 
         $totalReviewers = \App\Models\User::where('role', 'reviewer')
             ->orWhereHas('roles', function($q) { $q->where('name', 'reviewer'); })
             ->orWhereHas('reviewAssignments')
             ->distinct()
             ->count();
-        if ($totalReviewers === 0) {
-            $totalReviewers = 45;
-        }
 
         // Calculate Average First Decision Days
         $firstDecisions = \App\Models\EditorialDecision::selectRaw('submission_id, MIN(decided_at) as first_decision_at')
@@ -61,12 +55,12 @@ class HomeController extends Controller
         foreach ($decidedArticles as $art) {
             $decisionDaysList[] = $art->submitted_at->diffInDays($art->accepted_at);
         }
-        $avgFirstDecisionDays = count($decisionDaysList) > 0 ? round(array_sum($decisionDaysList) / count($decisionDaysList)) : 28;
+        $avgFirstDecisionDays = count($decisionDaysList) > 0 ? (int) round(array_sum($decisionDaysList) / count($decisionDaysList)) : 0;
 
         // Calculate Acceptance Rate
         $totalSubmissions = Article::count();
         $acceptedCount = Article::whereIn('status', ['accepted', 'published', 'waiting_payment', 'payment_uploaded', 'payment_verification', 'paid'])->count();
-        $acceptanceRate = $totalSubmissions > 0 ? round(($acceptedCount / $totalSubmissions) * 100) : 34;
+        $acceptanceRate = $totalSubmissions > 0 ? (int) round(($acceptedCount / $totalSubmissions) * 100) : 0;
 
         // Calculate Average Publication Days
         $pubArticles = Article::published()->whereNotNull('submitted_at')->whereNotNull('published_at')->get();
@@ -74,11 +68,28 @@ class HomeController extends Controller
         foreach ($pubArticles as $art) {
             $pubDaysList[] = $art->submitted_at->diffInDays($art->published_at);
         }
-        $avgPublicationDays = count($pubDaysList) > 0 ? round(array_sum($pubDaysList) / count($pubDaysList)) : 75;
+        $avgPublicationDays = count($pubDaysList) > 0 ? (int) round(array_sum($pubDaysList) / count($pubDaysList)) : 0;
 
-        // Calculate Total Downloads
-        $totalDownloadsVal = Article::sum('downloads_count');
-        $totalDownloads = $totalDownloadsVal > 0 ? ($totalDownloadsVal >= 1000 ? round($totalDownloadsVal / 1000, 1) . 'K+' : $totalDownloadsVal) : '45K+';
+        // Calculate Total Views and Downloads from Database
+        $totalDownloadsVal = (int) Article::sum('downloads_count');
+        $totalDownloads = $totalDownloadsVal >= 1000 ? round($totalDownloadsVal / 1000, 1) . 'K+' : (string) $totalDownloadsVal;
+
+        $totalViewsVal = (int) Article::sum('views_count');
+        $totalViews = $totalViewsVal >= 1000 ? round($totalViewsVal / 1000, 1) . 'K+' : (string) $totalViewsVal;
+
+        // Get Indexing Partners from Database (ApiIntegration, SitePage, or Setting)
+        $indexingPage = \App\Models\SitePage::findBySlug('indexing');
+        $dbIndexes = $indexingPage?->extra['indexes'] ?? Setting::get('indexing_list');
+        if (is_array($dbIndexes) && count($dbIndexes) > 0) {
+            $indexingPartners = implode(' & ', array_slice(array_column($dbIndexes, 'name'), 0, 2));
+        } else {
+            $activeIntegrations = \App\Models\ApiIntegration::where('status', 'active')
+                ->whereIn('provider', ['crossref', 'google-scholar', 'doaj', 'sinta', 'garuda', 'scopus'])
+                ->pluck('provider')
+                ->map(fn($p) => ucwords(str_replace('-', ' ', $p)))
+                ->toArray();
+            $indexingPartners = count($activeIntegrations) > 0 ? implode(' & ', array_slice($activeIntegrations, 0, 2)) : Setting::get('indexing_badge', 'Google Scholar & Crossref');
+        }
 
         return view('public.home', compact(
             'journals',
@@ -92,7 +103,9 @@ class HomeController extends Controller
             'avgFirstDecisionDays',
             'acceptanceRate',
             'avgPublicationDays',
-            'totalDownloads'
+            'totalDownloads',
+            'totalViews',
+            'indexingPartners'
         ));
     }
 

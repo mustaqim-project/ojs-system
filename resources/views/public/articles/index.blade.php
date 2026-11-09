@@ -134,13 +134,17 @@
             <span><i class="bi bi-person-circle text-muted me-1"></i> {{ $article->author?->name ?? 'Penulis' }}</span>
             <span class="text-muted">|</span>
             <span style="color:var(--text-muted);"><i class="bi bi-building me-1"></i> {{ $article->author?->affiliation ?? 'Institusi Akademik' }}</span>
-            <span class="text-muted">|</span>
-            <a href="https://orcid.org" target="_blank" style="color:#A6CE39; text-decoration:none;"><i class="bi bi-patch-check-fill"></i> ORCID</a>
+            @if($article->author?->orcid)
+              <span class="text-muted">|</span>
+              <a href="https://orcid.org/{{ $article->author->orcid }}" target="_blank" style="color:#A6CE39; text-decoration:none;"><i class="bi bi-patch-check-fill"></i> ORCID</a>
+            @endif
           </div>
 
+          @if($article->doi)
           <div class="mb-3" style="font-size:12px; color:var(--text-muted); font-family:monospace;">
-            <strong>DOI:</strong> <a href="https://doi.org/10.5555/ojs.v1i1.{{ $article->id }}" target="_blank" class="doi-text" style="color:var(--primary); text-decoration:none;">10.5555/ojs.v1i1.{{ $article->id }}</a>
+            <strong>DOI:</strong> <a href="https://doi.org/{{ $article->doi }}" target="_blank" class="doi-text" style="color:var(--primary); text-decoration:none;">{{ $article->doi }}</a>
           </div>
+          @endif
           
           <p style="font-size:15px; color:var(--text-muted); margin-bottom:20px; line-height:1.7; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">
             {{ strip_tags($article->abstract) }}
@@ -154,9 +158,11 @@
             </div>
             
             <div class="d-flex gap-4" style="font-size:13px; font-weight:600; color:var(--text-muted);">
-              <span title="Sitasi" class="d-flex align-items-center gap-1"><i class="bi bi-quote" style="font-size:16px;"></i> {{ rand(0, 50) }} Sitasi</span>
-              <span title="Dilihat" class="d-flex align-items-center gap-1"><i class="bi bi-eye" style="font-size:16px;"></i> {{ rand(100, 2000) }}</span>
-              <span title="Unduhan" class="d-flex align-items-center gap-1"><i class="bi bi-download" style="font-size:16px;"></i> {{ rand(50, 1000) }}</span>
+              @if(isset($article->citations_count) && $article->citations_count > 0)
+                <span title="Sitasi" class="d-flex align-items-center gap-1"><i class="bi bi-quote" style="font-size:16px;"></i> {{ number_format($article->citations_count, 0, ',', '.') }} Sitasi</span>
+              @endif
+              <span title="Dilihat" class="d-flex align-items-center gap-1"><i class="bi bi-eye" style="font-size:16px;"></i> {{ number_format($article->views_count ?? 0, 0, ',', '.') }}</span>
+              <span title="Unduhan" class="d-flex align-items-center gap-1"><i class="bi bi-download" style="font-size:16px;"></i> {{ number_format($article->downloads_count ?? 0, 0, ',', '.') }}</span>
             </div>
           </div>
           

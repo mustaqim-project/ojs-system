@@ -30,32 +30,40 @@
             </div>
 
             {{-- Sidebar --}}
+            @php
+                $activeJournal = \App\Models\Journal::where('is_active', true)->first();
+                $publisher = $page['extra']['publisher'] ?? $activeJournal?->publisher ?? \App\Models\Setting::get('site_publisher', '');
+                $issnPrint = $page['extra']['issn_print'] ?? $activeJournal?->issn_print ?? '';
+                $issnOnline = $page['extra']['issn_online'] ?? $activeJournal?->issn_online ?? '';
+                $frequency = $page['extra']['frequency'] ?? ($activeJournal ? ucfirst($activeJournal->frequency) . ' Edition' : '');
+                $foundedYear = $page['extra']['founded_year'] ?? '';
+            @endphp
             <div class="col-lg-4">
                 <div class="pub-card" style="position: sticky; top: 100px;" data-aos="fade-up" data-aos-delay="200">
                     <h4 class="mb-4" style="font-weight: 700; font-size: 16px;">Detail Jurnal</h4>
                     <ul class="list-unstyled" style="margin: 0;">
-                        @if(!empty($page['extra']['publisher']))
+                        @if(!empty($publisher))
                         <li style="padding-bottom:16px;margin-bottom:16px;border-bottom:1px solid var(--border);">
                             <div style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;">Penerbit</div>
-                            <div style="font-size:14px;font-weight:500;color:var(--text-main);">{{ $page['extra']['publisher'] }}</div>
+                            <div style="font-size:14px;font-weight:500;color:var(--text-main);">{{ $publisher }}</div>
                         </li>
                         @endif
-                        @if(!empty($page['extra']['issn_print']) || !empty($page['extra']['issn_online']))
+                        @if(!empty($issnPrint) || !empty($issnOnline))
                         <li style="padding-bottom:16px;margin-bottom:16px;border-bottom:1px solid var(--border);">
                             <div style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;">ISSN / e-ISSN</div>
-                            <div style="font-size:14px;font-weight:500;color:var(--text-main);">{{ $page['extra']['issn_print'] ?? '—' }} / {{ $page['extra']['issn_online'] ?? '—' }}</div>
+                            <div style="font-size:14px;font-weight:500;color:var(--text-main);">{{ $issnPrint ?: '—' }} / {{ $issnOnline ?: '—' }}</div>
                         </li>
                         @endif
-                        @if(!empty($page['extra']['frequency']))
+                        @if(!empty($frequency))
                         <li style="padding-bottom:16px;margin-bottom:16px;border-bottom:1px solid var(--border);">
                             <div style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;">Frekuensi Publikasi</div>
-                            <div style="font-size:14px;font-weight:500;color:var(--text-main);">{{ $page['extra']['frequency'] }}</div>
+                            <div style="font-size:14px;font-weight:500;color:var(--text-main);">{{ $frequency }}</div>
                         </li>
                         @endif
-                        @if(!empty($page['extra']['founded_year']))
+                        @if(!empty($foundedYear))
                         <li>
                             <div style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;">Didirikan</div>
-                            <div style="font-size:14px;font-weight:500;color:var(--text-main);">{{ $page['extra']['founded_year'] }}</div>
+                            <div style="font-size:14px;font-weight:500;color:var(--text-main);">{{ $foundedYear }}</div>
                         </li>
                         @endif
                     </ul>

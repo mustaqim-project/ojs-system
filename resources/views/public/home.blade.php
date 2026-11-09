@@ -89,7 +89,7 @@
                             <i class="bi bi-globe-americas text-primary" style="font-size:24px;"></i>
                             <div>
                                 <div style="font-size:12px; font-weight:700; color:var(--text-muted);">Terindeks di</div>
-                                <div style="font-size:15px; font-weight:800; color:var(--text-main);">Crossref & DOAJ</div>
+                                <div style="font-size:15px; font-weight:800; color:var(--text-main);">{{ $indexingPartners }}</div>
                             </div>
                         </div>
                     </div>
@@ -111,7 +111,7 @@
                 </div>
                 <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="200">
                     <h2 class="display-5" style="font-weight:800; color:var(--primary);"
-                        data-countup="{{ $totalAuthors }}">+0</h2>
+                        data-countup="{{ $totalAuthors }}">0</h2>
                     <p class="stat-label-text"
                         style="font-weight:600; color:var(--text-muted); font-size:15px; text-transform:uppercase; letter-spacing:1px;">
                         Penulis Aktif</p>
@@ -148,88 +148,75 @@
                     Madani. Jelajahi portal jurnal lainnya dalam jaringan kami.</p>
             </div>
 
-            <div class="row g-4 justify-content-center">
+            @php
+                $networkJournals = \App\Models\Setting::get('network_journals');
+                if (empty($networkJournals)) {
+                    $otherJournals = \App\Models\Journal::where('is_active', true)->get();
+                    if ($otherJournals->count() > 1) {
+                        $networkJournals = $otherJournals->map(fn($j) => [
+                            'name' => $j->abbreviation ?: Str::limit($j->title, 15),
+                            'title' => $j->title,
+                            'description' => $j->description ? Str::limit(strip_tags($j->description), 95) : 'Publikasi ilmiah terakreditasi.',
+                            'url' => route('public.journals.show', $j->slug),
+                            'logo' => $j->cover_image ? asset($j->cover_image) : null,
+                            'domain' => $j->slug,
+                        ])->toArray();
+                    }
+                }
+                if (empty($networkJournals)) {
+                    $networkJournals = [
+                        [
+                            'name' => 'JHAM',
+                            'title' => 'Jurnal Humaniora dan Agama Madani',
+                            'description' => 'Publikasi ilmiah bidang humaniora & keagamaan.',
+                            'url' => 'https://jham.indonesiamadani.com/',
+                            'logo' => 'https://jham.indonesiamadani.com/uploads/settings/1786621030_WhatsApp%20Image%202026-07-12%20at%2013.34.49(2).jpeg',
+                            'domain' => 'jham.indonesiamadani.com',
+                        ],
+                        [
+                            'name' => 'JPSTEM',
+                            'title' => 'Jurnal Pendidikan Sains, Teknologi, Engineering & Matematika',
+                            'description' => 'Inovasi riset STEM Indonesia.',
+                            'url' => 'https://jpstem.indonesiamadani.com/',
+                            'logo' => 'https://jpstem.indonesiamadani.com/uploads/settings/1786625429_WhatsApp%20Image%202026-07-12%20at%2013.34.49(1).jpeg',
+                            'domain' => 'jpstem.indonesiamadani.com',
+                        ],
+                        [
+                            'name' => 'JPMM',
+                            'title' => 'Jurnal Pengabdian Dan Pemberdayaan Masyarakat',
+                            'description' => 'Pengabdian dan pemberdayaan masyarakat berbasis ilmu pengetahuan & teknologi.',
+                            'url' => 'https://jpmm.indonesiamadani.com/',
+                            'logo' => 'https://jpmm.indonesiamadani.com/uploads/settings/1786623829_WhatsApp%20Image%202026-07-12%20at%2013.34.49.jpeg',
+                            'domain' => 'jpmm.indonesiamadani.com',
+                        ],
+                    ];
+                }
+            @endphp
 
-                {{-- JHAM --}}
-                <div class="col-12 col-sm-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
-                    <a href="https://jham.indonesiamadani.com/" target="_blank" rel="noopener noreferrer"
-                        style="text-decoration:none;">
+            <div class="row g-4 justify-content-center">
+                @foreach($networkJournals as $i => $net)
+                <div class="col-12 col-sm-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ $i * 100 }}">
+                    <a href="{{ $net['url'] }}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
                         <div class="pub-card h-100 text-center"
                             style="padding:32px 24px; transition:transform 0.3s, box-shadow 0.3s;"
                             onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 20px 48px rgba(37,99,235,0.15)';"
                             onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='';">
-                            <div
-                                style="width:96px; height:96px; border-radius:16px; overflow:hidden; margin:0 auto 20px; box-shadow:0 8px 24px rgba(0,0,0,0.12); border:1px solid var(--border);">
-                                <img src="https://jham.indonesiamadani.com/uploads/settings/1786621030_WhatsApp%20Image%202026-07-12%20at%2013.34.49(2).jpeg"
-                                    alt="JHAM Logo" style="width:100%; height:100%; object-fit:cover;">
+                            <div style="width:96px; height:96px; border-radius:16px; overflow:hidden; margin:0 auto 20px; box-shadow:0 8px 24px rgba(0,0,0,0.12); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; background:var(--bg-surface);">
+                                @if(!empty($net['logo']))
+                                    <img src="{{ $net['logo'] }}" alt="{{ $net['name'] }} Logo" style="width:100%; height:100%; object-fit:cover;">
+                                @else
+                                    <i class="bi bi-journal-bookmark-fill" style="font-size:40px; color:var(--primary);"></i>
+                                @endif
                             </div>
-                            <h5 style="font-weight:800; font-size:17px; color:var(--text-main); margin-bottom:8px;">JHAM
-                            </h5>
-                            <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.6;">Jurnal
-                                Humaniora dan Agama Madani — Publikasi ilmiah bidang humaniora & keagamaan.</p>
-                            <div
-                                style="font-size:12px; font-weight:700; color:var(--primary); background:var(--primary-light); display:inline-block; padding:5px 14px; border-radius:20px;">
-                                jham.indonesiamadani.com <i class="bi bi-box-arrow-up-right ms-1"
-                                    style="font-size:10px;"></i>
+                            <h5 style="font-weight:800; font-size:17px; color:var(--text-main); margin-bottom:8px;">{{ $net['name'] }}</h5>
+                            <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.6;">{{ $net['description'] }}</p>
+                            <div style="font-size:12px; font-weight:700; color:var(--primary); background:var(--primary-light); display:inline-block; padding:5px 14px; border-radius:20px;">
+                                {{ $net['domain'] ?? $net['name'] }} <i class="bi bi-box-arrow-up-right ms-1" style="font-size:10px;"></i>
                             </div>
                         </div>
                     </a>
                 </div>
-
-                {{-- JPSTEM --}}
-                <div class="col-12 col-sm-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
-                    <a href="https://jpstem.indonesiamadani.com/" target="_blank" rel="noopener noreferrer"
-                        style="text-decoration:none;">
-                        <div class="pub-card h-100 text-center"
-                            style="padding:32px 24px; transition:transform 0.3s, box-shadow 0.3s;"
-                            onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 20px 48px rgba(16,185,129,0.15)';"
-                            onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='';">
-                            <div
-                                style="width:96px; height:96px; border-radius:16px; overflow:hidden; margin:0 auto 20px; box-shadow:0 8px 24px rgba(0,0,0,0.12); border:1px solid var(--border);">
-                                <img src="https://jpstem.indonesiamadani.com/uploads/settings/1786625429_WhatsApp%20Image%202026-07-12%20at%2013.34.49(1).jpeg"
-                                    alt="JPSTEM Logo" style="width:100%; height:100%; object-fit:cover;">
-                            </div>
-                            <h5 style="font-weight:800; font-size:17px; color:var(--text-main); margin-bottom:8px;">JPSTEM
-                            </h5>
-                            <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.6;">Jurnal
-                                Pendidikan Sains, Teknologi, Engineering & Matematika — Inovasi riset STEM Indonesia.</p>
-                            <div
-                                style="font-size:12px; font-weight:700; color:#059669; background:rgba(16,185,129,0.08); display:inline-block; padding:5px 14px; border-radius:20px;">
-                                jpstem.indonesiamadani.com <i class="bi bi-box-arrow-up-right ms-1"
-                                    style="font-size:10px;"></i>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-                {{-- Indonesia Madani Portal --}}
-                <div class="col-12 col-sm-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
-                    <a href="https://jpmm.indonesiamadani.com/" target="_blank" rel="noopener noreferrer"
-                        style="text-decoration:none;">
-                        <div class="pub-card h-100 text-center"
-                            style="padding:32px 24px; transition:transform 0.3s, box-shadow 0.3s;"
-                            onmouseover="this.style.transform='translateY(-6px)';this.style.boxShadow='0 20px 48px rgba(234,88,12,0.15)';"
-                            onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='';">
-                            <div
-                                style="width:96px; height:96px; border-radius:16px; overflow:hidden; margin:0 auto 20px; box-shadow:0 8px 24px rgba(0,0,0,0.12); border:1px solid var(--border);">
-                                <img src="https://jpmm.indonesiamadani.com/uploads/settings/1786623829_WhatsApp%20Image%202026-07-12%20at%2013.34.49.jpeg"
-                                    alt="Indonesia Madani Logo" style="width:100%; height:100%; object-fit:cover;">
-                            </div>
-                            <h5 style="font-weight:800; font-size:17px; color:var(--text-main); margin-bottom:8px;">
-                                JPMM</h5>
-                            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6;">
-                                Jurnal Pengabdian Dan Pemberdayaan Masyarakat Berbasis Ilmu Pengetahuan, Teknologi,
-                                Pendidikan, Kesehatan, Ekonomi, Sosial, Budaya, Dan Lingkungan.
-                            </p>
-                            <div
-                                style="font-size:12px; font-weight:700; color:#c2410c; background:rgba(249,115,22,0.08); display:inline-block; padding:5px 14px; border-radius:20px;">
-                                jpmm.indonesiamadani.com <i class="bi bi-box-arrow-up-right ms-1"
-                                    style="font-size:10px;"></i>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
+                @endforeach
             </div>
         </div>
     </section>
@@ -283,9 +270,9 @@
                                     style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:12px;">
                                     <div style="display:flex; gap:16px; font-size:12px; color:var(--text-muted);">
                                         <span title="Dilihat"><i class="bi bi-eye me-1"></i>
-                                            {{ $article->views_count }}</span>
+                                            {{ number_format($article->views_count ?? 0, 0, ',', '.') }}</span>
                                         <span title="Diunduh"><i class="bi bi-download me-1"></i>
-                                            {{ $article->downloads_count }}</span>
+                                            {{ number_format($article->downloads_count ?? 0, 0, ',', '.') }}</span>
                                     </div>
                                     <a href="{{ route('public.articles.show', $article->slug ?? '') }}"
                                         style="font-size:13px; font-weight:700; color:var(--primary); text-decoration:none;">Baca
