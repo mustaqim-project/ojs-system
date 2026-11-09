@@ -16,6 +16,9 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // Enforce Bootstrap 5 Pagination
+        \Illuminate\Pagination\Paginator::useBootstrapFive();
+
         // ============================================================
         // GLOBAL AUTHORIZATION BYPASS (backward-compat safety net)
         // ------------------------------------------------------------

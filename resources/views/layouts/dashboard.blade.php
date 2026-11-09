@@ -95,7 +95,6 @@
         .sidebar {
             width: var(--sidebar-w, 280px);
             background: #0f172a;
-            /* Deep slate */
             color: #f8fafc;
             position: fixed;
             top: 0;
@@ -105,50 +104,142 @@
             overflow-y: auto;
             border-right: 1px solid #1e293b;
             transition: transform 0.3s ease;
-            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.02);
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.04);
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
         }
 
         .sidebar-header {
-            padding: 24px 20px;
+            padding: 18px 18px;
             border-bottom: 1px solid #1e293b;
             display: flex;
             align-items: center;
-            gap: 14px;
-            background: rgba(15, 23, 42, 0.95);
+            gap: 12px;
+            background: #0b1120;
             position: sticky;
             top: 0;
-            z-index: 2;
-            backdrop-filter: blur(8px);
+            z-index: 10;
+        }
+
+        .sidebar-brand-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #0284c7, #2563eb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 19px;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+            flex-shrink: 0;
+        }
+
+        .sidebar-brand-text {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            overflow: hidden;
+        }
+
+        .brand-title {
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            color: #ffffff;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        .brand-subtitle {
+            font-size: 11px;
+            color: #94a3b8;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
         }
 
         .sidebar-user-card {
-            margin: 16px 20px 8px;
-            background: #1e293b;
-            border-radius: 12px;
-            padding: 14px;
+            margin: 14px 14px 6px;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 10px;
+            padding: 12px 14px;
             display: flex;
             align-items: center;
             gap: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+        }
+
+        .sidebar-user-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #0284c7, #3b82f6);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            box-shadow: 0 2px 6px rgba(2, 132, 199, 0.3);
+            flex-shrink: 0;
+        }
+
+        .sidebar-user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #f8fafc;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            line-height: 1.3;
+        }
+
+        .sidebar-user-role {
+            font-size: 11px;
+            color: #38bdf8;
+            font-weight: 500;
+            text-transform: capitalize;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sidebar-user-role::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #22c55e;
+            display: inline-block;
         }
 
         .sidebar-menu {
             list-style: none;
-            padding: 8px 12px 24px;
+            padding: 8px 10px 24px;
             margin: 0;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 3px;
         }
 
         .sidebar-category {
-            padding: 24px 16px 8px;
-            font-size: 11px;
+            padding: 16px 12px 6px;
+            font-size: 10.5px;
             font-weight: 700;
             color: #64748b;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.12em;
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
@@ -156,55 +247,45 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 10px 16px;
+            padding: 9px 12px;
             color: #94a3b8;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 13.5px;
             font-weight: 500;
-            border-radius: 10px;
+            border-radius: 8px;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             font-family: 'Plus Jakarta Sans', sans-serif;
             position: relative;
-            overflow: hidden;
         }
 
         .sidebar-link i {
-            font-size: 18px;
-            transition: transform 0.2s ease, color 0.2s ease;
-            opacity: 0.8;
+            font-size: 17px;
+            min-width: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            transition: all 0.2s ease;
         }
 
         .sidebar-link:hover {
-            background: rgba(255, 255, 255, 0.04);
-            color: #f8fafc;
+            background: rgba(255, 255, 255, 0.05);
+            color: #f1f5f9;
         }
 
         .sidebar-link:hover i {
-            transform: scale(1.1);
             color: #38bdf8;
-            opacity: 1;
         }
 
         .sidebar-link.active {
-            background: linear-gradient(90deg, rgba(56, 189, 248, 0.1) 0%, transparent 100%);
+            background: rgba(2, 132, 199, 0.14);
             color: #38bdf8;
             font-weight: 600;
-        }
-
-        .sidebar-link.active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 10%;
-            height: 80%;
-            width: 3px;
-            background: #38bdf8;
-            border-radius: 0 4px 4px 0;
+            border: 1px solid rgba(56, 189, 248, 0.25);
         }
 
         .sidebar-link.active i {
             color: #38bdf8;
-            opacity: 1;
         }
 
         @media (max-width: 1023px) {
@@ -311,25 +392,23 @@
         {{-- SIDEBAR --}}
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <i class="bi bi-journal-bookmark-fill" style="font-size: 26px; color: #38bdf8;"></i>
-                <div style="line-height: 1.2;">
-                    <div
-                        style="font-size: 16px; color: #fff; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif;">
-                        {{ \App\Models\Setting::get('site_name', 'OJS') }}</div>
-                    <div style="font-size: 11px; color: #94a3b8; font-weight: 500;">Platform Publikasi</div>
+                <div class="sidebar-brand-icon">
+                    <i class="bi bi-journal-bookmark-fill"></i>
+                </div>
+                <div class="sidebar-brand-text">
+                    <span class="brand-title">OJS SYSTEM</span>
+                    <span class="brand-subtitle">Platform Publikasi</span>
                 </div>
             </div>
 
             <div class="sidebar-user-card">
-                <div
-                    style="width: 36px; height: 36px; background: linear-gradient(135deg, #0ea5e9, #2563eb); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
+                <div class="sidebar-user-avatar">
                     {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                 </div>
                 <div style="overflow: hidden; flex: 1;">
-                    <div
-                        style="font-size: 13px; font-weight: 600; color: #f8fafc; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif;">
+                    <div class="sidebar-user-name" title="{{ auth()->user()->name }}">
                         {{ auth()->user()->name }}</div>
-                    <div style="font-size: 11px; color: #94a3b8; font-weight: 500; text-transform: capitalize;">
+                    <div class="sidebar-user-role">
                         {{ auth()->user()->role }}</div>
                 </div>
             </div>
