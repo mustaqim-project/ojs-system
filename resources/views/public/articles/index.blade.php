@@ -150,18 +150,36 @@
           </div>
           @endif
           
-          <p style="font-size:15px; color:var(--text-muted); margin-bottom:20px; line-height:1.7; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">
-            {{ strip_tags($article->abstract) }}
-          </p>
+          <a href="{{ route('public.articles.show', $article->slug) }}" style="text-decoration:none; color:inherit; display:block;">
+            <p style="font-size:15px; color:var(--text-muted); margin-bottom:20px; line-height:1.7; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; cursor:pointer;">
+              {{ strip_tags($article->abstract) }}
+            </p>
+          </a>
           
           <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 border-top pt-3">
             <div class="d-flex gap-2 flex-wrap">
               @foreach(array_slice($article->keywords_array, 0, 4) as $kw)
-                <span class="badge bg-light text-dark border" style="font-weight:500; font-size:12px;">{{ $kw }}</span>
+                <a href="{{ route('public.articles.index', array_merge(request()->except('page'), ['q' => $kw])) }}"
+                   class="badge bg-light text-dark border text-decoration-none"
+                   style="font-weight:500; font-size:12px; padding:6px 10px; transition:all 0.2s;"
+                   onmouseover="this.className='badge bg-primary text-white border border-primary text-decoration-none'"
+                   onmouseout="this.className='badge bg-light text-dark border text-decoration-none'">
+                  {{ $kw }}
+                </a>
               @endforeach
             </div>
             
-            <div class="d-flex gap-4" style="font-size:13px; font-weight:600; color:var(--text-muted);">
+            <div class="d-flex gap-4 flex-wrap" style="font-size:13px; font-weight:600; color:var(--text-muted);">
+              @if($article->pages_range || $article->total_pages)
+                <span title="Halaman" class="d-flex align-items-center gap-1">
+                  <i class="bi bi-file-text" style="font-size:15px;"></i>
+                  @if($article->pages_range)
+                    Hal. {{ $article->pages_range }}@if($article->total_pages) ({{ $article->total_pages }} hal.)@endif
+                  @else
+                    {{ $article->total_pages }} hal.
+                  @endif
+                </span>
+              @endif
               @if(isset($article->citations_count) && $article->citations_count > 0)
                 <span title="Sitasi" class="d-flex align-items-center gap-1"><i class="bi bi-quote" style="font-size:16px;"></i> {{ number_format($article->citations_count, 0, ',', '.') }} Sitasi</span>
               @endif
