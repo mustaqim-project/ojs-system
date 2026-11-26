@@ -64,7 +64,7 @@ class ArticleController extends Controller
     {
         $article = Article::where('slug', $slug)
             ->where('status', 'published')
-            ->with(['journal', 'author', 'issue'])
+            ->with(['journal', 'author', 'issue', 'galleys'])
             ->firstOrFail();
 
         $article->increment('views_count');

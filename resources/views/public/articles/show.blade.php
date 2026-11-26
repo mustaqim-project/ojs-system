@@ -275,10 +275,16 @@
           </div>
           @endif
 
-          @if($article->pages_range)
+          @if($article->pages_range || $article->total_pages)
           <div class="mb-3 pb-3 border-bottom d-flex align-items-center justify-content-between" style="font-size:13px;">
-            <span style="color:var(--text-muted);"><i class="bi bi-file-text me-1 text-primary"></i> Halaman:</span>
-            <strong style="color:var(--text-main);">{{ $article->pages_range }}@if($article->total_pages) ({{ $article->total_pages }} hal.)@endif</strong>
+            <span style="color:var(--text-muted);"><i class="bi bi-file-text me-1 text-primary"></i> {{ $article->pages_range ? 'Halaman:' : 'Jumlah Halaman:' }}</span>
+            <strong style="color:var(--text-main);">
+              @if($article->pages_range)
+                {{ $article->pages_range }}@if($article->total_pages) ({{ $article->total_pages }} hal.)@endif
+              @else
+                {{ $article->total_pages }} halaman
+              @endif
+            </strong>
           </div>
           @endif
 

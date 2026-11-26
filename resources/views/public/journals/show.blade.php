@@ -158,12 +158,16 @@
                                         <i class="bi bi-person me-1"
                                             style="color:var(--text-muted);"></i>{{ $article->author?->name ?? 'Penulis' }}
                                     </span>
-                                    @if ($article->pages_range)
+                                    @if ($article->pages_range || $article->total_pages)
                                         <span style="font-size:13px;color:var(--text-muted);">
-                                            <i class="bi bi-file-text me-1"></i>Halaman
-                                            {{ $article->pages_range }}
-                                            @if ($article->total_pages)
-                                                ({{ $article->total_pages }} hal.)
+                                            <i class="bi bi-file-text me-1"></i>
+                                            @if ($article->pages_range)
+                                                Halaman {{ $article->pages_range }}
+                                                @if ($article->total_pages)
+                                                    ({{ $article->total_pages }} hal.)
+                                                @endif
+                                            @else
+                                                {{ $article->total_pages }} halaman
                                             @endif
                                         </span>
                                     @endif

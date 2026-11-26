@@ -26,7 +26,7 @@ class JournalController extends Controller
                 'editor',
                 'issues' => function ($q) {
                     $q->published()
-                        ->with(['publishedArticles.author'])
+                        ->with(['publishedArticles.author', 'publishedArticles.galleys'])
                         ->orderByDesc('year')
                         ->orderByDesc('volume')
                         ->orderByDesc('number');

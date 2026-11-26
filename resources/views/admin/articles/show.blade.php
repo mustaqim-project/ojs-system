@@ -276,7 +276,11 @@
             'Diterima'     => $fmtDate($article->accepted_at, 'd M Y'),
             'Diterbitkan'  => $fmtDate($article->published_at, 'd M Y'),
           ];
-          if($article->pages_range) $meta['Halaman'] = $article->pages_range . ($article->total_pages ? " ({$article->total_pages} hal.)" : '');
+          if ($article->pages_range) {
+              $meta['Halaman'] = $article->pages_range . ($article->total_pages ? " ({$article->total_pages} hal.)" : '');
+          } elseif ($article->total_pages) {
+              $meta['Jumlah Halaman'] = $article->total_pages . ' halaman (dari PDF)';
+          }
           @endphp
           <div style="padding:13px 20px;border-bottom:1px solid #F1F5F9;">
             <span style="font-size:12px;color:var(--text-muted);">Status</span><br>
