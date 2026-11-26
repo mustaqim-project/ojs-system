@@ -45,6 +45,9 @@ class Article extends Model
         'manuscript_file',
         'revision_file',
         'cover_letter',
+        'doi',
+        'pages_start',
+        'pages_end',
         'views_count',
         'downloads_count',
     ];
@@ -54,6 +57,8 @@ class Article extends Model
         'accepted_at'     => 'datetime',
         'published_at'    => 'datetime',
         'keywords'        => 'array',
+        'pages_start'     => 'integer',
+        'pages_end'       => 'integer',
         'views_count'     => 'integer',
         'downloads_count' => 'integer',
     ];
@@ -215,6 +220,32 @@ class Article extends Model
     public function getKeywordsArrayAttribute()
     {
         return is_array($this->keywords) ? $this->keywords : [];
+    }
+
+    public function getPagesRangeAttribute(): ?string
+    {
+        if (! $this->pages_start) {
+            return null;
+        }
+
+        if ($this->pages_end && $this->pages_end > $this->pages_start) {
+            return "{$this->pages_start}–{$this->pages_end}";
+        }
+
+        return (string) $this->pages_start;
+    }
+
+    public function getTotalPagesAttribute(): ?int
+    {
+        if (! $this->pages_start) {
+            return null;
+        }
+
+        if ($this->pages_end && $this->pages_end >= $this->pages_start) {
+            return ($this->pages_end - $this->pages_start) + 1;
+        }
+
+        return 1;
     }
 
     public function getStatusLabelAttribute(): string

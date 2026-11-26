@@ -46,6 +46,9 @@
                 <div style="display:flex; gap:16px; font-size:12px; color:var(--text-muted);">
                   <span title="Dilihat"><i class="bi bi-eye me-1"></i> {{ number_format($article->views_count ?? 0, 0, ',', '.') }}</span>
                   <span title="Diunduh"><i class="bi bi-download me-1"></i> {{ number_format($article->downloads_count ?? 0, 0, ',', '.') }}</span>
+                  @if($article->pages_range)
+                    <span title="Halaman"><i class="bi bi-file-text me-1"></i> Halaman {{ $article->pages_range }}@if($article->total_pages) ({{ $article->total_pages }} hal.)@endif</span>
+                  @endif
                 </div>
               </div>
               <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-end;">

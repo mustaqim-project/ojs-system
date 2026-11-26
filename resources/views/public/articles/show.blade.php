@@ -275,6 +275,13 @@
           </div>
           @endif
 
+          @if($article->pages_range)
+          <div class="mb-3 pb-3 border-bottom d-flex align-items-center justify-content-between" style="font-size:13px;">
+            <span style="color:var(--text-muted);"><i class="bi bi-file-text me-1 text-primary"></i> Halaman:</span>
+            <strong style="color:var(--text-main);">{{ $article->pages_range }}@if($article->total_pages) ({{ $article->total_pages }} hal.)@endif</strong>
+          </div>
+          @endif
+
           <a href="{{ route('public.articles.download', $article->slug) }}" class="btn btn-danger w-100 mb-2 d-flex align-items-center justify-content-center gap-2" style="font-weight: 600; padding: 12px; border-radius: 8px;">
             <i class="bi bi-file-earmark-pdf-fill" style="font-size:18px;"></i> Unduh PDF
           </a>
@@ -297,7 +304,7 @@
           <h5 style="font-weight:700; margin-bottom:16px;">Cara Mensitasi</h5>
           
           <div style="background:var(--bg-app); border:1px solid var(--border); border-radius:8px; padding:12px; font-size:13px; color:var(--text-main); line-height:1.6; margin-bottom:16px;">
-            {{ $article->author?->name ?? 'Penulis' }}. ({{ $article->published_at ? ($article->published_at instanceof \Carbon\Carbon ? $article->published_at->format('Y') : \Carbon\Carbon::parse($article->published_at)->format('Y')) : date('Y') }}). {{ $article->title }}. <em>{{ $article->journal?->title ?? '-' }}</em>, @if($article->issue) {{ $article->issue->volume }}({{ $article->issue->number }}). @endif
+            {{ $article->author?->name ?? 'Penulis' }}. ({{ $article->published_at ? ($article->published_at instanceof \Carbon\Carbon ? $article->published_at->format('Y') : \Carbon\Carbon::parse($article->published_at)->format('Y')) : date('Y') }}). {{ $article->title }}. <em>{{ $article->journal?->title ?? '-' }}</em>@if($article->issue), {{ $article->issue->volume }}({{ $article->issue->number }})@endif @if($article->pages_range), {{ $article->pages_range }}@endif.
           </div>
 
           <div class="dropdown w-100">

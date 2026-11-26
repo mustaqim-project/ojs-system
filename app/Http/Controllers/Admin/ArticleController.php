@@ -111,7 +111,12 @@ class ArticleController extends Controller
         $request->validate([
             'doi'         => ['nullable', 'string', 'max:255'],
             'pages_start' => ['nullable', 'integer', 'min:1'],
-            'pages_end'   => ['nullable', 'integer', 'min:1'],
+            'pages_end'   => array_values(array_filter([
+                'nullable',
+                'integer',
+                'min:1',
+                $request->filled('pages_start') ? 'gte:pages_start' : null,
+            ])),
         ]);
 
         $article->update([
