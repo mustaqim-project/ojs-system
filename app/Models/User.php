@@ -51,6 +51,18 @@ class User extends Authenticatable
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::created(function (User $user) {
+            if (! empty($user->role) && $user->roles()->count() === 0) {
+                $role = \Spatie\Permission\Models\Role::where('name', $user->role)->first();
+                if ($role) {
+                    $user->assignRole($role);
+                }
+            }
+        });
+    }
+
     // ===========================
     // ROLE HELPERS (Backward Compat)
     // ===========================
