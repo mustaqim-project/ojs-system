@@ -131,6 +131,7 @@ Route::middleware(['auth', 'admin.panel'])
             Route::get('/articles/{article}', [ArticleController::class, 'show'])->name('articles.show');
         });
         Route::middleware('permission:submission.update')->group(function () {
+            Route::post('/articles/reorder', [ArticleController::class, 'reorder'])->name('articles.reorder');
             Route::post('/articles/{article}/metadata', [ArticleController::class, 'updateMetadata'])->name('articles.update-metadata');
             Route::post('/articles/{article}/galley', [ArticleController::class, 'uploadGalley'])->name('articles.upload-galley');
             Route::delete('/articles/{article}/galley/{galley}', [ArticleController::class, 'deleteGalley'])->name('articles.delete-galley');

@@ -53,7 +53,7 @@ class ArticleController extends Controller
         } elseif ($sort === 'citations' || $sort === 'downloads') {
             $query->orderByDesc('downloads_count');
         } else {
-            $query->latest('published_at');
+            $query->ordered();
         }
 
         $articles = $query->paginate(15)->withQueryString();

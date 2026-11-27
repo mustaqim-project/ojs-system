@@ -48,6 +48,7 @@ class Article extends Model
         'doi',
         'pages_start',
         'pages_end',
+        'sort_order',
         'views_count',
         'downloads_count',
     ];
@@ -59,9 +60,20 @@ class Article extends Model
         'keywords'        => 'array',
         'pages_start'     => 'integer',
         'pages_end'       => 'integer',
+        'sort_order'      => 'integer',
         'views_count'     => 'integer',
         'downloads_count' => 'integer',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Article $article) {
+            if ($article->sort_order === null) {
+                $min = static::withTrashed()->min('sort_order');
+                $article->sort_order = $min !== null ? ((int) $min - 1) : 1;
+            }
+        });
+    }
 
     // ========== RELATIONSHIPS ==========
 
@@ -199,6 +211,11 @@ class Article extends Model
     public function scopePublished($query)
     {
         return $query->where('status', 'published');
+    }
+
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('sort_order')->orderByDesc('id');
     }
 
     public function scopeDraft($query)

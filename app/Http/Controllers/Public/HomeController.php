@@ -19,7 +19,7 @@ class HomeController extends Controller
         });
         $latestArticles   = Article::published()
             ->with(['journal', 'author'])
-            ->latest('published_at')
+            ->ordered()
             ->take(6)
             ->get();
         $totalPublished   = Article::published()->count();

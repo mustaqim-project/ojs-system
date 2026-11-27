@@ -17,12 +17,42 @@ class ArticleController extends Controller
     public function index(Request $request): View
     {
         $status   = $request->get('status', '');
-        $query    = Article::with(['journal', 'author', 'payment'])->latest();
+        $query    = Article::with(['journal', 'author', 'payment'])->ordered();
 
         if ($status) $query->where('status', $status);
 
         $articles = $query->paginate(15)->withQueryString();
         return view('admin.articles.index', compact('articles', 'status'));
+    }
+
+    public function reorder(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $data = $request->validate([
+            'ids'   => ['required', 'array', 'min:1'],
+            'ids.*' => ['integer', 'exists:articles,id'],
+        ]);
+
+        $ids = array_values(array_unique(array_map('intval', $data['ids'])));
+
+        $slots = Article::whereIn('id', $ids)
+            ->orderBy('sort_order')
+            ->orderByDesc('id')
+            ->pluck('sort_order')
+            ->all();
+
+        for ($i = 1; $i < count($slots); $i++) {
+            if ($slots[$i] <= $slots[$i - 1]) {
+                $slots[$i] = $slots[$i - 1] + 1;
+            }
+        }
+
+        foreach ($ids as $index => $id) {
+            if (isset($slots[$index])) {
+                Article::where('id', $id)->update(['sort_order' => $slots[$index]]);
+            }
+        }
+
+        return response()->json(['status' => 'ok']);
     }
 
     public function show(Article $article): View

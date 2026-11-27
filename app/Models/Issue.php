@@ -50,12 +50,12 @@ class Issue extends Model
 
     public function articles()
     {
-        return $this->hasMany(Article::class);
+        return $this->hasMany(Article::class)->orderBy('sort_order')->orderByDesc('id');
     }
 
     public function publishedArticles()
     {
-        return $this->hasMany(Article::class)->where('status', 'published');
+        return $this->hasMany(Article::class)->where('status', 'published')->orderBy('sort_order')->orderByDesc('id');
     }
 
     public function scopePublished($query)
