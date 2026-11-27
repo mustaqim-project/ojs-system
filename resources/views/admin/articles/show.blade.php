@@ -48,13 +48,13 @@
           </x-ui.form-field>
           <div class="row g-2 mt-1">
             <div class="col-6">
-              <x-ui.form-field label="Halaman Mulai">
-                <x-ui.input type="number" name="pages_start" :value="$article->pages_start" placeholder="1"/>
+              <x-ui.form-field label="Halaman Mulai" :error="$errors->first('pages_start')">
+                <x-ui.input type="number" name="pages_start" :value="old('pages_start', $article->pages_start)" :error="$errors->has('pages_start')" placeholder="1"/>
               </x-ui.form-field>
             </div>
             <div class="col-6">
-              <x-ui.form-field label="Halaman Akhir">
-                <x-ui.input type="number" name="pages_end" :value="$article->pages_end" placeholder="20"/>
+              <x-ui.form-field label="Halaman Akhir" :error="$errors->first('pages_end')">
+                <x-ui.input type="number" name="pages_end" :value="old('pages_end', $article->pages_end)" :error="$errors->has('pages_end')" placeholder="20"/>
               </x-ui.form-field>
             </div>
           </div>
@@ -320,13 +320,13 @@
             </x-ui.form-field>
             <div class="row g-2">
               <div class="col-6">
-                <x-ui.form-field label="Halaman Mulai">
-                  <x-ui.input type="number" name="pages_start" :value="$article->pages_start" placeholder="1"/>
+                <x-ui.form-field label="Halaman Mulai" :error="$errors->first('pages_start')">
+                  <x-ui.input type="number" name="pages_start" :value="old('pages_start', $article->pages_start)" :error="$errors->has('pages_start')" placeholder="1"/>
                 </x-ui.form-field>
               </div>
               <div class="col-6">
-                <x-ui.form-field label="Halaman Akhir">
-                  <x-ui.input type="number" name="pages_end" :value="$article->pages_end" placeholder="20"/>
+                <x-ui.form-field label="Halaman Akhir" :error="$errors->first('pages_end')">
+                  <x-ui.input type="number" name="pages_end" :value="old('pages_end', $article->pages_end)" :error="$errors->has('pages_end')" placeholder="20"/>
                 </x-ui.form-field>
               </div>
             </div>
