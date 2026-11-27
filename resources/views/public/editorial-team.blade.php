@@ -73,24 +73,10 @@
                 <h3 class="mb-4" style="font-weight:700;color:var(--text-main);" data-aos="fade-up">Pemimpin Redaksi</h3>
                 <div class="row mb-5">
                     <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
-                        <div class="pub-card text-center">
-                            <img src="https://ui-avatars.com/api/?name={{ urlencode($eic['name']) }}&background=2563eb&color=fff&size=100"
-                                alt="{{ $eic['name'] }}" class="rounded-circle mb-3" width="96" height="96">
-                            <h4 style="font-weight:700;font-size:18px;margin-bottom:4px;">{{ $eic['name'] }}</h4>
-                            <p style="font-size:14px;color:var(--primary);font-weight:500;margin-bottom:12px;">
+                        <div class="pub-card text-center h-100 d-flex flex-column justify-content-center" style="padding:24px;">
+                            <h4 style="font-weight:700;font-size:18px;margin-bottom:6px;color:var(--text-main);">{{ $eic['name'] }}</h4>
+                            <p style="font-size:14px;color:var(--primary);font-weight:500;margin-bottom:0;">
                                 {{ $eic['affiliation'] ?? '' }}</p>
-                            @if (!empty($eic['orcid']) || !empty($eic['scholar']))
-                                <div class="d-flex justify-content-center gap-2">
-                                    @if (!empty($eic['orcid']))
-                                        <a href="{{ str_starts_with($eic['orcid'], 'http') ? $eic['orcid'] : 'https://orcid.org/' . $eic['orcid'] }}" class="badge badge-neutral text-decoration-none"
-                                            target="_blank"><i class="bi bi-person-badge"></i> ORCID</a>
-                                    @endif
-                                    @if (!empty($eic['scholar']))
-                                        <a href="{{ $eic['scholar'] }}" class="badge badge-neutral text-decoration-none"
-                                            target="_blank"><i class="bi bi-mortarboard-fill"></i> Scholar</a>
-                                    @endif
-                                </div>
-                            @endif
                         </div>
                     </div>
                 </div>
@@ -102,28 +88,10 @@
                 <div class="row g-4 mb-5">
                     @foreach ($editors as $i => $ed)
                         <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ ($i % 3) * 100 }}">
-                            <div class="pub-card text-center">
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode($ed['name']) }}&background=e2e8f0&color=475569&size=100"
-                                    alt="{{ $ed['name'] }}" class="rounded-circle mb-3" width="80" height="80">
-                                <h4 style="font-weight:600;font-size:16px;margin-bottom:4px;">{{ $ed['name'] }}</h4>
-                                <p style="font-size:13px;color:var(--primary);font-weight:500;margin-bottom:6px;">
+                            <div class="pub-card text-center h-100 d-flex flex-column justify-content-center" style="padding:24px;">
+                                <h4 style="font-weight:600;font-size:16px;margin-bottom:6px;color:var(--text-main);">{{ $ed['name'] }}</h4>
+                                <p style="font-size:13px;color:var(--primary);font-weight:500;margin-bottom:0;">
                                     {{ $ed['affiliation'] ?? '' }}</p>
-                                @if (!empty($ed['area']))
-                                    <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">
-                                        {{ $ed['area'] }}</p>
-                                @endif
-                                @if (!empty($ed['orcid']) || !empty($ed['scholar']))
-                                    <div class="d-flex justify-content-center gap-2">
-                                        @if (!empty($ed['orcid']))
-                                            <a href="{{ str_starts_with($ed['orcid'], 'http') ? $ed['orcid'] : 'https://orcid.org/' . $ed['orcid'] }}" class="badge badge-neutral text-decoration-none"
-                                                target="_blank"><i class="bi bi-person-badge"></i> ORCID</a>
-                                        @endif
-                                        @if (!empty($ed['scholar']))
-                                            <a href="{{ $ed['scholar'] }}" class="badge badge-neutral text-decoration-none"
-                                                target="_blank"><i class="bi bi-mortarboard-fill"></i> Scholar</a>
-                                        @endif
-                                    </div>
-                                @endif
                             </div>
                         </div>
                     @endforeach

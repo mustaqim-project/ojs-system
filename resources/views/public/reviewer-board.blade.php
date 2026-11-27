@@ -33,22 +33,9 @@
         <div class="row g-4">
             @forelse($reviewers as $i => $reviewer)
             <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="{{ ($i % 4) * 80 }}">
-                <div class="pub-card text-center" style="padding: 20px;">
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode($reviewer->name) }}&background=e0e7ff&color=3730a3&size=80"
-                         alt="{{ $reviewer->name }}" class="rounded-circle mb-3" width="64" height="64">
-                    <h4 style="font-weight:600;font-size:14px;margin-bottom:4px;">{{ $reviewer->name }}</h4>
-                    <p style="font-size:12px;color:var(--primary);font-weight:500;margin-bottom:6px;">{{ $reviewer->affiliation ?? 'Lembaga Akademik' }}</p>
-                    @if(!empty($reviewer->research_interest))<p style="font-size:11px;color:var(--text-muted);margin-bottom:12px;">{{ $reviewer->research_interest }}</p>@endif
-                    @if(!empty($reviewer->orcid) || !empty($reviewer->google_scholar_url))
-                    <div class="d-flex justify-content-center gap-2">
-                        @if(!empty($reviewer->orcid))
-                            <a href="{{ str_starts_with($reviewer->orcid, 'http') ? $reviewer->orcid : 'https://orcid.org/' . $reviewer->orcid }}" class="badge badge-neutral text-decoration-none" target="_blank"><i class="bi bi-person-badge"></i> ORCID</a>
-                        @endif
-                        @if(!empty($reviewer->google_scholar_url))
-                            <a href="{{ $reviewer->google_scholar_url }}" class="badge badge-neutral text-decoration-none" target="_blank"><i class="bi bi-mortarboard-fill"></i> Scholar</a>
-                        @endif
-                    </div>
-                    @endif
+                <div class="pub-card text-center h-100 d-flex flex-column justify-content-center" style="padding: 20px;">
+                    <h4 style="font-weight:600;font-size:14px;margin-bottom:6px;color:var(--text-main);">{{ $reviewer->name }}</h4>
+                    <p style="font-size:12px;color:var(--primary);font-weight:500;margin-bottom:0;">{{ $reviewer->affiliation ?? 'Lembaga Akademik' }}</p>
                 </div>
             </div>
             @empty
