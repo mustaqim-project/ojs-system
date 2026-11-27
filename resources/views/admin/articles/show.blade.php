@@ -46,6 +46,18 @@
               @endforeach
             </x-ui.select>
           </x-ui.form-field>
+          <div class="row g-2 mt-1">
+            <div class="col-6">
+              <x-ui.form-field label="Halaman Mulai">
+                <x-ui.input type="number" name="pages_start" :value="$article->pages_start" placeholder="1"/>
+              </x-ui.form-field>
+            </div>
+            <div class="col-6">
+              <x-ui.form-field label="Halaman Akhir">
+                <x-ui.input type="number" name="pages_end" :value="$article->pages_end" placeholder="20"/>
+              </x-ui.form-field>
+            </div>
+          </div>
         </form>
       </div>
       <div class="modal-footer" style="border-top:1px solid var(--border);padding:16px 24px;">
@@ -277,9 +289,7 @@
             'Diterbitkan'  => $fmtDate($article->published_at, 'd M Y'),
           ];
           if ($article->pages_range) {
-              $meta['Halaman'] = $article->pages_range . ($article->total_pages ? " ({$article->total_pages} hal.)" : '');
-          } elseif ($article->total_pages) {
-              $meta['Jumlah Halaman'] = $article->total_pages . ' halaman (dari PDF)';
+              $meta['Halaman'] = $article->pages_range;
           }
           @endphp
           <div style="padding:13px 20px;border-bottom:1px solid #F1F5F9;">

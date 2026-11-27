@@ -94,10 +94,24 @@ class ArticleController extends Controller
     public function publish(Request $request, Article $article): RedirectResponse
     {
         $request->validate([
-            'issue_id' => ['required', 'exists:issues,id'],
+            'issue_id'    => ['required', 'exists:issues,id'],
+            'pages_start' => ['nullable', 'integer', 'min:1'],
+            'pages_end'   => array_values(array_filter([
+                'nullable',
+                'integer',
+                'min:1',
+                $request->filled('pages_start') ? 'gte:pages_start' : null,
+            ])),
         ]);
 
         try {
+            if ($request->filled('pages_start') || $request->filled('pages_end')) {
+                $article->update([
+                    'pages_start' => $request->pages_start,
+                    'pages_end'   => $request->pages_end,
+                ]);
+            }
+
             $this->articleService->publish($article, $request->issue_id);
             return redirect()->route('admin.articles.show', $article)
                 ->with('success', 'Artikel berhasil dipublish!');

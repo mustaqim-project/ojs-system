@@ -17,7 +17,7 @@ class ArticleController extends Controller
         $yearFrom = request('year_from', '');
         $yearTo = request('year_to', '');
         
-        $query = Article::published()->with(['journal', 'author', 'issue', 'galleys']);
+        $query = Article::published()->with(['journal', 'author', 'issue']);
         
         // Search Query (q)
         if (!empty($q)) {
@@ -65,7 +65,7 @@ class ArticleController extends Controller
     {
         $article = Article::where('slug', $slug)
             ->where('status', 'published')
-            ->with(['journal', 'author', 'issue', 'galleys'])
+            ->with(['journal', 'author', 'issue'])
             ->firstOrFail();
 
         $article->increment('views_count');

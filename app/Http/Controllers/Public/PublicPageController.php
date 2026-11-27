@@ -70,13 +70,13 @@ class PublicPageController extends Controller
             if ($issueId) {
                 $currentIssue = \App\Models\Issue::published()
                     ->with(['volume', 'articles' => function ($q) {
-                        $q->published()->with(['author', 'galleys']);
+                        $q->published()->with('author');
                     }])
                     ->find($issueId);
             } else {
                 $currentIssue = \App\Models\Issue::published()
                     ->with(['volume', 'articles' => function ($q) {
-                        $q->published()->with(['author', 'galleys']);
+                        $q->published()->with('author');
                     }])
                     ->latest('published_date')
                     ->first();

@@ -170,14 +170,9 @@
             </div>
             
             <div class="d-flex gap-4 flex-wrap" style="font-size:13px; font-weight:600; color:var(--text-muted);">
-              @if($article->pages_range || $article->total_pages)
+              @if($article->pages_range)
                 <span title="Halaman" class="d-flex align-items-center gap-1">
-                  <i class="bi bi-file-text" style="font-size:15px;"></i>
-                  @if($article->pages_range)
-                    Hal. {{ $article->pages_range }}@if($article->total_pages) ({{ $article->total_pages }} hal.)@endif
-                  @else
-                    {{ $article->total_pages }} hal.
-                  @endif
+                  <i class="bi bi-file-text" style="font-size:15px;"></i> Hal. {{ $article->pages_range }}
                 </span>
               @endif
               @if(isset($article->citations_count) && $article->citations_count > 0)
